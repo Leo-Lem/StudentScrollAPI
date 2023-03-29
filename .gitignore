@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# VSCode
+.vscode
+*.code-workspace
+
+# Maven
+target

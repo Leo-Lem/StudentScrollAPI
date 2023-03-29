@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  JDK_VERSION: "17"
+  JDK_DISTRIBUTION: "temurin"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B compile --file pom.xml
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B test --file pom.xml
+
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B package --file pom.xml
