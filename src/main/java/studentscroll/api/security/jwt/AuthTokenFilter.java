@@ -14,7 +14,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import studentscroll.api.security.auth.AppUserDetailsService;
+import studentscroll.api.security.auth.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
@@ -22,7 +22,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   private JWTUtils jwtUtils;
 
   @Autowired
-  private AppUserDetailsService detailsService;
+  private UserDetailsServiceImpl detailsService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
