@@ -1,0 +1,317 @@
+openapi: 3.1.0
+
+info:
+  version: 1.0.0
+  title: Student Scroll API
+  description: |
+    This is the REST API powering Student Scroll.
+    It's hosted on the app's domain at the /api endpoint.
+  license:
+    name: MIT
+
+servers:
+  - url: https://studentscroll.net/api/v1
+
+paths:
+  /signin:
+    post:
+      summary: Post credentials to sign in.
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Authentication was successful.
+          content:
+            application/json:
+              schema:
+                type: string
+                value: The JWT.
+        "400":
+          description: Credentials could not be read.
+        "401":
+          description: Authentication was unsuccessful.
+
+  # students
+
+  /students:
+    get:
+      summary: Get all students.
+      parameters:
+        - name: limit
+          in: query
+        - name: email
+          in: query
+        - name: name
+          in: query
+        - name: description
+          in: query
+        - name: latitude
+          in: query
+        - name: longitude
+          in: query
+    post:
+      summary: Post new student.
+
+  /students/{studentID}:
+    get:
+      summary: Get student.
+      parameters:
+        - name: studentID
+          in: path
+    put:
+      summary: Put updated student.
+      parameters:
+        - name: studentID
+          in: path
+    delete:
+      summary: Delete student.
+      parameters:
+        - name: studentID
+          in: path
+
+  /students/{studentID}/settings:
+    get:
+      summary: Get settings.
+      parameters:
+        - name: studentID
+          in: path
+    put:
+      summary: Put updated settings
+      parameters:
+        - name: studentID
+          in: path
+
+  /students/{studentID}/profile:
+    get:
+      summary: Get profile.
+      parameters:
+        - name: studentID
+          in: path
+    put:
+      summary: Put updated profile.
+      parameters:
+        - name: studentID
+          in: path
+
+  /students/{studentID}/profile/followers:
+    get:
+      summary: Get followers.
+      parameters:
+        - name: studentID
+          in: path
+
+  /students/{studentID}/profile/followers/{followerID}:
+    post:
+      summary: Post new follower.
+      parameters:
+        - name: studentID
+          in: path
+        - name: followerID
+          in: path
+    delete:
+      summary: Delete follower.
+      parameters:
+        - name: studentID
+          in: path
+        - name: followerID
+          in: path
+
+  /students/{studentID}/profile/follows/{followID}:
+    get:
+      summary: Get follows.
+      parameters:
+        - name: studentID
+          in: path
+        - name: followID
+          in: path
+    post:
+      summary: Post new follow.
+      parameters:
+        - name: studentID
+          in: path
+        - name: followID
+          in: path
+    delete:
+      summary: Delete follow
+      parameters:
+        - name: studentID
+          in: path
+        - name: followID
+          in: path
+
+  # chats
+
+  /chats:
+    get:
+      summary: Get all chats.
+      parameters:
+        - name: limit
+          in: query
+        - name: studentID
+          in: query
+        - name: title
+          in: query
+    post:
+      summary: Post new chat.
+
+  /chats/{chatID}:
+    get:
+      summary: Get chat.
+      parameters:
+        - name: chatID
+          in: path
+    put:
+      summary: Put updated chat
+      parameters:
+        - name: chatID
+          in: path
+    delete:
+      summary: Delete chat.
+      parameters:
+        - name: chatID
+          in: path
+
+  /chats/{chatID}/students:
+    get:
+      summary: Get students in chat.
+      parameters:
+        - name: chatID
+          in: path
+
+  /chats/{chatID}/students/{studentID}:
+    head:
+      summary: Get if student is in chat.
+      parameters:
+        - name: chatID
+          in: path
+        - name: studentID
+          in: path
+    post:
+      summary: Post new student to chat.
+      parameters:
+        - name: chatID
+          in: path
+        - name: studentID
+          in: path
+    delete:
+      summary: Delete student from chat.
+      parameters:
+        - name: chatID
+          in: path
+        - name: studentID
+          in: path
+
+  /chats/{chatID}/messages:
+    get:
+      summary: Get all messages in chat.
+      parameters:
+        - name: chatID
+          in: path
+    post:
+      summary: Post new message in chat.
+      parameters:
+        - name: chatID
+          in: path
+
+  /chats/{chatID}/messages/{messageID}:
+    put:
+      summary: Put updated message to chat.
+      parameters:
+        - name: chatID
+          in: path
+        - name: messageID
+          in: path
+    delete:
+      summary: Delete message from chat.
+      parameters:
+        - name: chatID
+          in: path
+        - name: messageID
+          in: path
+
+  # posts
+
+  /posts:
+    get:
+      summary: Get all posts.
+      parameters:
+        - name: limit
+          in: query
+        - name: studentID
+          in: query
+        - name: tags
+          in: query
+        - name: title
+          in: query
+        - name: description
+          in: query
+        - name: latitude
+          in: query
+        - name: longitude
+          in: query
+        - name: date
+          in: query
+        - name: query
+          in: query
+    post:
+      summary: Post new post.
+
+  /posts/{postID}:
+    get:
+      summary: Get post.
+      parameters:
+        - name: postID
+          in: path
+    put:
+      summary: Put updated post.
+      parameters:
+        - name: postID
+          in: path
+    delete:
+      summary: Delete post.
+      parameters:
+        - name: postID
+          in: path
+
+  /posts/{postID}/comments:
+    get:
+      summary: Get all comments of post.
+      parameters:
+        - name: postID
+          in: path
+    post:
+      summary: Post new comment to post.
+      parameters:
+        - name: postID
+          in: path
+
+  /posts/{postID}/comments/{commentID}:
+    get:
+      summary: Get comment of post.
+      parameters:
+        - name: postID
+          in: path
+        - name: commentID
+          in: path
+    put:
+      summary: Put updated comment to post.
+      parameters:
+        - name: postID
+          in: path
+        - name: commentID
+          in: path
+    delete:
+      summary: Delete comment from post.
+      parameters:
+        - name: postID
+          in: path
+        - name: commentID
+          in: path
