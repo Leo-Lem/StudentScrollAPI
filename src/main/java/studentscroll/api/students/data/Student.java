@@ -1,6 +1,6 @@
 package studentscroll.api.students.data;
 
-import java.util.Collection;
+import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,11 +28,10 @@ public class Student implements UserDetails {
   @Embedded
   private Profile profile;
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
-  }
+  @Column(name = "roles")
+  private Set<GrantedAuthority> roles;
+
+  // authentication, user details, security, etc.
 
   @Override
   public String getPassword() {
@@ -45,27 +44,28 @@ public class Student implements UserDetails {
   }
 
   @Override
+  public Collection<GrantedAuthority> getAuthorities() {
+    return this.roles;
+  }
+
+  @Override
   public boolean isAccountNonExpired() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isAccountNonExpired'");
+    return true;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isAccountNonLocked'");
+    return true;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isCredentialsNonExpired'");
+    return true;
   }
 
   @Override
   public boolean isEnabled() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'isEnabled'");
+    return true;
   }
 
 }
