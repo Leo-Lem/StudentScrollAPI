@@ -1,6 +1,6 @@
 # StudentScroll API
 
-This is the REST API behind the StudentScroll app.
+This is the REST API behind the StudentScroll app ([OpenAPI specs](./openapi.yml)).
 
 [![CI](https://github.com/Leo-Lem/StudentScrollAPI/actions/workflows/maven.yml/badge.svg)](https://github.com/Leo-Lem/StudentScrollAPI/actions/workflows/maven.yml)
 
@@ -10,11 +10,10 @@ _Necessary for compiling, running, and everything in between_
 
 1. (only macOS) Install using homebrew (`brew install maven`)
 2. Now the maven commands should work (e.g., `mvn compile`, `mvn package`, [Docs](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html))
-3. (optional) Install VSCode extension (`Maven for Java`)
 
 ## Setting up a local PostgreSQL database
 
-_Necessary for running_
+_Necessary for trying everything out_
 
 1. Install [PostgreSQL](https://www.postgresql.org/download/).
 2. Create a database named '**studentscroll**' (macOS: `createdb studentscroll`).
