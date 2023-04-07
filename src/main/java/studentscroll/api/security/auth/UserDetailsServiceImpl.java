@@ -5,11 +5,10 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.repos.StudentRepository;
+import studentscroll.api.students.data.StudentRepository;
 
 @Service
-public class AppUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
   StudentRepository studentRepository;
@@ -17,10 +16,8 @@ public class AppUserDetailsService implements UserDetailsService {
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    Student student = studentRepository.findByEmail(email)
+    return studentRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException(email));
-
-    return student;
   }
 
 }
