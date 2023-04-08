@@ -1,5 +1,6 @@
 package studentscroll.api.students.data;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,11 @@ public class Student implements UserDetails {
   @Column(name = "password")
   @NonNull
   private String password;
+
+  @Column(name = "registeredOn")
+  @NonNull
+  @Builder.Default
+  private LocalDate registeredOn = LocalDate.now();
 
   @Embedded
   @Builder.Default

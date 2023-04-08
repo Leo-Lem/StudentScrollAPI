@@ -1,13 +1,10 @@
 package studentscroll.api.students.data;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.tools.DocumentationTool.Location;
+import java.util.*;
 
 import jakarta.persistence.*;
 import lombok.*;
+import studentscroll.api.shared.Location;
 
 @Embeddable
 @Data
@@ -27,11 +24,20 @@ public class Profile {
   @Column(name = "interests")
   private Set<String> interests = new HashSet<>();
 
-  @Column(name = "location")
-  private Optional<Location> location;
+  @Embedded
+  private Location location;
 
   public Profile(String name) {
     this.name = name;
+  }
+
+  public Optional<Location> getLocation() {
+    return Optional.ofNullable(location);
+  }
+
+  public Profile setLocation(Optional<Location> newLocation) {
+    this.location = newLocation.orElse(null);
+    return this;
   }
 
 }

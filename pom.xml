@@ -107,8 +107,8 @@
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <compilerArgs>
-                        <arg>-XDcompilePolicy=simple</arg>
                         <arg>
+                            -XDcompilePolicy=simple \
                             -Xplugin:ErrorProne \
                             -Xep:NullAway:ERROR \
                             -XepOpt:NullAway:AnnotatedPackages=com.uber \
