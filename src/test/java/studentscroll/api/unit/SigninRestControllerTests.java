@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import lombok.val;
 import studentscroll.api.security.auth.*;
+import studentscroll.api.students.data.Profile;
 import studentscroll.api.students.data.Student;
 
 public class SigninRestControllerTests {
@@ -40,7 +41,7 @@ public class SigninRestControllerTests {
   @Test
   public void givenCrendentialsAreValid_whenRequestIsReceived_thenReturns200AndSomeJWT() {
     String email = "abc@xyz.com", password = "1234";
-    val details = Student.builder().email(email).password(password).build();
+    val details = new Student(email, password, new Profile(""));
     val request = new SigninRequest(email, password);
 
     when(authManager.authenticate(any(Authentication.class)))

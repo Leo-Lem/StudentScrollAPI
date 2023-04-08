@@ -35,7 +35,7 @@ public class StudentsRestControllerTests {
     val request = new CreateStudentRequest(name, email, password);
 
     when(service.create(name, email, password))
-        .thenReturn(Student.builder().id(1L).email(email).password("321bca").profile(new Profile(name)).build());
+        .thenReturn(new Student(email, "abc123", new Profile(name)).setId(1L));
 
     ResponseEntity<?> response = controller.registerUser(request);
 

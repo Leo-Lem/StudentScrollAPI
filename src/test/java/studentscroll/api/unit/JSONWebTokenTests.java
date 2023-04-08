@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import lombok.val;
 import studentscroll.api.security.JSONWebToken;
+import studentscroll.api.students.data.Profile;
 import studentscroll.api.students.data.Student;
 
 @SuppressWarnings("JavaUtilDate")
@@ -16,7 +17,7 @@ public class JSONWebTokenTests {
   @Test
   public void givenUserDetailsAreValid_whenGeneratingJWT_thenReturnsJWTWithCorrectEmail() {
     val email = "abc@xyz.com";
-    val details = Student.builder().email(email).password("").build();
+    val details = new Student(email, "", new Profile(""));
     val token = JSONWebToken.generateFrom(details);
 
     assertEquals(email, token.getUsername());
@@ -24,7 +25,7 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsCreated_whenGettingExpirationDate_thenDateReflectsExpirationInterval() {
-    val details = Student.builder().email("xxx").password("").build();
+    val details = new Student("xxx", "", new Profile(""));
     val token = JSONWebToken.generateFrom(details);
 
     val expirationInterval = JSONWebToken.EXPIRES_AFTER_SECONDS;
@@ -36,7 +37,7 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsValid_whenValidatingJWT_thenReturnsTrue() {
-    val details = Student.builder().email("xxx").password("").build();
+    val details = new Student("xxx", "", new Profile(""));
     val token = JSONWebToken.generateFrom(details);
 
     assertTrue(token.validate(details));
@@ -44,8 +45,8 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsInvalid_whenValidatingJWT_thenReturnsFalse() {
-    val details = Student.builder().email("xxx").password("").build();
-    val otherDetails = Student.builder().email("yyy").password("").build();
+    val details = new Student("xxx", "", new Profile(""));
+    val otherDetails = new Student("yyy", "", new Profile(""));
     val token = JSONWebToken.generateFrom(details);
 
     assertFalse(token.validate(otherDetails));

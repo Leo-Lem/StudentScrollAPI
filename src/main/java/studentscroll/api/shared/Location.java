@@ -1,7 +1,6 @@
 package studentscroll.api.shared;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Embeddable
@@ -9,12 +8,12 @@ import lombok.Data;
 public class Location {
 
   @Column(name = "description")
-  private String description;
+  private final String description;
 
   @Column(name = "latitude")
-  private Long latitude;
+  private final Double latitude;
 
   @Column(name = "longitude")
-  private Long longitude;
+  private final Double longitude;
 
 }

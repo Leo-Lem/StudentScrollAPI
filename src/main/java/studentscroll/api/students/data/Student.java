@@ -13,8 +13,8 @@ import lombok.*;
 @Entity(name = "student")
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Student implements UserDetails {
 
   @Id
@@ -30,20 +30,23 @@ public class Student implements UserDetails {
   private String password;
 
   @Column(name = "registeredOn")
-  @NonNull
-  @Builder.Default
   private LocalDate registeredOn = LocalDate.now();
 
   @Embedded
+  @NonNull
   private Profile profile;
 
   @Embedded
-  @Builder.Default
   private Settings settings = new Settings();
+
+  public Student setId(Long newId) {
+    id = newId;
+    return this;
+  }
 
   @Override
   public String getPassword() {
-    return getPassword();
+    return password;
   }
 
   @Override
