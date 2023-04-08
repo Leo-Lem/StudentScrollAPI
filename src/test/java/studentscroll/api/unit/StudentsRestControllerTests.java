@@ -14,8 +14,7 @@ import studentscroll.api.students.data.Profile;
 import studentscroll.api.students.data.Student;
 import studentscroll.api.students.services.StudentService;
 import studentscroll.api.students.web.StudentsRestController;
-import studentscroll.api.students.web.requestDTO.CreateStudentRequest;
-import studentscroll.api.students.web.responseDTO.StudentResponse;
+import studentscroll.api.students.web.dto.*;
 
 public class StudentsRestControllerTests {
 

@@ -1,4 +1,4 @@
-package studentscroll.api.students.web.requestDTO;
+package studentscroll.api.students.web.dto;
 
 import lombok.*;
 

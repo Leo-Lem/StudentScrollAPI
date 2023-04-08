@@ -1,4 +1,4 @@
-package studentscroll.api.students.web.responseDTO;
+package studentscroll.api.students.web.dto;
 
 import lombok.Data;
 import studentscroll.api.shared.Location;

@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.val;
-import studentscroll.api.students.services.StudentService;
-import studentscroll.api.students.web.requestDTO.CreateStudentRequest;
-import studentscroll.api.students.web.responseDTO.StudentResponse;
+import studentscroll.api.students.services.*;
+import studentscroll.api.students.web.dto.*;
 
 @RestController
 @RequestMapping("/students")
@@ -17,6 +16,12 @@ public class StudentsRestController {
 
   @Autowired
   private StudentService service;
+
+  // @Autowired
+  // private ProfileService profileService;
+
+  // @Autowired
+  // private SettingsService settingsService;
 
   @PostMapping
   public ResponseEntity<?> registerUser(@Validated @RequestBody CreateStudentRequest request) {
