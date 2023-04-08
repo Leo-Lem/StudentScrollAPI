@@ -30,18 +30,21 @@ public class JWTFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       val token = parseJWT(request);
-      val email = token.getUsername();
-      val details = detailsService.loadUserByUsername(email);
 
-      if (token.validate(details)) {
-        val authentication = new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+      if (token != null) {
+        val email = token.getUsername();
+        val details = detailsService.loadUserByUsername(email);
+
+        if (token.validate(details)) {
+          val authentication = new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities());
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
       }
     } catch (ExpiredJwtException e) {
       System.err.println("JWT is expired.");
     } catch (Exception e) {
-      System.err.println(e.getMessage());
+      System.err.println("Failed to authenticate: " + e.getMessage());
     }
 
     filterChain.doFilter(request, response);
