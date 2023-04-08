@@ -10,6 +10,9 @@ import lombok.*;
 
 @Entity(name = "student")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Student implements UserDetails {
 
   @Id
