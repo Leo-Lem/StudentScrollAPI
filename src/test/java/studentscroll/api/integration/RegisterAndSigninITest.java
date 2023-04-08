@@ -19,37 +19,37 @@ import studentscroll.api.students.web.requestDTO.CreateStudentRequest;
 @AutoConfigureMockMvc(addFilters = false)
 public class RegisterAndSigninITest {
 
-        @Autowired
-        private MockMvc mockMVC;
+  @Autowired
+  private MockMvc mockMVC;
 
-        @Autowired
-        private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-        @Test
-        void whenSigningUp_thenUserIsCreatedInDatabaseAndResponseIs200AndCannotSignUpAgain()
-                        throws Exception {
-                String email = "jwayne@xyz.com", password = "1234";
-                val registerRequest = new CreateStudentRequest("John Wayne", email, password);
+  @Test
+  void whenSigningUp_thenUserIsCreatedInDatabaseAndResponseIs200AndCannotSignUpAgain()
+      throws Exception {
+    String email = "jwayne@xyz.com", password = "1234";
+    val registerRequest = new CreateStudentRequest("John Wayne", email, password);
 
-                mockMVC.perform(
-                                post("/students")
-                                                .contentType("application/json")
-                                                .content(objectMapper.writeValueAsString(registerRequest)))
-                                .andExpect(status().isOk());
+    mockMVC.perform(
+        post("/students")
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(registerRequest)))
+        .andExpect(status().isOk());
 
-                mockMVC.perform(
-                                post("/students")
-                                                .contentType("application/json")
-                                                .content(objectMapper.writeValueAsString(registerRequest)))
-                                .andExpect(status().isConflict());
+    mockMVC.perform(
+        post("/students")
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(registerRequest)))
+        .andExpect(status().isConflict());
 
-                val signinRequest = new SigninRequest(email, password);
+    val signinRequest = new SigninRequest(email, password);
 
-                mockMVC.perform(
-                                post("/signin")
-                                                .contentType("application/json")
-                                                .content(objectMapper.writeValueAsString(signinRequest)))
-                                .andExpect(status().isOk());
-        }
+    mockMVC.perform(
+        post("/signin")
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(signinRequest)))
+        .andExpect(status().isOk());
+  }
 
 }
