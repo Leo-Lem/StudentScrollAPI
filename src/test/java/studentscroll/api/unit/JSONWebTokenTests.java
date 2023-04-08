@@ -10,6 +10,7 @@ import lombok.val;
 import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.students.data.Student;
 
+@SuppressWarnings("JavaUtilDate")
 public class JSONWebTokenTests {
 
   @Test

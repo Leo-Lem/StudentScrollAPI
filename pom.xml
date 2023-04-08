@@ -108,7 +108,12 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-Xplugin:ErrorProne -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.uber</arg>
+                        <arg>
+                            -Xplugin:ErrorProne \
+                            -Xep:NullAway:ERROR \
+                            -XepOpt:NullAway:AnnotatedPackages=com.uber \
+                            -Xep:MissingSummary:OFF
+                        </arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>

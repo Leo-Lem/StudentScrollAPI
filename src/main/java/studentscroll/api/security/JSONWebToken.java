@@ -30,7 +30,7 @@ public class JSONWebToken {
   }
 
   public Boolean validate(UserDetails details) {
-    return (getUsername().equals(details.getUsername())) && !isExpired();
+    return getUsername().equals(details.getUsername()) && !isExpired();
   }
 
   @Override
