@@ -15,7 +15,7 @@ public class JSONWebTokenTests {
   @Test
   public void givenUserDetailsAreValid_whenGeneratingJWT_thenReturnsJWTWithCorrectEmail() {
     val email = "abc@xyz.com";
-    val details = Student.builder().email(email).build();
+    val details = Student.builder().email(email).password("").build();
     val token = JSONWebToken.generateFrom(details);
 
     assertEquals(email, token.getUsername());
@@ -23,7 +23,7 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsCreated_whenGettingExpirationDate_thenDateReflectsExpirationInterval() {
-    val details = Student.builder().email("xxx").build();
+    val details = Student.builder().email("xxx").password("").build();
     val token = JSONWebToken.generateFrom(details);
 
     val expirationInterval = JSONWebToken.EXPIRES_AFTER_SECONDS;
@@ -35,7 +35,7 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsValid_whenValidatingJWT_thenReturnsTrue() {
-    val details = Student.builder().email("xxx").build();
+    val details = Student.builder().email("xxx").password("").build();
     val token = JSONWebToken.generateFrom(details);
 
     assertTrue(token.validate(details));
@@ -43,8 +43,8 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsInvalid_whenValidatingJWT_thenReturnsFalse() {
-    val details = Student.builder().email("xxx").build();
-    val otherDetails = Student.builder().email("yyy").build();
+    val details = Student.builder().email("xxx").password("").build();
+    val otherDetails = Student.builder().email("yyy").password("").build();
     val token = JSONWebToken.generateFrom(details);
 
     assertFalse(token.validate(otherDetails));

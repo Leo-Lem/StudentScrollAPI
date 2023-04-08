@@ -21,16 +21,20 @@ public class Student implements UserDetails {
   private Long id;
 
   @Column(name = "email")
+  @NonNull
   private String email;
 
   @Column(name = "password")
+  @NonNull
   private String password;
 
   @Embedded
-  private Settings settings;
+  @Builder.Default
+  private Profile profile = new Profile();
 
   @Embedded
-  private Profile profile;
+  @Builder.Default
+  private Settings settings = new Settings();
 
   @Override
   public String getPassword() {
