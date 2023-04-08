@@ -12,11 +12,17 @@ public class Settings {
   @Column(name = "isNotified")
   private Boolean isNotified = false;
 
+  @Column(name = "isLocated")
+  private Boolean isLocated = false;
+
   @Column(name = "theme")
-  private Theme theme = Theme.DARK;
+  private String theme = "DARK";
 
   @Column(name = "locale")
-  private Locale locale = Locale.ENGLISH;
+  private String locale = "EN";
+
+  @Column(name = "privacy")
+  private Privacy privacy = Privacy.VISIBLE;
 
   // @OneToMany
   // @JoinColumn

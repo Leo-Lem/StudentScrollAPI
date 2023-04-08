@@ -1,5 +1,11 @@
 package studentscroll.api.students.data;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.tools.DocumentationTool.Location;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +22,13 @@ public class Profile {
   private String bio = "";
 
   @Column(name = "icon")
-  private String icon = "student";
+  private String icon = "STUDENT";
 
-  // @Column(name = "lastLocation")
-  // private Location lastLocation;
+  @Column(name = "interests")
+  private Set<String> interests = new HashSet<>();
+
+  @Column(name = "location")
+  private Optional<Location> location;
 
   public Profile(String name) {
     this.name = name;
