@@ -8,19 +8,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 
 @Component
 @SuppressWarnings("JavaUtilDate")
+@AllArgsConstructor
 public class JSONWebToken {
 
   public static final long EXPIRES_AFTER_SECONDS = 24 * 60 * 60;
   private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
   private String token;
-
-  public JSONWebToken(String token) {
-    this.token = token;
-  }
 
   public static JSONWebToken generateFrom(UserDetails details) {
     return new JSONWebToken(
@@ -35,6 +33,11 @@ public class JSONWebToken {
 
   public Boolean validate(UserDetails details) {
     return (getUsername().equals(details.getUsername())) && !isExpired();
+  }
+
+  @Override
+  public String toString() {
+    return token;
   }
 
   public String getUsername() {
