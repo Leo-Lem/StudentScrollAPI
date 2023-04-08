@@ -39,8 +39,30 @@ paths:
         "401":
           description: Authentication was unsuccessful.
 
+  # API Sum
   # students
+  # 1. /students Get all atudents. Post new student.
+  # 2. /students/{studentID} Get student. Put updated student. Delete student.
+  # 3. /students/{studentID}/settings Get settings. Put updated settings.
+  # 4. /students/{studentID}/profile Get profile. Put updated profile.
+  # 5. /students/{studentID}/profile/followers Get followers.
+  # 6. /students/{studentID}/profile/followers/{followerID} Post new follower. Delete follower.
+  # 7. /students/{studentID}/profile/follows/{followID} Get follows. Post new follow. Delete follow.
+  # chats
+  # 1. /chats Get all chats. Post new chat.
+  # 2. /chats/{chatID} Get chat. Put updated chat. Delete chat.
+  # 3. /chats/{chatID}/students Get students in chat.
+  # 4. /chats/{chatID}/students/{studentID} Get if student is in chat. Post new student to chat. Delete student from chat.
+  # 5. /chats/{chatID}/messages Get all messages in chat. Post new message in chat.
+  # 6. /chats/{chatID}/messages/{messageID} Put updated message to chat. Delete message from chat.
+  # posts
+  # 1. /posts Get all posts. Post new post.
+  # 2. /posts/{postID} Get post. Put updated post. Delete post.
+  # 3. /posts/{postID}/comments Get all comments of post. Post new comment to post.
+  # 4. /posts/{postID}/comments/{commentID} Get comment of post. Put updated comment to post. Delete comment from post.
 
+  # students
+  # 1. /students Get all atudents. Post new student.
   /students:
     get:
       summary: Get all students.
@@ -60,6 +82,7 @@ paths:
     post:
       summary: Post new student.
 
+  # 2. /students/{studentID} Get student. Put updated student. Delete student.
   /students/{studentID}:
     get:
       summary: Get student.
@@ -77,6 +100,7 @@ paths:
         - name: studentID
           in: path
 
+  # 3. /students/{studentID}/settings Get settings. Put updated settings.
   /students/{studentID}/settings:
     get:
       summary: Get settings.
@@ -84,11 +108,12 @@ paths:
         - name: studentID
           in: path
     put:
-      summary: Put updated settings
+      summary: Put updated settings.
       parameters:
         - name: studentID
           in: path
-
+          
+  # 4. /students/{studentID}/profile Get profile. Put updated profile.
   /students/{studentID}/profile:
     get:
       summary: Get profile.
@@ -101,6 +126,7 @@ paths:
         - name: studentID
           in: path
 
+  # 5. /students/{studentID}/profile/followers Get followers.
   /students/{studentID}/profile/followers:
     get:
       summary: Get followers.
@@ -108,6 +134,7 @@ paths:
         - name: studentID
           in: path
 
+  # 6. /students/{studentID}/profile/followers/{followerID} Post new follower. Delete follower.
   /students/{studentID}/profile/followers/{followerID}:
     post:
       summary: Post new follower.
@@ -124,6 +151,7 @@ paths:
         - name: followerID
           in: path
 
+  # 7. /students/{studentID}/profile/follows/{followID} Get follows. Post new follow. Delete follow.
   /students/{studentID}/profile/follows/{followID}:
     get:
       summary: Get follows.
@@ -148,7 +176,7 @@ paths:
           in: path
 
   # chats
-
+  # 1. /chats Get all chats. Post new chat.
   /chats:
     get:
       summary: Get all chats.
@@ -162,6 +190,7 @@ paths:
     post:
       summary: Post new chat.
 
+  # 2. /chats/{chatID} Get chat. Put updated chat. Delete chat.
   /chats/{chatID}:
     get:
       summary: Get chat.
@@ -169,7 +198,7 @@ paths:
         - name: chatID
           in: path
     put:
-      summary: Put updated chat
+      summary: Put updated chat.
       parameters:
         - name: chatID
           in: path
@@ -179,6 +208,7 @@ paths:
         - name: chatID
           in: path
 
+  # 3. /chats/{chatID}/students Get students in chat.
   /chats/{chatID}/students:
     get:
       summary: Get students in chat.
@@ -186,6 +216,7 @@ paths:
         - name: chatID
           in: path
 
+  # 4. /chats/{chatID}/students/{studentID} Get if student is in chat. Post new student to chat. Delete student from chat.
   /chats/{chatID}/students/{studentID}:
     head:
       summary: Get if student is in chat.
@@ -209,6 +240,7 @@ paths:
         - name: studentID
           in: path
 
+  # 5. /chats/{chatID}/messages Get all messages in chat. Post new message in chat.
   /chats/{chatID}/messages:
     get:
       summary: Get all messages in chat.
@@ -221,6 +253,7 @@ paths:
         - name: chatID
           in: path
 
+  # 6. /chats/{chatID}/messages/{messageID} Put updated message to chat. Delete message from chat.
   /chats/{chatID}/messages/{messageID}:
     put:
       summary: Put updated message to chat.
@@ -238,7 +271,7 @@ paths:
           in: path
 
   # posts
-
+  # 1. /posts Get all posts. Post new post.
   /posts:
     get:
       summary: Get all posts.
@@ -264,6 +297,7 @@ paths:
     post:
       summary: Post new post.
 
+  # 2. /posts/{postID} Get post. Put updated post. Delete post.
   /posts/{postID}:
     get:
       summary: Get post.
@@ -281,6 +315,7 @@ paths:
         - name: postID
           in: path
 
+  # 3. /posts/{postID}/comments Get all comments of post. Post new comment to post.
   /posts/{postID}/comments:
     get:
       summary: Get all comments of post.
@@ -293,6 +328,7 @@ paths:
         - name: postID
           in: path
 
+  # 4. /posts/{postID}/comments/{commentID} Get comment of post. Put updated comment to post. Delete comment from post.
   /posts/{postID}/comments/{commentID}:
     get:
       summary: Get comment of post.
