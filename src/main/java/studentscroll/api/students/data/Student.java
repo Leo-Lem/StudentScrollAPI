@@ -35,8 +35,7 @@ public class Student implements UserDetails {
   private LocalDate registeredOn = LocalDate.now();
 
   @Embedded
-  @Builder.Default
-  private Profile profile = new Profile();
+  private Profile profile;
 
   @Embedded
   @Builder.Default
@@ -44,7 +43,7 @@ public class Student implements UserDetails {
 
   @Override
   public String getPassword() {
-    return password;
+    return getPassword();
   }
 
   @Override

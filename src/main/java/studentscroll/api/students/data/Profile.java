@@ -1,19 +1,17 @@
 package studentscroll.api.students.data;
 
 import java.util.*;
-
 import jakarta.persistence.*;
 import lombok.*;
 import studentscroll.api.shared.Location;
 
 @Embeddable
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Profile {
 
   @Column(name = "name")
-  private String name = "<Anonymous>";
+  private String name;
 
   @Column(name = "bio")
   private String bio = "";
