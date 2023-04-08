@@ -1,13 +1,13 @@
-package studentscroll.api.students.data.repos;
+package studentscroll.api.students.data;
 
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import studentscroll.api.students.data.Student;
-
 public interface StudentRepository extends CrudRepository<Student, Long> {
 
   Optional<Student> findByEmail(String email);
+
+  Boolean existsByEmail(String email);
 
 }

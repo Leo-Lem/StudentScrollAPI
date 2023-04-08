@@ -34,8 +34,6 @@ paths:
               schema:
                 type: string
                 value: The JWT.
-        "400":
-          description: Credentials could not be read.
         "401":
           description: Authentication was unsuccessful.
 
