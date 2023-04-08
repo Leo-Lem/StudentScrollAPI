@@ -44,8 +44,4 @@ public class ProfileService {
     return repo.save(student).getProfile();
   }
 
-  public void readProfile(long l) {
-    throw new UnsupportedOperationException("Unimplemented");
-  }
-
 }

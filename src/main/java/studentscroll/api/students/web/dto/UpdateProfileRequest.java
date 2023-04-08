@@ -1,15 +1,15 @@
 package studentscroll.api.students.web.dto;
 
-import lombok.Data;
+import lombok.*;
 import studentscroll.api.shared.Location;
 
 @Data
 public class UpdateProfileRequest {
 
-  private String name;
-  private String bio;
-  private String icon;
-  private String[] interests;
-  private Location location;
+  private final String name;
+  private final String bio;
+  private final String icon;
+  private final String[] interests;
+  private final Location location;
 
 }

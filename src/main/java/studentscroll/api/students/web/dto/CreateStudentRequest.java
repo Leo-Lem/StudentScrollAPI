@@ -3,16 +3,15 @@ package studentscroll.api.students.web.dto;
 import lombok.*;
 
 @Data
-@RequiredArgsConstructor
 public class CreateStudentRequest {
 
   @NonNull
-  private String name;
+  private final String name;
 
   @NonNull
-  private String email;
+  private final String email;
 
   @NonNull
-  private String password;
+  private final String password;
 
 }

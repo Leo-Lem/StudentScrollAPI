@@ -7,10 +7,13 @@ import studentscroll.api.shared.Location;
 
 @Embeddable
 @Data
+@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Profile {
 
   @Column(name = "name")
+  @NonNull
   private String name;
 
   @Column(name = "bio")
@@ -24,10 +27,6 @@ public class Profile {
 
   @Embedded
   private Location location;
-
-  public Profile(String name) {
-    this.name = name;
-  }
 
   public Optional<Location> getLocation() {
     return Optional.ofNullable(location);

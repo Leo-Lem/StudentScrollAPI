@@ -1,15 +1,26 @@
 package studentscroll.api.students.web.dto;
 
-import lombok.Data;
+import lombok.*;
 import studentscroll.api.shared.Location;
+import studentscroll.api.students.data.Profile;
 
 @Data
+@RequiredArgsConstructor
 public class ProfileResponse {
 
-  private String name;
-  private String bio;
-  private String icon;
-  private String[] interests;
-  private Location location;
+  private final String name;
+  private final String bio;
+  private final String icon;
+  private final String[] interests;
+  private final Location location;
+
+  public ProfileResponse(Profile profile) {
+    this(
+        profile.getName(),
+        profile.getBio(),
+        profile.getIcon(),
+        profile.getInterests().toArray(new String[] {}),
+        profile.getLocation().orElse(null));
+  }
 
 }
