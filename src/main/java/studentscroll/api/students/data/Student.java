@@ -3,6 +3,7 @@ package studentscroll.api.students.data;
 import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
@@ -31,11 +32,6 @@ public class Student implements UserDetails {
   @Embedded
   private Profile profile;
 
-  @Column(name = "roles")
-  private Set<GrantedAuthority> roles;
-
-  // authentication, user details, security, etc.
-
   @Override
   public String getPassword() {
     return password;
@@ -48,7 +44,7 @@ public class Student implements UserDetails {
 
   @Override
   public Collection<GrantedAuthority> getAuthorities() {
-    return this.roles;
+    return Set.of(new SimpleGrantedAuthority("USER"));
   }
 
   @Override
