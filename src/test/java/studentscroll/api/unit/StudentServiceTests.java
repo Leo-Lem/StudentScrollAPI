@@ -1,6 +1,7 @@
 package studentscroll.api.unit;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.*;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.val;
+import studentscroll.api.students.data.Student;
 import studentscroll.api.students.data.StudentRepository;
 import studentscroll.api.students.services.StudentService;
 
@@ -37,6 +39,9 @@ public class StudentServiceTests {
 
     when(repo.existsByEmail(email))
         .thenReturn(false);
+
+    when(repo.save(any(Student.class)))
+        .thenAnswer(i -> i.getArguments()[0]);
 
     val student = service.create(name, email, password);
 
