@@ -22,12 +22,12 @@ public class UserDetailsServiceImplTests {
   private UserDetailsServiceImpl service;
 
   @BeforeEach
-  void setUp() {
+  public void setUp() {
     MockitoAnnotations.openMocks(this);
   }
 
   @Test
-  void givenUserExists_whenLoadingByEmail_thenDoesNotThrow() {
+  public void givenUserExists_whenLoadingByEmail_thenDoesNotThrow() {
     String existingEmail = "abc@xyz.com";
 
     when(repo.findByEmail(existingEmail))
@@ -37,7 +37,7 @@ public class UserDetailsServiceImplTests {
   }
 
   @Test
-  void givenUserDoesNotExist_whenLoadingByEmail_thenThrowsUserNotFound() {
+  public void givenUserDoesNotExist_whenLoadingByEmail_thenThrowsUserNotFound() {
     String nonExistingEmail = "abc@xyz.com";
 
     when(repo.findByEmail(nonExistingEmail))

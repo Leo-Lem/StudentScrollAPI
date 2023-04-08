@@ -24,7 +24,7 @@ public class StudentServiceTests {
   private StudentService service;
 
   @BeforeEach
-  void setUp() {
+  public void setUp() {
     MockitoAnnotations.openMocks(this);
   }
 

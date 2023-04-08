@@ -51,6 +51,7 @@ public class SecurityConfiguration {
     return security
         .csrf().disable()
         .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.POST, "/students").permitAll()
             .requestMatchers(HttpMethod.POST, "/signin").permitAll()
             .anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())

@@ -33,12 +33,12 @@ public class SigninRestControllerTests {
   private SigninRestController controller;
 
   @BeforeEach
-  void setUp() {
+  public void setUp() {
     MockitoAnnotations.openMocks(this);
   }
 
   @Test
-  public void givenCrendentialsAreValid_whenRequestIsReceived_thenReturnsSomeJWT() {
+  public void givenCrendentialsAreValid_whenRequestIsReceived_thenReturns200AndSomeJWT() {
     String email = "abc@xyz.com", password = "1234";
     val details = Student.builder().email(email).password(password).build();
     val request = new SigninRequest(email, password);
