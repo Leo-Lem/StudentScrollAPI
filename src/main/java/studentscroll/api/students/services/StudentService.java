@@ -20,11 +20,7 @@ public class StudentService {
     if (repo.existsByEmail(email))
       throw new EntityExistsException();
 
-    return repo.save(Student.builder()
-        .email(email)
-        .password(passwordEncoder.encode(password))
-        .profile(new Profile(name))
-        .build());
+    return repo.save(new Student(email, passwordEncoder.encode(password), new Profile(name)));
   }
 
 }

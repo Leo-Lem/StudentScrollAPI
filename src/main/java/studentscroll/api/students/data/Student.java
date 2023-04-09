@@ -1,5 +1,6 @@
 package studentscroll.api.students.data;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -12,8 +13,8 @@ import lombok.*;
 @Entity(name = "student")
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Student implements UserDetails {
 
   @Id
@@ -28,13 +29,20 @@ public class Student implements UserDetails {
   @NonNull
   private String password;
 
-  @Embedded
-  @Builder.Default
-  private Profile profile = new Profile();
+  @Column(name = "registeredOn")
+  private LocalDate registeredOn = LocalDate.now();
 
   @Embedded
-  @Builder.Default
+  @NonNull
+  private Profile profile;
+
+  @Embedded
   private Settings settings = new Settings();
+
+  public Student setId(Long newId) {
+    id = newId;
+    return this;
+  }
 
   @Override
   public String getPassword() {

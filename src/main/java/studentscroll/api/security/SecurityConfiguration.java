@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,14 +13,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import studentscroll.api.security.auth.UserDetailsServiceImpl;
+import studentscroll.api.security.authz.IsStudentAuthorizationManager;
 import studentscroll.api.security.authz.JWTFilter;
 
 @Configuration
-@EnableMethodSecurity
 public class SecurityConfiguration {
 
   @Autowired
   private UserDetailsServiceImpl userDetailsService;
+
+  @Autowired
+  private IsStudentAuthorizationManager isStudentAuthz;
 
   @Bean
   public JWTFilter jwtFilter() {
@@ -53,6 +55,8 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.POST, "/students").permitAll()
             .requestMatchers(HttpMethod.POST, "/signin").permitAll()
+            .requestMatchers(HttpMethod.PUT, "/students/{studentID}/**").access(isStudentAuthz)
+            .requestMatchers(HttpMethod.GET, "/students/{studentID}/profile").authenticated()
             .anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())
         .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
