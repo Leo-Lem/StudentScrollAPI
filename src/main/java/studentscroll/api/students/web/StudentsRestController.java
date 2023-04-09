@@ -35,8 +35,7 @@ public class StudentsRestController {
 
   @Operation(summary = "Create a new student.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created the student.", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class)) }),
+      @ApiResponse(responseCode = "201", description = "Created the student.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class))),
       @ApiResponse(responseCode = "409", description = "Email is already in use.", content = @Content) })
   @PostMapping
   public ResponseEntity<?> registerStudent(@RequestBody CreateStudentRequest request) {
@@ -55,8 +54,7 @@ public class StudentsRestController {
 
   @Operation(summary = "Find the profile of the student.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the profile.", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class)) }),
+      @ApiResponse(responseCode = "200", description = "Found the profile.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class))),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @GetMapping("/{studentId}/profile")
@@ -70,8 +68,7 @@ public class StudentsRestController {
 
   @Operation(summary = "Update the profile of the student.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the profile.", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class)) }),
+      @ApiResponse(responseCode = "200", description = "Updated the profile.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class))),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
   @SecurityRequirement(name = "student themself")
   @PutMapping("/{studentId}/profile")

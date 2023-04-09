@@ -121,12 +121,19 @@ public class PostsRestControllerTests {
 
   @Test
   public void givenPostExists_whenDeletingById_thenReturns200() {
+    Long postId = 1L;
 
+    assertEquals(HttpStatusCode.valueOf(204), controller.delete(postId).getStatusCode());
   }
 
   @Test
   public void givenPostDoesNotExist_whenDeletingById_thenReturns404() {
+    Long postId = 1L;
 
+    doThrow(new EntityNotFoundException())
+        .when(service).delete(postId);
+
+    assertEquals(HttpStatusCode.valueOf(404), controller.delete(postId).getStatusCode());
   }
 
   private ContentPost exampleContentPost() {

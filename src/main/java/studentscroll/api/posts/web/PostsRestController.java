@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -90,9 +91,18 @@ public class PostsRestController {
     }
   }
 
+  @Operation(summary = "Delete the post.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Deleted the post.", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
   @DeleteMapping("/{postId}")
   public ResponseEntity<?> delete(@PathVariable Long postId) {
-    return ResponseEntity.internalServerError().body("Unimplemented");
+    try {
+      service.delete(postId);
+      return ResponseEntity.noContent().build();
+    } catch (EntityNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
 }

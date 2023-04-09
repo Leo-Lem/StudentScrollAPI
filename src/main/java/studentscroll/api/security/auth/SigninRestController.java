@@ -30,8 +30,7 @@ public class SigninRestController {
 
   @Operation(summary = "Sign in to receive JWT.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT.", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = JWTResponse.class)) }),
+      @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JWTResponse.class))),
       @ApiResponse(responseCode = "401", description = "Credentials not accepted.", content = @Content) })
   @PostMapping
   public ResponseEntity<?> signin(@Validated @RequestBody SigninRequest request) {
