@@ -10,6 +10,7 @@ import org.mockito.*;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
@@ -20,13 +21,7 @@ import studentscroll.api.shared.Location;
 public class PostsRestControllerTests {
 
   @Mock
-  private PostService postService;
-
-  @Mock
-  private EventPostService eventPostService;
-
-  @Mock
-  private ContentPostService contentPostService;
+  private PostService service;
 
   @InjectMocks
   private PostsRestController controller;
@@ -43,7 +38,7 @@ public class PostsRestControllerTests {
         post.getPosterId(), post.getTitle(), post.getTags().toArray(new String[] {}),
         null, null, null, post.getContent());
 
-    when(contentPostService.create(anyLong(), any(), any(), any()))
+    when(service.create(anyLong(), any(), any(), any()))
         .thenReturn(post);
 
     ResponseEntity<?> response = controller.create(request);
@@ -69,12 +64,24 @@ public class PostsRestControllerTests {
 
   @Test
   public void givenPostExist_whenReadingById_thenReturns200() {
+    Long postId = 1L;
 
+    when(service.read(postId))
+        .thenReturn(exampleEventPost());
+
+    val response = controller.read(postId);
+    assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+    assertTrue(response.hasBody());
   }
 
   @Test
   public void givenPostDoesNotExist_whenReadingById_thenReturns404() {
+    Long postId = 1L;
 
+    when(service.read(postId))
+        .thenThrow(new EntityNotFoundException());
+
+    assertEquals(HttpStatusCode.valueOf(404), controller.read(postId).getStatusCode());
   }
 
   @Test

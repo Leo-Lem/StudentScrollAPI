@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
 import studentscroll.api.posts.data.*;
@@ -25,13 +26,7 @@ import studentscroll.api.posts.web.dto.*;
 public class PostsRestController {
 
   @Autowired
-  private PostService postService;
-
-  @Autowired
-  private EventPostService eventPostService;
-
-  @Autowired
-  private ContentPostService contentPostService;
+  private PostService service;
 
   @Operation(summary = "Create a new post.")
   @ApiResponses(value = {
@@ -48,11 +43,11 @@ public class PostsRestController {
     PostResponse response;
 
     if (type.equals(EventPost.class))
-      response = new PostResponse(eventPostService.create(
+      response = new PostResponse(service.create(
           request.getPosterId(), request.getTitle(), request.getDescription(),
           request.getDate(), request.getLocation(), Set.of(request.getTags())));
     else // if (type.equals(ContentPost.class))
-      response = new PostResponse(contentPostService.create(
+      response = new PostResponse(service.create(
           request.getPosterId(), request.getTitle(), request.getContent(), Set.of(request.getTags())));
 
     try {
@@ -62,9 +57,18 @@ public class PostsRestController {
     }
   }
 
+  @Operation(summary = "Find the post.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Found the post.", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class)) }),
+      @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
   @GetMapping("/{postId}")
   public ResponseEntity<?> read(@PathVariable Long postId) {
-    return ResponseEntity.internalServerError().body("Unimplemented");
+    try {
+      return ResponseEntity.ok(new PostResponse(service.read(postId)));
+    } catch (EntityNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @PutMapping("/{postId}")

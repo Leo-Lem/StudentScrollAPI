@@ -29,16 +29,27 @@ public class PostResponse {
 
   private final String content;
 
-  public PostResponse(EventPost post) {
-    this(post.getId(),
-        post.getPosterId(), post.getTitle(), post.getTags().toArray(new String[] {}),
-        post.getDescription(), post.getDate(), post.getLocation(), null);
-  }
+  public PostResponse(Post post) {
+    this.id = post.getId();
+    this.posterId = post.getPosterId();
+    this.title = post.getTitle();
+    this.tags = post.getTags().toArray(new String[] {});
 
-  public PostResponse(ContentPost post) {
-    this(post.getId(),
-        post.getPosterId(), post.getTitle(), post.getTags().toArray(new String[] {}),
-        null, null, null, post.getContent());
+    if (post instanceof EventPost) {
+      EventPost eventPost = (EventPost) post;
+      this.description = eventPost.getDescription();
+      this.date = eventPost.getDate();
+      this.location = eventPost.getLocation();
+      this.content = null;
+    } else if (post instanceof ContentPost) {
+      ContentPost contentPost = (ContentPost) post;
+      this.description = null;
+      this.date = null;
+      this.location = null;
+      this.content = contentPost.getContent();
+    } else {
+      throw new IllegalArgumentException("Invalid post type");
+    }
   }
 
 }
