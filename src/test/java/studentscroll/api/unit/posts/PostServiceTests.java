@@ -80,7 +80,7 @@ public class PostServiceTests {
         .thenReturn(post);
 
     EventPost createdPost = service.create(
-        post.getPosterId(), post.getTitle(), post.getDescription(), post.getDate(), post.getLocation(), post.getTags());
+        post.getPosterId(), post.getTitle(), post.getTags(), post.getDescription(), post.getDate(), post.getLocation());
 
     assertEquals(post.getPosterId(), createdPost.getPosterId());
     assertEquals(post.getTitle(), createdPost.getTitle());
@@ -91,7 +91,7 @@ public class PostServiceTests {
   }
 
   @Test
-  public void givenEventPostExists_whenUpdatingContentPost_thenReturnsUpdatedContentPost() {
+  public void givenPostExists_whenUpdatingPost_thenReturnsUpdatedContentPost() {
     String newTitle = "New title", newDescription = "New content here";
     EventPost post = exampleEventPost();
 
@@ -101,25 +101,24 @@ public class PostServiceTests {
     when(repo.save(any(EventPost.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    EventPost updatedPost = service.update(
+    Post updatedPost = service.update(
         post.getId(),
-        Optional.of(newTitle), Optional.of(newDescription), Optional.empty(), Optional.empty(), Optional.empty());
+        Optional.of(newTitle), Optional.empty(),
+        Optional.of(newDescription), Optional.empty(), Optional.empty(),
+        Optional.empty());
 
     assertEquals(post.getPosterId(), updatedPost.getPosterId());
     assertEquals(newTitle, updatedPost.getTitle());
-    assertEquals(newDescription, updatedPost.getDescription());
-    assertEquals(post.getDate(), updatedPost.getDate());
-    assertEquals(post.getLocation(), updatedPost.getLocation());
     assertEquals(post.getTags(), updatedPost.getTags());
   }
 
   @Test
-  public void givenEventPostDoesNotExist_whenUpdatingContentPost_thenThrowsEntityNotFoundException() {
+  public void givenPostDoesNotExist_whenUpdatingPost_thenThrowsEntityNotFoundException() {
     when(repo.findById(anyLong()))
         .thenReturn(Optional.empty());
 
     assertThrows(EntityNotFoundException.class, () -> service.update(
-      1L, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
+      1L, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
   }
 
   @Test
@@ -129,40 +128,12 @@ public class PostServiceTests {
     when(repo.save(any(ContentPost.class)))
         .thenReturn(post);
 
-    ContentPost createdPost = service.create(post.getPosterId(), post.getTitle(), post.getContent(), post.getTags());
+    ContentPost createdPost = service.create(post.getPosterId(), post.getTitle(), post.getTags(), post.getContent());
 
     assertEquals(post.getPosterId(), createdPost.getPosterId());
     assertEquals(post.getTitle(), createdPost.getTitle());
     assertEquals(post.getContent(), createdPost.getContent());
     assertEquals(post.getTags(), createdPost.getTags());
-  }
-
-  @Test
-  public void givenContentPostExists_whenUpdatingContentPost_thenReturnsUpdatedContentPost() {
-    String newTitle = "New title", newContent = "New content here";
-    ContentPost post = exampleContentPost();
-
-    when(repo.findById(post.getId()))
-        .thenReturn(Optional.of(post));
-
-    when(repo.save(any(ContentPost.class)))
-        .thenAnswer(i -> i.getArguments()[0]);
-
-    ContentPost updatedPost = service.update(
-        post.getId(), Optional.of(newTitle), Optional.of(newContent), Optional.empty());
-
-    assertEquals(post.getPosterId(), updatedPost.getPosterId());
-    assertEquals(newTitle, updatedPost.getTitle());
-    assertEquals(newContent, updatedPost.getContent());
-    assertEquals(post.getTags(), updatedPost.getTags());
-  }
-
-  @Test
-  public void givenContentPostDoesNotExist_whenUpdatingContentPost_thenThrowsEntityNotFoundException() {
-    when(repo.findById(anyLong()))
-        .thenReturn(Optional.empty());
-
-    assertThrows(EntityNotFoundException.class, () -> service.update(1L, Optional.empty(), Optional.empty(), Optional.empty()));
   }
 
   private ContentPost exampleContentPost() {

@@ -16,8 +16,49 @@ public class PostService {
   @Autowired
   protected PostRepository repo;
 
+  public EventPost create(
+      Long posterId, String title, Set<String> tags,
+      String description, LocalDate date, Location location) {
+    return repo.save(new EventPost(posterId, title, tags, description, date, location));
+  }
+
+  public ContentPost create(Long posterId, String title, Set<String> tags, String content) {
+    return repo.save(new ContentPost(posterId, title, tags, content));
+  }
+
   public Post read(Long postID) throws EntityNotFoundException {
     return repo.findById(postID).orElseThrow(() -> new EntityNotFoundException());
+  }
+
+  public Post update(
+      Long postID,
+      Optional<String> newTitle,
+      Optional<Set<String>> newTags,
+      Optional<String> newDescription,
+      Optional<LocalDate> newDate,
+      Optional<Location> newLocation,
+      Optional<String> newContent) throws EntityNotFoundException {
+    try {
+      final Post post = read(postID);
+
+      newTitle.ifPresent(unwrapped -> post.setTitle(unwrapped));
+      newTags.ifPresent(unwrapped -> post.setTags(unwrapped));
+
+      if (post instanceof EventPost) {
+        EventPost eventPost = (EventPost) post;
+        newDescription.ifPresent(unwrapped -> eventPost.setDescription(unwrapped));
+        newDate.ifPresent(unwrapped -> eventPost.setDate(unwrapped));
+        newLocation.ifPresent(unwrapped -> eventPost.setLocation(unwrapped));
+        return repo.save(eventPost);
+      } else if (post instanceof ContentPost) {
+        ContentPost contentPost = (ContentPost) post;
+        newContent.ifPresent(unwrapped -> contentPost.setContent(unwrapped));
+        return repo.save(contentPost);
+      } else
+        return repo.save(post);
+    } catch (ClassCastException e) {
+      throw new EntityNotFoundException("Updated post is of wrong type.");
+    }
   }
 
   public void delete(Long postID) throws EntityNotFoundException {
@@ -25,53 +66,6 @@ public class PostService {
       throw new EntityNotFoundException();
 
     repo.deleteById(postID);
-  }
-
-  public EventPost create(
-      Long posterId, String title, String description, LocalDate date, Location location, Set<String> tags) {
-    return repo.save(new EventPost(posterId, title, tags, description, date, location));
-  }
-
-  public EventPost update(
-      Long postID,
-      Optional<String> newTitle,
-      Optional<String> newDescription,
-      Optional<LocalDate> newDate,
-      Optional<Location> newLocation,
-      Optional<Set<String>> newTags) throws EntityNotFoundException {
-    EventPost post;
-
-    if ((post = (EventPost) repo.findById(postID).orElse(null)) == null)
-      throw new EntityNotFoundException();
-
-    newTitle.ifPresent(unwrapped -> post.setTitle(unwrapped));
-    newDescription.ifPresent(unwrapped -> post.setDescription(unwrapped));
-    newDate.ifPresent(unwrapped -> post.setDate(unwrapped));
-    newLocation.ifPresent(unwrapped -> post.setLocation(unwrapped));
-    newTags.ifPresent(unwrapped -> post.setTags(unwrapped));
-
-    return repo.save(post);
-  }
-
-  public ContentPost create(Long posterId, String title, String content, Set<String> tags) {
-    return repo.save(new ContentPost(posterId, title, tags, content));
-  }
-
-  public ContentPost update(
-      Long postID,
-      Optional<String> newTitle,
-      Optional<String> newContent,
-      Optional<Set<String>> newTags) throws EntityNotFoundException {
-    ContentPost post;
-
-    if ((post = (ContentPost) repo.findById(postID).orElse(null)) == null)
-      throw new EntityNotFoundException();
-
-    newTitle.ifPresent(unwrapped -> post.setTitle(unwrapped));
-    newContent.ifPresent(unwrapped -> post.setContent(unwrapped));
-    newTags.ifPresent(unwrapped -> post.setTags(unwrapped));
-
-    return repo.save(post);
   }
 
 }

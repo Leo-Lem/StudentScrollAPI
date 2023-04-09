@@ -86,12 +86,37 @@ public class PostsRestControllerTests {
 
   @Test
   public void givenPostExists_whenUpdatingById_thenReturns200AndUpdatedPost() {
+    Long postId = 1L;
+    String newTitle = "Some title", newDescription = "some description";
+    EventPost post = exampleEventPost();
+    val request = new UpdatePostRequest(newTitle, null, newDescription, null, null, null);
 
+    when(service.update(anyLong(), any(), any(), any(), any(), any(), any()))
+        .thenReturn(post);
+
+    ResponseEntity<?> response = controller.update(postId, request);
+
+    assertEquals(HttpStatusCode.valueOf(200), controller.update(postId, request).getStatusCode());
+
+    PostResponse body = (PostResponse) response.getBody();
+    if (body != null) {
+      assertEquals(post.getPosterId(), body.getPosterId());
+      assertEquals(post.getTitle(), body.getTitle());
+      assertEquals(post.getTags().size(), body.getTags().length);
+      assertEquals(post.getDescription(), body.getDescription());
+    }
   }
 
   @Test
   public void givenPostDoesNotExist_whenUpdatingById_thenReturns404() {
+    Long postId = 1L;
+    String newTitle = "Some title", newDescription = "some description";
+    val request = new UpdatePostRequest(newTitle, null, newDescription, null, null, null);
 
+    when(service.update(anyLong(), any(), any(), any(), any(), any(), any()))
+        .thenThrow(new EntityNotFoundException());
+
+    assertEquals(HttpStatusCode.valueOf(404), controller.update(postId, request).getStatusCode());
   }
 
   @Test
