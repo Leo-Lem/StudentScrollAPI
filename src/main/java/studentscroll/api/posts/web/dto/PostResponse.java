@@ -10,7 +10,6 @@ import studentscroll.api.shared.Location;
 @RequiredArgsConstructor
 public class PostResponse {
 
-  @NonNull
   private final Long id;
 
   @NonNull

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,7 +25,7 @@ public class StudentsRestController {
   // private SettingsService settingsService;
 
   @PostMapping
-  public ResponseEntity<?> registerUser(@Validated @RequestBody CreateStudentRequest request) {
+  public ResponseEntity<?> registerStudent(@RequestBody CreateStudentRequest request) {
     try {
       val student = studentService.create(request.getName(), request.getEmail(), request.getPassword());
       val response = new StudentResponse(student);
@@ -38,21 +37,20 @@ public class StudentsRestController {
     }
   }
 
-  @GetMapping("/{studentID}/profile")
-  public ResponseEntity<?> findProfile(@PathVariable Long studentID) {
+  @GetMapping("/{studentId}/profile")
+  public ResponseEntity<?> readProfile(@PathVariable Long studentId) {
     try {
-      return ResponseEntity.ok().body(new ProfileResponse(profileService.read(studentID)));
+      return ResponseEntity.ok().body(new ProfileResponse(profileService.read(studentId)));
     } catch (EntityNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
   }
 
-  @PutMapping("/{studentID}/profile")
-  public ResponseEntity<?> updateProfile(
-      @PathVariable Long studentID, @Validated @RequestBody UpdateProfileRequest request) {
+  @PutMapping("/{studentId}/profile")
+  public ResponseEntity<?> updateProfile(@PathVariable Long studentId, @RequestBody UpdateProfileRequest request) {
     try {
       val profile = profileService.update(
-          studentID,
+          studentId,
           Optional.ofNullable(request.getNewName()),
           Optional.ofNullable(request.getNewBio()),
           Optional.ofNullable(request.getNewIcon()),

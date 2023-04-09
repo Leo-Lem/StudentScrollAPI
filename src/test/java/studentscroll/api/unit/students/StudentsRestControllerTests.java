@@ -42,7 +42,7 @@ public class StudentsRestControllerTests {
     when(studentService.create(name, email, password))
         .thenReturn(new Student(email, "abc123", new Profile(name)).setId(1L));
 
-    ResponseEntity<?> response = controller.registerUser(request);
+    ResponseEntity<?> response = controller.registerStudent(request);
 
     assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
     StudentResponse body = (StudentResponse) response.getBody();
@@ -61,7 +61,7 @@ public class StudentsRestControllerTests {
     when(studentService.create("", email, ""))
         .thenThrow(new EntityExistsException());
 
-    ResponseEntity<?> response = controller.registerUser(request);
+    ResponseEntity<?> response = controller.registerStudent(request);
 
     assertEquals(HttpStatusCode.valueOf(409), response.getStatusCode());
   }
@@ -74,7 +74,7 @@ public class StudentsRestControllerTests {
     when(profileService.read(studentID))
         .thenReturn(profile);
 
-    ResponseEntity<?> response = controller.findProfile(studentID);
+    ResponseEntity<?> response = controller.readProfile(studentID);
 
     assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     assertNotNull((ProfileResponse) response.getBody());
@@ -87,7 +87,7 @@ public class StudentsRestControllerTests {
     when(profileService.read(studentID))
         .thenThrow(new EntityNotFoundException());
 
-    ResponseEntity<?> response = controller.findProfile(studentID);
+    ResponseEntity<?> response = controller.readProfile(studentID);
 
     assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
   }

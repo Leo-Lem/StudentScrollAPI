@@ -36,7 +36,7 @@ public class CreatePostRequest {
     else if (content != null)
       return ContentPost.class;
     else
-      throw new TypeMismatchException("Unknown post type.");
+      return null;
   }
 
 }
