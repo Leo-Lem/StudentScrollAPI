@@ -6,10 +6,10 @@ import studentscroll.api.shared.Location;
 @Data
 public class UpdateProfileRequest {
 
-  private final String name;
-  private final String bio;
-  private final String icon;
-  private final String[] interests;
-  private final Location location;
+  private final String newName;
+  private final String newBio;
+  private final String newIcon;
+  private final String[] newInterests;
+  private final Location newLocation;
 
 }

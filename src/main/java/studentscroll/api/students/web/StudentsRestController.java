@@ -53,11 +53,11 @@ public class StudentsRestController {
     try {
       val profile = profileService.update(
           studentID,
-          Optional.ofNullable(request.getName()),
-          Optional.ofNullable(request.getBio()),
-          Optional.ofNullable(request.getIcon()),
-          Optional.ofNullable(request.getInterests()).map(Set::of),
-          Optional.ofNullable(request.getLocation()));
+          Optional.ofNullable(request.getNewName()),
+          Optional.ofNullable(request.getNewBio()),
+          Optional.ofNullable(request.getNewIcon()),
+          Optional.ofNullable(request.getNewInterests()).map(Set::of),
+          Optional.ofNullable(request.getNewLocation()));
 
       return ResponseEntity.ok().body(new ProfileResponse(profile));
     } catch (EntityNotFoundException e) {
