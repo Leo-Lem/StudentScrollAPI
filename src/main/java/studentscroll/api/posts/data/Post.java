@@ -11,25 +11,29 @@ import studentscroll.api.students.data.Student;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "post_type", discriminatorType = DiscriminatorType.STRING)
 @Data
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class Post {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @Column(name = "title")
-  @NonNull
-  private String name;
+  @Column(name = "poster_id")
+  private final Long posterId;
 
   @Column(name = "timestamp")
-  private LocalDate timestamp = LocalDate.now();
+  private final LocalDate timestamp = LocalDate.now();
+
+  @Column(name = "title")
+  @NonNull
+  private String title;
 
   @Column(name = "tags")
-  private Set<String> interests = new HashSet<>();
+  @NonNull
+  private Set<String> tags;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "student_id", nullable = false)
+  @JoinColumn(name = "poster_id", nullable = false, insertable = false, updatable = false)
+  @ManyToOne
   private Student poster;
 
 }
