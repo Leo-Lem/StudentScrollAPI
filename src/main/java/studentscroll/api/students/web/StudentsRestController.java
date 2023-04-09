@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.val;
+import jakarta.persistence.*;
+import lombok.*;
 import studentscroll.api.students.services.*;
 import studentscroll.api.students.web.dto.*;
 

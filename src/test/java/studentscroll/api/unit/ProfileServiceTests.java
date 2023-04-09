@@ -114,10 +114,7 @@ public class ProfileServiceTests {
         """
             Cletus Delroy Montfort Bigglesworth Spuckler, also known as Cletus the Slack-Jawed Yokel,
             is a stereotypical redneck with a good-natured personality. He is thin and is usually
-            portrayed wearing a pair of jeans and an undershirt. He resides with his family on
-            Rural Route 9 in Springfield. He is married to Brandine Spuckler, and it is heavily implied
-            throughout the series that they are also brother and sister
-            or in some way related (possibly cousins), making their children together inbred.
+            portrayed wearing a pair of jeans and an undershirt.
             """,
         "PIGS",
         Set.of("farming", "construction", "redneck"),

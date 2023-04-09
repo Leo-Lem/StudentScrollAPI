@@ -8,15 +8,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
 
-import studentscroll.api.students.data.Student;
+import lombok.val;
+import studentscroll.api.students.data.*;
 
 @Component
-public class UserIDAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+public class IsStudentAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    Long principalID = ((Student) supplier.get().getPrincipal()).getId();
-    Long requestID = Long.parseLong(context.getVariables().get("userID"));
+    val principalID = ((Student) supplier.get().getPrincipal()).getId();
+    val requestID = Long.parseLong(context.getVariables().get("studentID"));
 
     return new AuthorizationDecision(principalID.equals(requestID));
   }
