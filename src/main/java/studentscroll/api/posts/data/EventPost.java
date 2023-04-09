@@ -4,15 +4,21 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 import lombok.*;
+import studentscroll.api.shared.Location;
 
 @Entity
 @DiscriminatorValue("event")
 @Getter
-@Setter
+@NoArgsConstructor
 public class EventPost extends Post {
 
+  @Column(name = "description")
   private String description;
+
+  @Column(name = "date")
   private LocalDate date;
-  // private Location location;
+
+  @Embedded
+  private Location location;
 
 }

@@ -6,9 +6,10 @@ import lombok.*;
 @Entity
 @DiscriminatorValue("content")
 @Getter
-@Setter
+@NoArgsConstructor
 public class ContentPost extends Post {
 
+  @Column(name = "content")
   private String content;
 
 }

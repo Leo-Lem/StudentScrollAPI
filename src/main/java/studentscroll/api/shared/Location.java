@@ -1,19 +1,21 @@
 package studentscroll.api.shared;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Embeddable
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Location {
 
-  @Column(name = "description")
-  private final String description;
+  @Column(name = "location_name")
+  private String name;
 
   @Column(name = "latitude")
-  private final Double latitude;
+  private Double latitude;
 
   @Column(name = "longitude")
-  private final Double longitude;
+  private Double longitude;
 
 }

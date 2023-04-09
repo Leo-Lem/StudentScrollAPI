@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import lombok.*;
+import studentscroll.api.posts.data.Post;
 
 @Entity(name = "student")
 @Data
@@ -38,6 +39,9 @@ public class Student implements UserDetails {
 
   @Embedded
   private Settings settings = new Settings();
+
+  @OneToMany(mappedBy = "poster")
+  private Set<Post> posts;
 
   public Student setId(Long newId) {
     id = newId;
