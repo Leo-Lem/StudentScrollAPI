@@ -11,6 +11,7 @@ import studentscroll.api.students.data.Student;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "post_type", discriminatorType = DiscriminatorType.STRING)
 @Data
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class Post {
 
@@ -19,7 +20,8 @@ public class Post {
   private Long id;
 
   @Column(name = "poster_id")
-  private final Long posterId;
+  @NonNull
+  private Long posterId;
 
   @Column(name = "timestamp")
   private final LocalDate timestamp = LocalDate.now();

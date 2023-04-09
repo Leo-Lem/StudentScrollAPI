@@ -10,6 +10,7 @@ import studentscroll.api.shared.Location;
 @Entity
 @DiscriminatorValue("event")
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class EventPost extends Post {
 

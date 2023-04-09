@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +37,8 @@ public class PostsRestController {
   public ResponseEntity<?> create(@RequestBody CreatePostRequest request) {
     val type = request.getType();
 
+    System.out.println(type);
+
     if (type == null)
       return ResponseEntity.badRequest().body("Cannot resolve to post type");
 
@@ -47,7 +48,7 @@ public class PostsRestController {
       response = new PostResponse(service.create(
           request.getPosterId(), request.getTitle(), Set.of(request.getTags()),
           request.getDescription(), request.getDate(), request.getLocation()));
-    else // if (type.equals(ContentPost.class))
+    else
       response = new PostResponse(service.create(
           request.getPosterId(), request.getTitle(), Set.of(request.getTags()), request.getContent()));
 

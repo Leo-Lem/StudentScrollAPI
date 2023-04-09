@@ -29,7 +29,7 @@ public class CreatePostRequest {
   private final String content;
 
   public Class<? extends Post> getType() {
-    if (description != null && date != null && location == null)
+    if (description != null && date != null && location != null)
       return EventPost.class;
     else if (content != null)
       return ContentPost.class;
