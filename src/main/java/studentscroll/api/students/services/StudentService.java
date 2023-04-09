@@ -29,7 +29,8 @@ public class StudentService {
     return repo.save(new Student(email, passwordEncoder.encode(password), new Profile(name)));
   }
 
-  public Student read(@NonNull Long studentId) throws EntityNotFoundException {
+  public Student read(
+      @NonNull Long studentId) throws EntityNotFoundException {
     return repo
         .findById(studentId)
         .orElseThrow(() -> new EntityNotFoundException());
@@ -45,7 +46,8 @@ public class StudentService {
     return repo.save(student);
   }
 
-  public void delete(@NonNull Long studentId) throws EntityNotFoundException {
+  public void delete(
+      @NonNull Long studentId) throws EntityNotFoundException {
     if (!repo.existsById(studentId))
       throw new EntityNotFoundException();
 

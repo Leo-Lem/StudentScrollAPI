@@ -21,11 +21,15 @@ public class PostResponse {
   @NonNull
   private final String[] tags;
 
+  // event posts
+
   private final String description;
 
   private final LocalDate date;
 
   private final Location location;
+
+  // content posts
 
   private final String content;
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.NonNull;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.Location;
 
@@ -17,27 +18,36 @@ public class PostService {
   protected PostRepository repo;
 
   public EventPost create(
-      Long posterId, String title, Set<String> tags,
-      String description, LocalDate date, Location location) {
+      @NonNull Long posterId,
+      @NonNull String title,
+      @NonNull Set<String> tags,
+      @NonNull String description,
+      @NonNull LocalDate date,
+      @NonNull Location location) {
     return repo.save(new EventPost(posterId, title, tags, description, date, location));
   }
 
-  public ContentPost create(Long posterId, String title, Set<String> tags, String content) {
+  public ContentPost create(
+      @NonNull Long posterId,
+      @NonNull String title,
+      @NonNull Set<String> tags,
+      @NonNull String content) {
     return repo.save(new ContentPost(posterId, title, tags, content));
   }
 
-  public Post read(Long postID) throws EntityNotFoundException {
+  public Post read(
+      @NonNull Long postID) throws EntityNotFoundException {
     return repo.findById(postID).orElseThrow(() -> new EntityNotFoundException());
   }
 
   public Post update(
-      Long postID,
-      Optional<String> newTitle,
-      Optional<Set<String>> newTags,
-      Optional<String> newDescription,
-      Optional<LocalDate> newDate,
-      Optional<Location> newLocation,
-      Optional<String> newContent) throws EntityNotFoundException {
+      @NonNull Long postID,
+      @NonNull Optional<String> newTitle,
+      @NonNull Optional<Set<String>> newTags,
+      @NonNull Optional<String> newDescription,
+      @NonNull Optional<LocalDate> newDate,
+      @NonNull Optional<Location> newLocation,
+      @NonNull Optional<String> newContent) throws EntityNotFoundException {
     try {
       final Post post = read(postID);
 
@@ -61,7 +71,8 @@ public class PostService {
     }
   }
 
-  public void delete(Long postID) throws EntityNotFoundException {
+  public void delete(
+      @NonNull Long postID) throws EntityNotFoundException {
     if (!repo.existsById(postID))
       throw new EntityNotFoundException();
 

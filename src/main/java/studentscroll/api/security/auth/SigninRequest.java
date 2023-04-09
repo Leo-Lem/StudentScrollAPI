@@ -6,9 +6,9 @@ import lombok.*;
 public class SigninRequest {
 
   @NonNull
-  private String email;
+  private final String email;
 
   @NonNull
-  private String password;
+  private final String password;
 
 }
