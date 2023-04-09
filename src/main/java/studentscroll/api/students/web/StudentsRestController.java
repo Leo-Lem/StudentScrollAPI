@@ -41,7 +41,7 @@ public class StudentsRestController {
   @GetMapping("/{studentID}/profile")
   public ResponseEntity<?> findProfile(@PathVariable Long studentID) {
     try {
-      return ResponseEntity.ok().body(new ProfileResponse(profileService.readProfile(studentID)));
+      return ResponseEntity.ok().body(new ProfileResponse(profileService.read(studentID)));
     } catch (EntityNotFoundException e) {
       return ResponseEntity.notFound().build();
     }
@@ -51,7 +51,7 @@ public class StudentsRestController {
   public ResponseEntity<?> updateProfile(
       @PathVariable Long studentID, @Validated @RequestBody UpdateProfileRequest request) {
     try {
-      val profile = profileService.updateProfile(
+      val profile = profileService.update(
           studentID,
           Optional.ofNullable(request.getName()),
           Optional.ofNullable(request.getBio()),

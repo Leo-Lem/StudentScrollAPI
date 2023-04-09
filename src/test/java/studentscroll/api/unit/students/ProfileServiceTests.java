@@ -34,7 +34,7 @@ public class ProfileServiceTests {
     when(repo.findById(student.getId()))
         .thenReturn(Optional.of(student));
 
-    Profile profile = service.readProfile(student.getId());
+    Profile profile = service.read(student.getId());
 
     assertEquals(example, profile);
   }
@@ -46,7 +46,7 @@ public class ProfileServiceTests {
     when(repo.findById(studentID))
         .thenReturn(Optional.empty());
 
-    assertThrows(EntityNotFoundException.class, () -> service.readProfile(studentID));
+    assertThrows(EntityNotFoundException.class, () -> service.read(studentID));
   }
 
   @Test
@@ -60,7 +60,7 @@ public class ProfileServiceTests {
     when(repo.save(any(Student.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    Profile profile = service.updateProfile(
+    Profile profile = service.update(
         student.getId(),
         Optional.of(example.getName()),
         Optional.of(example.getBio()),
@@ -86,7 +86,7 @@ public class ProfileServiceTests {
     when(repo.save(any(Student.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    Profile profile = service.updateProfile(
+    Profile profile = service.update(
         student.getId(),
         Optional.of(example.getName()),
         Optional.empty(),

@@ -13,15 +13,14 @@ public class ProfileService {
   @Autowired
   private StudentRepository repo;
 
-  public Profile readProfile(Long studentID) throws EntityNotFoundException {
-    Student student;
-    if ((student = repo.findById(studentID).orElse(null)) == null)
-      throw new EntityNotFoundException("Student does not exist.");
-
-    return student.getProfile();
+  public Profile read(Long studentID) throws EntityNotFoundException {
+    return repo
+        .findById(studentID)
+        .orElseThrow(() -> new EntityNotFoundException("Student does not exist."))
+        .getProfile();
   }
 
-  public Profile updateProfile(
+  public Profile update(
       Long studentID,
       Optional<String> name,
       Optional<String> bio,
@@ -29,9 +28,9 @@ public class ProfileService {
       Optional<Set<String>> interests,
       Optional<Location> location) throws EntityNotFoundException {
 
-    Student student;
-    if ((student = repo.findById(studentID).orElse(null)) == null)
-      throw new EntityNotFoundException("Student does not exist.");
+    Student student = repo
+        .findById(studentID)
+        .orElseThrow(() -> new EntityNotFoundException("Student does not exist."));
 
     Profile profile = student.getProfile();
     name.ifPresent(unwrapped -> profile.setName(unwrapped));

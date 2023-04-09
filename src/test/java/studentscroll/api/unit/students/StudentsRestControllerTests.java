@@ -71,7 +71,7 @@ public class StudentsRestControllerTests {
     val studentID = 1L;
     val profile = exampleProfile();
 
-    when(profileService.readProfile(studentID))
+    when(profileService.read(studentID))
         .thenReturn(profile);
 
     ResponseEntity<?> response = controller.findProfile(studentID);
@@ -84,7 +84,7 @@ public class StudentsRestControllerTests {
   public void givenStudentDoesNotExist_whenGettingProfile_thenReturns404() {
     val studentID = 1L;
 
-    when(profileService.readProfile(studentID))
+    when(profileService.read(studentID))
         .thenThrow(new EntityNotFoundException());
 
     ResponseEntity<?> response = controller.findProfile(studentID);
@@ -102,7 +102,7 @@ public class StudentsRestControllerTests {
         profile.getInterests().toArray(new String[] {}),
         profile.getLocation().orElse(null));
 
-    when(profileService.updateProfile(anyLong(), any(), any(), any(), any(), any()))
+    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(profile);
 
     ResponseEntity<?> response = controller.updateProfile(1L, request);
@@ -128,7 +128,7 @@ public class StudentsRestControllerTests {
     val updatedProfile = new Profile(
         name, profile.getBio(), icon, profile.getInterests(), profile.getLocation().orElse(null));
 
-    when(profileService.updateProfile(anyLong(), any(), any(), any(), any(), any()))
+    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(updatedProfile);
 
     ResponseEntity<?> response = controller.updateProfile(1L, request);
@@ -149,7 +149,7 @@ public class StudentsRestControllerTests {
   public void givenStudentDoesNotExist_whenUpdatingProfile_thenReturns404() {
     val studentID = 1L;
 
-    when(profileService.updateProfile(anyLong(), any(), any(), any(), any(), any()))
+    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
         .thenThrow(new EntityNotFoundException());
 
     ResponseEntity<?> response = controller.updateProfile(studentID,
