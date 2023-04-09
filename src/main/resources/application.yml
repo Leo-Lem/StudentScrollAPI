@@ -9,7 +9,7 @@ spring:
     properties.hibernate:
       jdbc.lob.non_contextual_creation: true
       dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create
     open-in-view: true
 
 springdoc:

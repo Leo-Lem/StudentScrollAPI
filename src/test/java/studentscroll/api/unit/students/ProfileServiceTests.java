@@ -1,15 +1,12 @@
-package studentscroll.api.unit;
+package studentscroll.api.unit.students;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-import java.util.Set;
-
+import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-
 import jakarta.persistence.EntityNotFoundException;
 import studentscroll.api.shared.Location;
 import studentscroll.api.students.data.*;
@@ -37,7 +34,7 @@ public class ProfileServiceTests {
     when(repo.findById(student.getId()))
         .thenReturn(Optional.of(student));
 
-    Profile profile = service.readProfile(student.getId());
+    Profile profile = service.read(student.getId());
 
     assertEquals(example, profile);
   }
@@ -49,7 +46,7 @@ public class ProfileServiceTests {
     when(repo.findById(studentID))
         .thenReturn(Optional.empty());
 
-    assertThrows(EntityNotFoundException.class, () -> service.readProfile(studentID));
+    assertThrows(EntityNotFoundException.class, () -> service.read(studentID));
   }
 
   @Test
@@ -63,7 +60,7 @@ public class ProfileServiceTests {
     when(repo.save(any(Student.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    Profile profile = service.updateProfile(
+    Profile profile = service.update(
         student.getId(),
         Optional.of(example.getName()),
         Optional.of(example.getBio()),
@@ -89,7 +86,7 @@ public class ProfileServiceTests {
     when(repo.save(any(Student.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    Profile profile = service.updateProfile(
+    Profile profile = service.update(
         student.getId(),
         Optional.of(example.getName()),
         Optional.empty(),

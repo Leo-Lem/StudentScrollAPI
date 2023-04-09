@@ -1,14 +1,23 @@
 package studentscroll.api.posts.data;
 
+import java.util.Set;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @DiscriminatorValue("content")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class ContentPost extends Post {
 
-  private String content;
+  @Column(name = "content")
+  @NonNull
+  private String content = "";
+
+  public ContentPost(Long posterId, String title, Set<String> tags, String content) {
+    super(posterId, title, tags);
+    this.content = content;
+  }
 
 }

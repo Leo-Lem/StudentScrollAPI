@@ -12,10 +12,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import io.swagger.v3.oas.annotations.enums.*;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import studentscroll.api.security.auth.UserDetailsServiceImpl;
 import studentscroll.api.security.authz.IsStudentAuthorizationManager;
 import studentscroll.api.security.authz.JWTFilter;
 
+@SecurityScheme(name = "token", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@SecurityScheme(name = "student themself", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @Configuration
 public class SecurityConfiguration {
 

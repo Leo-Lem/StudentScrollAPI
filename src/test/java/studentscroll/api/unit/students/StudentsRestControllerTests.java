@@ -1,4 +1,4 @@
-package studentscroll.api.unit;
+package studentscroll.api.unit.students;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -42,9 +42,9 @@ public class StudentsRestControllerTests {
     when(studentService.create(name, email, password))
         .thenReturn(new Student(email, "abc123", new Profile(name)).setId(1L));
 
-    ResponseEntity<?> response = controller.registerUser(request);
+    ResponseEntity<?> response = controller.registerStudent(request);
 
-    assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
+    assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
     StudentResponse body = (StudentResponse) response.getBody();
     if (body != null) {
       assertNotNull(body.getId());
@@ -61,7 +61,7 @@ public class StudentsRestControllerTests {
     when(studentService.create("", email, ""))
         .thenThrow(new EntityExistsException());
 
-    ResponseEntity<?> response = controller.registerUser(request);
+    ResponseEntity<?> response = controller.registerStudent(request);
 
     assertEquals(HttpStatusCode.valueOf(409), response.getStatusCode());
   }
@@ -71,10 +71,10 @@ public class StudentsRestControllerTests {
     val studentID = 1L;
     val profile = exampleProfile();
 
-    when(profileService.readProfile(studentID))
+    when(profileService.read(studentID))
         .thenReturn(profile);
 
-    ResponseEntity<?> response = controller.findProfile(studentID);
+    ResponseEntity<?> response = controller.readProfile(studentID);
 
     assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     assertNotNull((ProfileResponse) response.getBody());
@@ -84,10 +84,10 @@ public class StudentsRestControllerTests {
   public void givenStudentDoesNotExist_whenGettingProfile_thenReturns404() {
     val studentID = 1L;
 
-    when(profileService.readProfile(studentID))
+    when(profileService.read(studentID))
         .thenThrow(new EntityNotFoundException());
 
-    ResponseEntity<?> response = controller.findProfile(studentID);
+    ResponseEntity<?> response = controller.readProfile(studentID);
 
     assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
   }
@@ -102,7 +102,7 @@ public class StudentsRestControllerTests {
         profile.getInterests().toArray(new String[] {}),
         profile.getLocation().orElse(null));
 
-    when(profileService.updateProfile(anyLong(), any(), any(), any(), any(), any()))
+    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(profile);
 
     ResponseEntity<?> response = controller.updateProfile(1L, request);
@@ -128,7 +128,7 @@ public class StudentsRestControllerTests {
     val updatedProfile = new Profile(
         name, profile.getBio(), icon, profile.getInterests(), profile.getLocation().orElse(null));
 
-    when(profileService.updateProfile(anyLong(), any(), any(), any(), any(), any()))
+    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(updatedProfile);
 
     ResponseEntity<?> response = controller.updateProfile(1L, request);
@@ -149,7 +149,7 @@ public class StudentsRestControllerTests {
   public void givenStudentDoesNotExist_whenUpdatingProfile_thenReturns404() {
     val studentID = 1L;
 
-    when(profileService.updateProfile(anyLong(), any(), any(), any(), any(), any()))
+    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
         .thenThrow(new EntityNotFoundException());
 
     ResponseEntity<?> response = controller.updateProfile(studentID,
