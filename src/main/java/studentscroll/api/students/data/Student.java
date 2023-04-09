@@ -15,7 +15,6 @@ import studentscroll.api.posts.data.Post;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class Student implements UserDetails {
 
   @Id
