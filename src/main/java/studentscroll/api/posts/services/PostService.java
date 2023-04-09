@@ -2,14 +2,13 @@ package studentscroll.api.posts.services;
 
 import java.time.LocalDate;
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.Location;
+import studentscroll.api.students.data.StudentRepository;
 
 @Service
 public class PostService {
@@ -17,22 +16,25 @@ public class PostService {
   @Autowired
   protected PostRepository repo;
 
+  @Autowired
+  private StudentRepository studentRepo;
+
   public EventPost create(
       @NonNull Long posterId,
       @NonNull String title,
       @NonNull Set<String> tags,
       @NonNull String description,
       @NonNull LocalDate date,
-      @NonNull Location location) {
-    return repo.save(new EventPost(posterId, title, tags, description, date, location));
+      @NonNull Location location) throws EntityNotFoundException {
+    return (EventPost) create(posterId, new EventPost(title, tags, description, date, location));
   }
 
   public ContentPost create(
       @NonNull Long posterId,
       @NonNull String title,
       @NonNull Set<String> tags,
-      @NonNull String content) {
-    return repo.save(new ContentPost(posterId, title, tags, content));
+      @NonNull String content) throws EntityNotFoundException {
+    return (ContentPost) create(posterId, new ContentPost(title, tags, content));
   }
 
   public Post read(
@@ -77,6 +79,15 @@ public class PostService {
       throw new EntityNotFoundException();
 
     repo.deleteById(postID);
+  }
+
+  private Post create(
+      @NonNull Long posterId,
+      @NonNull Post post) throws EntityNotFoundException {
+    post.setPoster(studentRepo
+        .findById(posterId)
+        .orElseThrow(() -> new EntityNotFoundException("Student does not exist.")));
+    return repo.save(post);
   }
 
 }

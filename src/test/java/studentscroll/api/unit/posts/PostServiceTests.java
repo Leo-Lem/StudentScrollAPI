@@ -13,11 +13,16 @@ import studentscroll.api.posts.data.ContentPost;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.PostService;
 import studentscroll.api.shared.Location;
+import studentscroll.api.students.data.Student;
+import studentscroll.api.students.data.StudentRepository;
 
 public class PostServiceTests {
 
   @Mock
   private PostRepository repo;
+
+  @Mock
+  private StudentRepository studentRepo;
 
   @InjectMocks
   private PostService service;
@@ -57,7 +62,7 @@ public class PostServiceTests {
     Post readPost = service.read(post.getId());
 
     assertEquals(post.getId(), readPost.getId());
-    assertEquals(post.getPosterId(), readPost.getPosterId());
+    assertEquals(post.getPoster().getId(), readPost.getPoster().getId());
     assertEquals(post.getTimestamp(), readPost.getTimestamp());
     assertEquals(post.getTags(), readPost.getTags());
     assertEquals(post.getTitle(), readPost.getTitle());
@@ -79,10 +84,14 @@ public class PostServiceTests {
     when(repo.save(any(EventPost.class)))
         .thenReturn(post);
 
-    EventPost createdPost = service.create(
-        post.getPosterId(), post.getTitle(), post.getTags(), post.getDescription(), post.getDate(), post.getLocation());
+    when(studentRepo.findById(anyLong()))
+        .thenAnswer(i -> Optional.of(new Student().setId((Long) i.getArguments()[0])));
 
-    assertEquals(post.getPosterId(), createdPost.getPosterId());
+    EventPost createdPost = service.create(
+        post.getPoster().getId(), post.getTitle(), post.getTags(), post.getDescription(), post.getDate(),
+        post.getLocation());
+
+    assertEquals(post.getPoster().getId(), createdPost.getPoster().getId());
     assertEquals(post.getTitle(), createdPost.getTitle());
     assertEquals(post.getDescription(), createdPost.getDescription());
     assertEquals(post.getDate(), createdPost.getDate());
@@ -107,7 +116,7 @@ public class PostServiceTests {
         Optional.of(newDescription), Optional.empty(), Optional.empty(),
         Optional.empty());
 
-    assertEquals(post.getPosterId(), updatedPost.getPosterId());
+    assertEquals(post.getPoster().getId(), updatedPost.getPoster().getId());
     assertEquals(newTitle, updatedPost.getTitle());
     assertEquals(post.getTags(), updatedPost.getTags());
   }
@@ -128,9 +137,13 @@ public class PostServiceTests {
     when(repo.save(any(ContentPost.class)))
         .thenReturn(post);
 
-    ContentPost createdPost = service.create(post.getPosterId(), post.getTitle(), post.getTags(), post.getContent());
+    when(studentRepo.findById(anyLong()))
+        .thenAnswer(i -> Optional.of(new Student().setId((Long) i.getArguments()[0])));
 
-    assertEquals(post.getPosterId(), createdPost.getPosterId());
+    ContentPost createdPost = service.create(
+        post.getPoster().getId(), post.getTitle(), post.getTags(), post.getContent());
+
+    assertEquals(post.getPoster().getId(), createdPost.getPoster().getId());
     assertEquals(post.getTitle(), createdPost.getTitle());
     assertEquals(post.getContent(), createdPost.getContent());
     assertEquals(post.getTags(), createdPost.getTags());
@@ -138,19 +151,20 @@ public class PostServiceTests {
 
   private ContentPost exampleContentPost() {
     return (ContentPost) new ContentPost(
-        1L,
         "Jimmy's Dog",
         Set.of("JIMMY", "DOG"),
         "Jimmy's dog is really cute. I would love to pet it again.")
+        .setPoster(new Student().setId(1L))
         .setId(1L);
   }
 
   private EventPost exampleEventPost() {
     return (EventPost) new EventPost(
-        1L, "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
+        "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
         LocalDate.now(),
         new Location("Jimmy's House", 1.0, 1.0))
+        .setPoster(new Student().setId(1L))
         .setId(1L);
   }
 

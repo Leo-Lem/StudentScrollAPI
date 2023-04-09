@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-import org.springframework.http.*;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;

@@ -26,9 +26,8 @@ public class EventPost extends Post {
   @NonNull
   private Location location;
 
-  public EventPost(
-      Long posterId, String title, Set<String> tags, String description, LocalDate date, Location location) {
-    super(posterId, title, tags);
+  public EventPost(String title, Set<String> tags, String description, LocalDate date, Location location) {
+    super(title, tags);
     this.description = description;
     this.date = date;
     this.location = location;

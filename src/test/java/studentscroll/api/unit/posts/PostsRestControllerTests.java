@@ -17,6 +17,7 @@ import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.PostsRestController;
 import studentscroll.api.posts.web.dto.*;
 import studentscroll.api.shared.Location;
+import studentscroll.api.students.data.Student;
 
 public class PostsRestControllerTests {
 
@@ -35,7 +36,7 @@ public class PostsRestControllerTests {
   public void whenCreatingPost_thenReturnsCorrectFields() {
     val post = exampleContentPost();
     val request = new CreatePostRequest(
-        post.getPosterId(), post.getTitle(), post.getTags().toArray(new String[] {}),
+        post.getPoster().getId(), post.getTitle(), post.getTags().toArray(new String[] {}),
         null, null, null, post.getContent());
 
     when(service.create(anyLong(), any(), any(), any()))
@@ -43,7 +44,7 @@ public class PostsRestControllerTests {
 
     PostResponse response = controller.create(request, mock(HttpServletResponse.class));
 
-    assertEquals(post.getPosterId(), response.getPosterId());
+    assertEquals(post.getPoster().getId(), response.getPosterId());
     assertEquals(post.getTitle(), response.getTitle());
     assertEquals(post.getTags().size(), response.getTags().length);
     assertEquals(post.getContent(), response.getContent());
@@ -78,7 +79,7 @@ public class PostsRestControllerTests {
         .thenReturn(post);
 
     PostResponse response = controller.update(postId, request);
-    assertEquals(post.getPosterId(), response.getPosterId());
+    assertEquals(post.getPoster().getId(), response.getPosterId());
     assertEquals(post.getTitle(), response.getTitle());
     assertEquals(post.getTags().size(), response.getTags().length);
     assertEquals(post.getDescription(), response.getDescription());
@@ -110,16 +111,20 @@ public class PostsRestControllerTests {
   }
 
   private ContentPost exampleContentPost() {
-    return new ContentPost(
-        1L, "Jimmy's Dog", Set.of("JIMMY", "DOG"), "Jimmy's dog is really cute. I would love to pet it again.");
+    return (ContentPost) new ContentPost(
+        "Jimmy's Dog",
+        Set.of("JIMMY", "DOG"),
+        "Jimmy's dog is really cute. I would love to pet it again.")
+        .setPoster(new Student().setId(1L));
   }
 
   private EventPost exampleEventPost() {
-    return new EventPost(
-        1L, "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
+    return (EventPost) new EventPost(
+        "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
         LocalDate.now(),
-        new Location("Jimmy's House", 1.0, 1.0));
+        new Location("Jimmy's House", 1.0, 1.0))
+        .setPoster(new Student().setId(1L));
   }
 
 }

@@ -23,7 +23,7 @@ public class IsPosterAuthorizationManager implements AuthorizationManager<Reques
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
     val principalId = ((Student) supplier.get().getPrincipal()).getId();
     val requestPostId = Long.parseLong(context.getVariables().get("postId"));
-    val posterId = repo.findById(requestPostId).map(Post::getPosterId);
+    val posterId = repo.findById(requestPostId).map(Post::getPoster).map(Student::getId);
 
     return new AuthorizationDecision(posterId.map(id -> id.equals(principalId)).orElse(false));
   }
