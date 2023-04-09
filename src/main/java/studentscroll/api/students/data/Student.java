@@ -42,11 +42,6 @@ public class Student implements UserDetails {
   @OneToMany(mappedBy = "poster")
   private Set<Post> posts;
 
-  public Student setId(Long newId) {
-    id = newId;
-    return this;
-  }
-
   @Override
   public String getPassword() {
     return password;

@@ -137,16 +137,21 @@ public class PostServiceTests {
   }
 
   private ContentPost exampleContentPost() {
-    return new ContentPost(
-        1L, "Jimmy's Dog", Set.of("JIMMY", "DOG"), "Jimmy's dog is really cute. I would love to pet it again.");
+    return (ContentPost) new ContentPost(
+        1L,
+        "Jimmy's Dog",
+        Set.of("JIMMY", "DOG"),
+        "Jimmy's dog is really cute. I would love to pet it again.")
+        .setId(1L);
   }
 
   private EventPost exampleEventPost() {
-    return new EventPost(
+    return (EventPost) new EventPost(
         1L, "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
         LocalDate.now(),
-        new Location("Jimmy's House", 1.0, 1.0));
+        new Location("Jimmy's House", 1.0, 1.0))
+        .setId(1L);
   }
 
 }

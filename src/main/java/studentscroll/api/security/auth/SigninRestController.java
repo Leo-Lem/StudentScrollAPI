@@ -1,7 +1,6 @@
 package studentscroll.api.security.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -27,21 +26,18 @@ public class SigninRestController {
 
   @Operation(summary = "Sign in to receive JWT.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JWTResponse.class))),
+      @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT."),
       @ApiResponse(responseCode = "401", description = "Credentials not accepted.", content = @Content) })
   @PostMapping
-  public ResponseEntity<?> signin(@RequestBody SigninRequest request) {
-    try {
-      if (authenticate(request.getEmail(), request.getPassword())) {
-        val student = (Student) detailsService.loadUserByUsername(request.getEmail());
-        val jwt = JSONWebToken.generateFrom(student);
-
-        return ResponseEntity.ok(new JWTResponse(student.getId(), student.getEmail(), jwt.toString()));
-      } else
-        throw new BadCredentialsException("");
-    } catch (BadCredentialsException e) {
-      return ResponseEntity.status(401).build();
-    }
+  public JWTResponse signin(@RequestBody SigninRequest request) throws BadCredentialsException {
+    if (authenticate(request.getEmail(), request.getPassword())) {
+      val student = (Student) detailsService.loadUserByUsername(request.getEmail());
+      return new JWTResponse(
+          student.getId(),
+          student.getEmail(),
+          JSONWebToken.generateFrom(student).toString());
+    } else
+      throw new BadCredentialsException("");
   }
 
   private Boolean authenticate(String email, String password) {

@@ -21,6 +21,7 @@ import studentscroll.api.security.authz.JWTFilter;
 
 @SecurityScheme(name = "token", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @SecurityScheme(name = "student themself", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@SecurityScheme(name = "poster", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @Configuration
 public class SecurityConfiguration {
 
@@ -67,7 +68,7 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.GET, "/students/{studentId}/profile", "/posts/{postId}").authenticated()
             .requestMatchers(HttpMethod.POST, "/posts").authenticated())
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers(HttpMethod.PUT, "/students/{studentId}/**").access(isStudentAuthz)
+            .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())

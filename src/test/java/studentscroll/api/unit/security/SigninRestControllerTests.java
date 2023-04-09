@@ -8,10 +8,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -54,25 +51,15 @@ public class SigninRestControllerTests {
     when(detailsService.loadUserByUsername(email))
         .thenReturn(details);
 
-    ResponseEntity<?> response = controller.signin(request);
-
-    assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
-
-    val body = response.getBody();
-    if (body != null)
-      assertTrue(StringUtils.hasText(body.toString()));
-    else
-      fail("No JWT returned");
+    assertTrue(StringUtils.hasText(controller.signin(request).toString()));
   }
 
   @Test
-  public void givenCrendentialsAreInvalid_whenRequestIsReceived_thenReturns401() {
+  public void givenCrendentialsAreInvalid_whenRequestIsReceived_thenThrowsBadCredentialsException() {
     when(authManager.authenticate(any(Authentication.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    ResponseEntity<?> response = controller.signin(new SigninRequest("abc@xyz.com", "1234"));
-
-    assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(401));
+    assertThrows(BadCredentialsException.class, () -> controller.signin(new SigninRequest("abc@xyz.com", "1234")));
   }
 
 }

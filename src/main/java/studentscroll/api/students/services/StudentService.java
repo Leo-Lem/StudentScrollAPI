@@ -24,7 +24,7 @@ public class StudentService {
       @NonNull String email,
       @NonNull String password) throws EntityExistsException {
     if (repo.existsByEmail(email))
-      throw new EntityExistsException();
+      throw new EntityExistsException("Email is already in use.");
 
     return repo.save(new Student(email, passwordEncoder.encode(password), new Profile(name)));
   }
