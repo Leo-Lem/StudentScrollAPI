@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import io.swagger.v3.oas.annotations.enums.*;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import studentscroll.api.security.auth.UserDetailsServiceImpl;
+import studentscroll.api.security.authz.IsPosterAuthorizationManager;
 import studentscroll.api.security.authz.IsStudentAuthorizationManager;
 import studentscroll.api.security.authz.JWTFilter;
 
@@ -28,6 +29,9 @@ public class SecurityConfiguration {
 
   @Autowired
   private IsStudentAuthorizationManager isStudentAuthz;
+
+  @Autowired
+  private IsPosterAuthorizationManager isPosterAuthz;
 
   @Bean
   public JWTFilter jwtFilter() {
@@ -58,10 +62,14 @@ public class SecurityConfiguration {
         .csrf().disable()
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.GET, "/docs*/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll()
-            .requestMatchers(HttpMethod.PUT, "/students/{studentID}/**").access(isStudentAuthz)
-            .requestMatchers(HttpMethod.GET, "/students/{studentID}/profile").authenticated()
-            .anyRequest().denyAll())
+            .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll())
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.GET, "/students/{studentId}/profile", "/posts/{postId}").authenticated()
+            .requestMatchers(HttpMethod.POST, "/posts").authenticated())
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.PUT, "/students/{studentId}/**").access(isStudentAuthz)
+            .requestMatchers("/posts/{postId}").access(isPosterAuthz))
+        .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())
         .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
         .build();
