@@ -37,7 +37,7 @@ public class PostsRestControllerTests {
   }
 
   @Test
-  public void whenCreatingPost_thenReturns200AndCorrectFields() {
+  public void whenCreatingPost_thenReturns201AndCorrectFields() {
     val post = exampleContentPost();
     val request = new CreatePostRequest(
         post.getPosterId(), post.getTitle(), post.getTags().toArray(new String[] {}),
@@ -48,7 +48,7 @@ public class PostsRestControllerTests {
 
     ResponseEntity<?> response = controller.create(request);
 
-    assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+    assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
 
     PostResponse body = (PostResponse) response.getBody();
     if (body != null) {

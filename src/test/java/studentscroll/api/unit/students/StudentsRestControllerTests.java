@@ -44,7 +44,7 @@ public class StudentsRestControllerTests {
 
     ResponseEntity<?> response = controller.registerStudent(request);
 
-    assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
+    assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
     StudentResponse body = (StudentResponse) response.getBody();
     if (body != null) {
       assertNotNull(body.getId());

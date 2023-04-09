@@ -4,11 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.*;
 import io.swagger.v3.oas.annotations.servers.Server;
 
-@OpenAPIDefinition(servers = {
-    @Server(url = "studentscroll.net/api/v1", description = "Student Scroll API URL")
-})
+@OpenAPIDefinition(info = @Info(title = "Student Scroll REST API", description = "This is the REST API for Student Scroll.", license = @License(name = "MIT License", url = "https://github.com/Leo-Lem/StudentScrollAPI/blob/main/LICENSE")), servers = @Server(url = "studentscroll.net/api/v1"))
 @SpringBootApplication
 public class App {
 

@@ -1,16 +1,25 @@
 package studentscroll.api.posts.web;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
 
+@Tag(name = "Posts", description = "Everything related to posts.")
+@SecurityRequirement(name = "token")
 @RestController
 @RequestMapping("/posts")
 public class PostsRestController {
@@ -24,6 +33,11 @@ public class PostsRestController {
   @Autowired
   private ContentPostService contentPostService;
 
+  @Operation(summary = "Create a new post.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Created the post.", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class)) }),
+      @ApiResponse(responseCode = "400", description = "Missing fields in request.", content = @Content) })
   @PostMapping
   public ResponseEntity<?> create(@RequestBody CreatePostRequest request) {
     val type = request.getType();
@@ -31,19 +45,21 @@ public class PostsRestController {
     if (type == null)
       return ResponseEntity.badRequest().body("Cannot resolve to post type");
 
-    if (type.equals(EventPost.class))
-      return ResponseEntity.ok(
-          new PostResponse(
-              eventPostService.create(
-                  request.getPosterId(), request.getTitle(), request.getDescription(),
-                  request.getDate(), request.getLocation(), Set.of(request.getTags()))));
-    else if (type.equals(ContentPost.class))
-      return ResponseEntity.ok(
-          new PostResponse(
-              contentPostService.create(
-                  request.getPosterId(), request.getTitle(), request.getContent(), Set.of(request.getTags()))));
+    PostResponse response;
 
-    return ResponseEntity.internalServerError().build();
+    if (type.equals(EventPost.class))
+      response = new PostResponse(eventPostService.create(
+          request.getPosterId(), request.getTitle(), request.getDescription(),
+          request.getDate(), request.getLocation(), Set.of(request.getTags())));
+    else // if (type.equals(ContentPost.class))
+      response = new PostResponse(contentPostService.create(
+          request.getPosterId(), request.getTitle(), request.getContent(), Set.of(request.getTags())));
+
+    try {
+      return ResponseEntity.created(new URI("/posts/" + response.getId())).body(response);
+    } catch (URISyntaxException e) {
+      return ResponseEntity.internalServerError().body(e.getMessage());
+    }
   }
 
   @GetMapping("/{postId}")
