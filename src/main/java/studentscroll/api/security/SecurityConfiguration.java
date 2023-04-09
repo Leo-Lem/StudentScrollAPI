@@ -53,8 +53,8 @@ public class SecurityConfiguration {
     return security
         .csrf().disable()
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers(HttpMethod.POST, "/students").permitAll()
-            .requestMatchers(HttpMethod.POST, "/signin").permitAll()
+            .requestMatchers(HttpMethod.GET, "/docs*/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll()
             .requestMatchers(HttpMethod.PUT, "/students/{studentID}/**").access(isStudentAuthz)
             .requestMatchers(HttpMethod.GET, "/students/{studentID}/profile").authenticated()
             .anyRequest().denyAll())

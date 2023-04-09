@@ -11,3 +11,7 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate.ddl-auto: update
     open-in-view: true
+
+springdoc:
+  api-docs.path: /docs
+  swagger-ui.path: /docs/swagger
