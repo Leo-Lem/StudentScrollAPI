@@ -1,8 +1,6 @@
-package studentscroll.api.chats.data.repos;
+package studentscroll.api.chats.data;
 
 import org.springframework.data.repository.CrudRepository;
-
-import studentscroll.api.chats.data.Chatroom;
 
 public interface ChatroomRepository extends CrudRepository<Chatroom, Long> {
 }

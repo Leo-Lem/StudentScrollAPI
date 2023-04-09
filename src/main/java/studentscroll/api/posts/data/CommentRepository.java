@@ -1,8 +1,6 @@
-package studentscroll.api.posts.data.repos;
+package studentscroll.api.posts.data;
 
 import org.springframework.data.repository.CrudRepository;
-
-import studentscroll.api.posts.data.Comment;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
 }
