@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
 import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.students.data.Student;
+import studentscroll.api.students.web.dto.StudentResponse;
 
 @Tag(name = "Sign in", description = "Signing in to Student Scroll.")
 @RestController
@@ -29,13 +30,10 @@ public class SigninRestController {
       @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT."),
       @ApiResponse(responseCode = "401", description = "Credentials not accepted.", content = @Content) })
   @PostMapping
-  public JWTResponse signin(@RequestBody SigninRequest request) throws BadCredentialsException {
+  public StudentResponse signin(@RequestBody SigninRequest request) throws BadCredentialsException {
     if (authenticate(request.getEmail(), request.getPassword())) {
       val student = (Student) detailsService.loadUserByUsername(request.getEmail());
-      return new JWTResponse(
-          student.getId(),
-          student.getEmail(),
-          JSONWebToken.generateFrom(student).toString());
+      return new StudentResponse(student, JSONWebToken.generateFrom(student));
     } else
       throw new BadCredentialsException("");
   }

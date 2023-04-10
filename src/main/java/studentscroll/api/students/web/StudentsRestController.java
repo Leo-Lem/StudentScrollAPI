@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.*;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.*;
+import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.students.services.*;
 import studentscroll.api.students.web.dto.*;
 
@@ -49,7 +50,7 @@ public class StudentsRestController {
         request.getEmail(),
         request.getPassword());
     response.setHeader("Location", "/students/" + student.getId());
-    return new StudentResponse(student);
+    return new StudentResponse(student, JSONWebToken.generateFrom(student));
   }
 
   @Operation(summary = "Find the student.")
@@ -72,17 +73,17 @@ public class StudentsRestController {
   @PutMapping("/{studentId}")
   public StudentResponse update(
       @PathVariable Long studentId, @RequestBody UpdateStudentRequest request) throws EntityNotFoundException {
-    val student = studentService.read(studentId);
+    var student = studentService.read(studentId);
 
     if (!authManager
         .authenticate(new UsernamePasswordAuthenticationToken(student.getEmail(), request.getCurrentPassword()))
         .isAuthenticated())
       throw new BadCredentialsException("Invalid password.");
 
-    return new StudentResponse(studentService.update(
-        studentId,
-        Optional.ofNullable(request.getNewEmail()),
-        Optional.ofNullable(request.getNewPassword())));
+    student = studentService.update(
+        studentId, Optional.ofNullable(request.getNewEmail()), Optional.ofNullable(request.getNewPassword()));
+
+    return new StudentResponse(student, JSONWebToken.generateFrom(student));
   }
 
   @Operation(summary = "Delete the student.")

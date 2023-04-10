@@ -16,7 +16,12 @@ public class IsStudentAuthorizationManager implements AuthorizationManager<Reque
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    val principalID = ((Student) supplier.get().getPrincipal()).getId();
+    val principal = supplier.get().getPrincipal();
+
+    if (!(principal instanceof Student))
+      return new AuthorizationDecision(false);
+
+    val principalID = ((Student) principal).getId();
     val requestID = Long.parseLong(context.getVariables().get("studentId"));
 
     return new AuthorizationDecision(principalID.equals(requestID));
