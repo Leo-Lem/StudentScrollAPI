@@ -4,8 +4,8 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
@@ -24,6 +24,9 @@ import studentscroll.api.students.web.dto.*;
 public class StudentsRestController {
 
   @Autowired
+  private AuthenticationManager authManager;
+
+  @Autowired
   private StudentService studentService;
 
   @Autowired
@@ -36,6 +39,7 @@ public class StudentsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the student."),
       @ApiResponse(responseCode = "409", description = "Email is already in use.", content = @Content) })
+  @SecurityRequirement(name = "token")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public StudentResponse create(
@@ -52,34 +56,45 @@ public class StudentsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Found the student."),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "student themself")
+  @SecurityRequirement(name = "token")
   @GetMapping("/{studentId}")
   public StudentResponse read(
       @PathVariable Long studentId) throws EntityNotFoundException {
-    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    return new StudentResponse(studentService.read(studentId));
   }
 
   @Operation(summary = "Update the student.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the student.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponse.class))),
+      @ApiResponse(responseCode = "200", description = "Updated the student."),
+      @ApiResponse(responseCode = "401", description = "Current password is wrong.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "student themself")
+  @SecurityRequirement(name = "token")
   @PutMapping("/{studentId}")
   public StudentResponse update(
-      @PathVariable Long studentId) throws EntityNotFoundException {
-    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+      @PathVariable Long studentId, @RequestBody UpdateStudentRequest request) throws EntityNotFoundException {
+    val student = studentService.read(studentId);
+
+    if (!authManager
+        .authenticate(new UsernamePasswordAuthenticationToken(student.getEmail(), request.getCurrentPassword()))
+        .isAuthenticated())
+      throw new BadCredentialsException("Invalid password.");
+
+    return new StudentResponse(studentService.update(
+        studentId,
+        Optional.ofNullable(request.getNewEmail()),
+        Optional.ofNullable(request.getNewPassword())));
   }
 
   @Operation(summary = "Delete the student.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted the student.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "student themself")
+  @SecurityRequirement(name = "token")
   @DeleteMapping("/{studentId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
       @PathVariable Long studentId) throws EntityNotFoundException {
-    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+    studentService.delete(studentId);
   }
 
   @Operation(summary = "Find profile of the student.")
@@ -97,7 +112,7 @@ public class StudentsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated the profile."),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "student themself")
+  @SecurityRequirement(name = "token")
   @PutMapping("/{studentId}/profile")
   public ProfileResponse updateProfile(
       @PathVariable Long studentId, @RequestBody UpdateProfileRequest request) throws EntityNotFoundException {

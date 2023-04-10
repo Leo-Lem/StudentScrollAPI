@@ -20,6 +20,7 @@ import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
 
 @Tag(name = "Posts", description = "Everything related to posts.")
+@SecurityRequirement(name = "token")
 @RestController
 @RequestMapping("/posts")
 public class PostsRestController {
@@ -31,7 +32,6 @@ public class PostsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the post."),
       @ApiResponse(responseCode = "400", description = "Missing fields in request.", content = @Content) })
-  @SecurityRequirement(name = "token")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public PostResponse create(
@@ -66,7 +66,6 @@ public class PostsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Found the post."),
       @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
   @GetMapping("/{postId}")
   public PostResponse read(
       @PathVariable Long postId) throws EntityNotFoundException {
@@ -77,7 +76,6 @@ public class PostsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated the post."),
       @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
-  @SecurityRequirement(name = "poster")
   @PutMapping("/{postId}")
   public PostResponse update(
       @PathVariable Long postId, @RequestBody UpdatePostRequest request) throws EntityNotFoundException {
@@ -94,7 +92,6 @@ public class PostsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted the post.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
-  @SecurityRequirement(name = "poster")
   @DeleteMapping("/{postId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
