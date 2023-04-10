@@ -5,6 +5,7 @@ import java.util.*;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import studentscroll.api.students.data.Student;
 
 @Entity(name = "post")
@@ -13,15 +14,12 @@ import studentscroll.api.students.data.Student;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Accessors(chain = true)
 public class Post {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-
-  @Column(name = "poster_id")
-  @NonNull
-  private Long posterId;
 
   @Column(name = "timestamp")
   private final LocalDate timestamp = LocalDate.now();
@@ -34,8 +32,8 @@ public class Post {
   @NonNull
   private Set<String> tags;
 
-  @JoinColumn(name = "poster_id", nullable = false, insertable = false, updatable = false)
-  @ManyToOne
-  private Student poster;
+  @JoinColumn(name = "student_id")
+  @ManyToOne(fetch = FetchType.EAGER)
+  public Student poster;
 
 }

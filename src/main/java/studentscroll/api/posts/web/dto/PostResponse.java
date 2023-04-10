@@ -2,12 +2,16 @@ package studentscroll.api.posts.web.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.*;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.Location;
 
 @Data
 @RequiredArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class PostResponse {
 
   private final Long id;
@@ -21,17 +25,21 @@ public class PostResponse {
   @NonNull
   private final String[] tags;
 
+  // event posts
+
   private final String description;
 
   private final LocalDate date;
 
   private final Location location;
 
+  // content posts
+
   private final String content;
 
   public PostResponse(Post post) {
     this.id = post.getId();
-    this.posterId = post.getPosterId();
+    this.posterId = post.getPoster().getId();
     this.title = post.getTitle();
     this.tags = post.getTags().toArray(new String[] {});
 

@@ -7,16 +7,17 @@ import java.time.LocalDate;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.PostsRestController;
 import studentscroll.api.posts.web.dto.*;
 import studentscroll.api.shared.Location;
+import studentscroll.api.students.data.Student;
 
 public class PostsRestControllerTests {
 
@@ -32,56 +33,39 @@ public class PostsRestControllerTests {
   }
 
   @Test
-  public void whenCreatingPost_thenReturns201AndCorrectFields() {
+  public void whenCreatingPost_thenReturnsCorrectFields() {
     val post = exampleContentPost();
     val request = new CreatePostRequest(
-        post.getPosterId(), post.getTitle(), post.getTags().toArray(new String[] {}),
+        post.getPoster().getId(), post.getTitle(), post.getTags().toArray(new String[] {}),
         null, null, null, post.getContent());
 
     when(service.create(anyLong(), any(), any(), any()))
         .thenReturn(post);
 
-    ResponseEntity<?> response = controller.create(request);
+    PostResponse response = controller.create(request, mock(HttpServletResponse.class));
 
-    assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
-
-    PostResponse body = (PostResponse) response.getBody();
-    if (body != null) {
-      assertEquals(post.getPosterId(), body.getPosterId());
-      assertEquals(post.getTitle(), body.getTitle());
-      assertEquals(post.getTags().size(), body.getTags().length);
-      assertEquals(post.getContent(), body.getContent());
-    }
+    assertEquals(post.getPoster().getId(), response.getPosterId());
+    assertEquals(post.getTitle(), response.getTitle());
+    assertEquals(post.getTags().size(), response.getTags().length);
+    assertEquals(post.getContent(), response.getContent());
   }
 
   @Test
-  public void whenCreatingInvalidPost_thenReturns400() {
-    val invalidRequest = new CreatePostRequest(
-        1L, "something", new String[] {}, null, null, null, null);
+  public void whenCreatingInvalidPost_thenThrowsResponseStatusException() {
+    val invalidRequest = new CreatePostRequest(1L, "something", new String[] {}, null, null, null, null);
 
-    assertEquals(HttpStatusCode.valueOf(400), controller.create(invalidRequest).getStatusCode());
+    assertThrows(ResponseStatusException.class,
+        () -> controller.create(invalidRequest, mock(HttpServletResponse.class)));
   }
 
   @Test
-  public void givenPostExist_whenReadingById_thenReturns200() {
+  public void givenPostExist_whenReadingById_thenDoesNotThrow() {
     Long postId = 1L;
 
     when(service.read(postId))
         .thenReturn(exampleEventPost());
 
-    val response = controller.read(postId);
-    assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-    assertTrue(response.hasBody());
-  }
-
-  @Test
-  public void givenPostDoesNotExist_whenReadingById_thenReturns404() {
-    Long postId = 1L;
-
-    when(service.read(postId))
-        .thenThrow(new EntityNotFoundException());
-
-    assertEquals(HttpStatusCode.valueOf(404), controller.read(postId).getStatusCode());
+    assertDoesNotThrow(() -> controller.read(postId));
   }
 
   @Test
@@ -94,59 +78,53 @@ public class PostsRestControllerTests {
     when(service.update(anyLong(), any(), any(), any(), any(), any(), any()))
         .thenReturn(post);
 
-    ResponseEntity<?> response = controller.update(postId, request);
-
-    assertEquals(HttpStatusCode.valueOf(200), controller.update(postId, request).getStatusCode());
-
-    PostResponse body = (PostResponse) response.getBody();
-    if (body != null) {
-      assertEquals(post.getPosterId(), body.getPosterId());
-      assertEquals(post.getTitle(), body.getTitle());
-      assertEquals(post.getTags().size(), body.getTags().length);
-      assertEquals(post.getDescription(), body.getDescription());
-    }
+    PostResponse response = controller.update(postId, request);
+    assertEquals(post.getPoster().getId(), response.getPosterId());
+    assertEquals(post.getTitle(), response.getTitle());
+    assertEquals(post.getTags().size(), response.getTags().length);
+    assertEquals(post.getDescription(), response.getDescription());
   }
 
   @Test
-  public void givenPostDoesNotExist_whenUpdatingById_thenReturns404() {
+  public void givenPostExists_whenDeletingById_thenDoesntThrow() {
+    assertDoesNotThrow(() -> controller.delete(1L));
+  }
+
+  @Test
+  public void givenPostDoesNotExist_whenReadingUpdatingDeletingById_thenThrowsEntityNotFoundException() {
     Long postId = 1L;
-    String newTitle = "Some title", newDescription = "some description";
-    val request = new UpdatePostRequest(newTitle, null, newDescription, null, null, null);
+
+    val request = new UpdatePostRequest("", null, "", null, null, null);
+
+    when(service.read(postId))
+        .thenThrow(new EntityNotFoundException());
 
     when(service.update(anyLong(), any(), any(), any(), any(), any(), any()))
         .thenThrow(new EntityNotFoundException());
 
-    assertEquals(HttpStatusCode.valueOf(404), controller.update(postId, request).getStatusCode());
-  }
-
-  @Test
-  public void givenPostExists_whenDeletingById_thenReturns200() {
-    Long postId = 1L;
-
-    assertEquals(HttpStatusCode.valueOf(204), controller.delete(postId).getStatusCode());
-  }
-
-  @Test
-  public void givenPostDoesNotExist_whenDeletingById_thenReturns404() {
-    Long postId = 1L;
-
     doThrow(new EntityNotFoundException())
         .when(service).delete(postId);
 
-    assertEquals(HttpStatusCode.valueOf(404), controller.delete(postId).getStatusCode());
+    assertThrows(EntityNotFoundException.class, () -> controller.read(postId));
+    assertThrows(EntityNotFoundException.class, () -> controller.update(postId, request));
+    assertThrows(EntityNotFoundException.class, () -> controller.delete(postId));
   }
 
   private ContentPost exampleContentPost() {
-    return new ContentPost(
-        1L, "Jimmy's Dog", Set.of("JIMMY", "DOG"), "Jimmy's dog is really cute. I would love to pet it again.");
+    return (ContentPost) new ContentPost(
+        "Jimmy's Dog",
+        Set.of("JIMMY", "DOG"),
+        "Jimmy's dog is really cute. I would love to pet it again.")
+        .setPoster(new Student().setId(1L));
   }
 
   private EventPost exampleEventPost() {
-    return new EventPost(
-        1L, "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
+    return (EventPost) new EventPost(
+        "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
         LocalDate.now(),
-        new Location("Jimmy's House", 1.0, 1.0));
+        new Location("Jimmy's House", 1.0, 1.0))
+        .setPoster(new Student().setId(1L));
   }
 
 }

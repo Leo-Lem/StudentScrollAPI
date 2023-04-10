@@ -11,15 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import io.swagger.v3.oas.annotations.enums.*;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import studentscroll.api.security.auth.UserDetailsServiceImpl;
-import studentscroll.api.security.authz.IsStudentAuthorizationManager;
-import studentscroll.api.security.authz.JWTFilter;
+import studentscroll.api.security.auth.*;
+import studentscroll.api.security.authz.*;
 
 @SecurityScheme(name = "token", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
-@SecurityScheme(name = "student themself", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @Configuration
 public class SecurityConfiguration {
 
@@ -28,6 +25,9 @@ public class SecurityConfiguration {
 
   @Autowired
   private IsStudentAuthorizationManager isStudentAuthz;
+
+  @Autowired
+  private IsPosterAuthorizationManager isPosterAuthz;
 
   @Bean
   public JWTFilter jwtFilter() {
@@ -58,10 +58,14 @@ public class SecurityConfiguration {
         .csrf().disable()
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.GET, "/docs*/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll()
-            .requestMatchers(HttpMethod.PUT, "/students/{studentID}/**").access(isStudentAuthz)
-            .requestMatchers(HttpMethod.GET, "/students/{studentID}/profile").authenticated()
-            .anyRequest().denyAll())
+            .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll())
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.GET, "/students/{studentId}/profile", "/posts/{postId}").authenticated()
+            .requestMatchers(HttpMethod.POST, "/posts").authenticated())
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
+            .requestMatchers("/posts/{postId}").access(isPosterAuthz))
+        .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())
         .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
         .build();

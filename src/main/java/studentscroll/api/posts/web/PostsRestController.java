@@ -1,19 +1,18 @@
 package studentscroll.api.posts.web;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
 import studentscroll.api.posts.data.*;
@@ -31,65 +30,63 @@ public class PostsRestController {
 
   @Operation(summary = "Create a new post.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created the post.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))),
-      @ApiResponse(responseCode = "400", description = "Missing fields in request.", content = @Content) })
+      @ApiResponse(responseCode = "201", description = "Created the post."),
+      @ApiResponse(responseCode = "400", description = "Missing fields in request.", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Poster with id does not exist.", content = @Content) })
   @PostMapping
-  public ResponseEntity<?> create(@RequestBody CreatePostRequest request) {
+  @ResponseStatus(HttpStatus.CREATED)
+  public PostResponse create(
+      @RequestBody CreatePostRequest request, HttpServletResponse response) {
     val type = request.getType();
 
-    System.out.println(type);
-
     if (type == null)
-      return ResponseEntity.badRequest().body("Cannot resolve to post type");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot resolve to post type");
 
-    PostResponse response;
+    PostResponse postResponse;
 
     if (type.equals(EventPost.class))
-      response = new PostResponse(service.create(
-          request.getPosterId(), request.getTitle(), Set.of(request.getTags()),
-          request.getDescription(), request.getDate(), request.getLocation()));
+      postResponse = new PostResponse(service.create(
+          request.getPosterId(),
+          request.getTitle(),
+          Set.of(request.getTags()),
+          request.getDescription(),
+          request.getDate(),
+          request.getLocation()));
     else
-      response = new PostResponse(service.create(
-          request.getPosterId(), request.getTitle(), Set.of(request.getTags()), request.getContent()));
+      postResponse = new PostResponse(service.create(
+          request.getPosterId(),
+          request.getTitle(),
+          Set.of(request.getTags()),
+          request.getContent()));
 
-    try {
-      return ResponseEntity.created(new URI("/posts/" + response.getId())).body(response);
-    } catch (URISyntaxException e) {
-      return ResponseEntity.internalServerError().body(e.getMessage());
-    }
+    response.setHeader("Location", "/posts/" + postResponse.getId());
+    return postResponse;
   }
 
   @Operation(summary = "Find the post.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the post.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))),
+      @ApiResponse(responseCode = "200", description = "Found the post."),
       @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
   @GetMapping("/{postId}")
-  public ResponseEntity<?> read(@PathVariable Long postId) {
-    try {
-      return ResponseEntity.ok(new PostResponse(service.read(postId)));
-    } catch (EntityNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+  public PostResponse read(
+      @PathVariable Long postId) throws EntityNotFoundException {
+    return new PostResponse(service.read(postId));
   }
 
   @Operation(summary = "Update the post.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the post.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponse.class))),
+      @ApiResponse(responseCode = "200", description = "Updated the post."),
       @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
   @PutMapping("/{postId}")
-  public ResponseEntity<?> update(@PathVariable Long postId, @RequestBody UpdatePostRequest request) {
-    try {
-      return ResponseEntity.ok(
-          new PostResponse(service.update(postId,
-              Optional.ofNullable(request.getNewTitle()),
-              Optional.ofNullable(request.getNewTags()).map(Set::of),
-              Optional.ofNullable(request.getNewDescription()),
-              Optional.ofNullable(request.getNewDate()),
-              Optional.ofNullable(request.getNewLocation()),
-              Optional.ofNullable(request.getNewContent()))));
-    } catch (EntityNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+  public PostResponse update(
+      @PathVariable Long postId, @RequestBody UpdatePostRequest request) throws EntityNotFoundException {
+    return new PostResponse(service.update(postId,
+        Optional.ofNullable(request.getNewTitle()),
+        Optional.ofNullable(request.getNewTags()).map(Set::of),
+        Optional.ofNullable(request.getNewDescription()),
+        Optional.ofNullable(request.getNewDate()),
+        Optional.ofNullable(request.getNewLocation()),
+        Optional.ofNullable(request.getNewContent())));
   }
 
   @Operation(summary = "Delete the post.")
@@ -97,13 +94,10 @@ public class PostsRestController {
       @ApiResponse(responseCode = "204", description = "Deleted the post.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Post does not exist.", content = @Content) })
   @DeleteMapping("/{postId}")
-  public ResponseEntity<?> delete(@PathVariable Long postId) {
-    try {
-      service.delete(postId);
-      return ResponseEntity.noContent().build();
-    } catch (EntityNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(
+      @PathVariable Long postId) throws EntityNotFoundException {
+    service.delete(postId);
   }
 
 }

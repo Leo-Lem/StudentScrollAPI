@@ -3,6 +3,8 @@ package studentscroll.api.students.services;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.EntityNotFoundException;
 import studentscroll.api.shared.Location;
 import studentscroll.api.students.data.*;
@@ -13,7 +15,8 @@ public class ProfileService {
   @Autowired
   private StudentRepository repo;
 
-  public Profile read(Long studentID) throws EntityNotFoundException {
+  public Profile read(
+      @NonNull Long studentID) throws EntityNotFoundException {
     return repo
         .findById(studentID)
         .orElseThrow(() -> new EntityNotFoundException("Student does not exist."))
@@ -21,12 +24,12 @@ public class ProfileService {
   }
 
   public Profile update(
-      Long studentID,
-      Optional<String> name,
-      Optional<String> bio,
-      Optional<String> icon,
-      Optional<Set<String>> interests,
-      Optional<Location> location) throws EntityNotFoundException {
+      @NonNull Long studentID,
+      @NonNull Optional<String> name,
+      @NonNull Optional<String> bio,
+      @NonNull Optional<String> icon,
+      @NonNull Optional<Set<String>> interests,
+      @NonNull Optional<Location> location) throws EntityNotFoundException {
 
     Student student = repo
         .findById(studentID)

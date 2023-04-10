@@ -9,13 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import studentscroll.api.posts.data.Post;
 
 @Entity(name = "student")
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@AllArgsConstructor
+@Accessors(chain = true)
 public class Student implements UserDetails {
 
   @Id
@@ -40,13 +41,15 @@ public class Student implements UserDetails {
   @Embedded
   private Settings settings = new Settings();
 
-  @OneToMany(mappedBy = "poster")
+  @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Post> posts;
 
-  public Student setId(Long newId) {
-    id = newId;
+  public Student addPost(Post post) {
+    posts.add(post);
     return this;
   }
+
+  // security
 
   @Override
   public String getPassword() {

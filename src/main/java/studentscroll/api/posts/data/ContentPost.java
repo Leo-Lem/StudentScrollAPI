@@ -15,8 +15,8 @@ public class ContentPost extends Post {
   @NonNull
   private String content = "";
 
-  public ContentPost(Long posterId, String title, Set<String> tags, String content) {
-    super(posterId, title, tags);
+  public ContentPost(String title, Set<String> tags, String content) {
+    super(title, tags);
     this.content = content;
   }
 
