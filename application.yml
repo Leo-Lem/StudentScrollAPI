@@ -1,17 +1,1 @@
-spring:
-  profiles.active: dev
-  datasource:
-    url: jdbc:postgresql://${PSQL_URL}/studentscroll
-    username: ${PSQL_USERNAME}
-    password: ${PSQL_PASSWORD}
-    driverClassName: org.postgresql.Driver
-  jpa:
-    properties.hibernate:
-      jdbc.lob.non_contextual_creation: true
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate.ddl-auto: create
-    open-in-view: true
-
-springdoc:
-  api-docs.path: /docs
-  swagger-ui.path: /docs/swagger
+spring.profiles.active: dev

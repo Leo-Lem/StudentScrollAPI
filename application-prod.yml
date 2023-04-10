@@ -1,0 +1,19 @@
+server.port: 5001
+
+spring:
+  main.exit-on-close: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/studentscroll
+    username: ${PSQL_USERNAME}
+    password: ${PSQL_PASSWORD}
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties.hibernate:
+      jdbc.lob.non_contextual_creation: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: update
+    open-in-view: true
+
+springdoc:
+  api-docs.path: /docs
+  swagger-ui.path: /docs/swagger
