@@ -31,7 +31,8 @@ public class PostsRestController {
   @Operation(summary = "Create a new post.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the post."),
-      @ApiResponse(responseCode = "400", description = "Missing fields in request.", content = @Content) })
+      @ApiResponse(responseCode = "400", description = "Missing fields in request.", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Poster with id does not exist.", content = @Content) })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public PostResponse create(
