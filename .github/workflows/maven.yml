@@ -81,11 +81,22 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
-      - name: Deploy to server
+      - name: Set up SSH
         run: |
-          echo "$SSH_HOST" > github_actions_key && chmod 600 github_actions_key
-          ssh -v -o StrictHostKeyChecking=no -i github_actions_key "${SSH_USER}@${SSH_HOST}" 'ls -l'
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/github-actions-key
+          chmod 600 ~/.ssh/github-actions-key
+          cat >>~/.ssh/config <<END
+          Host StudentScroll
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/github-actions-key
+            StrictHostKeyChecking no
+          END
         env:
           SSH_HOST: ${{ vars.AWS_HOST }}
           SSH_USER: ${{ vars.AWS_USER }}
           SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+      - name: Deploy to server
+        run: ssh StudentScroll 'ls -l'
+        
