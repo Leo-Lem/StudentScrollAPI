@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: target/
+          path: target/api*.jar
 
   integration-test:
     runs-on: ubuntu-latest
@@ -81,10 +81,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
-      - name: Configure SSH
+      - name: print contents
+        run: ls -l
+      - name: Deploy to server
         run: |
-          echo "$AWS_SSH_KEY" > github_actions_key && chmod 600 github_actions_key
-          ssh -o StrictHostKeyChecking=no -i github_actions_key ${AWS_USER}@${AWS_HOST} 'ls -l'
+          echo "$SSH_HOST" > github_actions_key && chmod 600 github_actions_key
+          ssh -o StrictHostKeyChecking=no -i github_actions_key ${SSH_USER}@${SSH_KEY} 'ls -l'
         env:
           SSH_HOST: ${{ vars.AWS_HOST }}
           SSH_USER: ${{ vars.AWS_USER }}
