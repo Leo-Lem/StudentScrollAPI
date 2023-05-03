@@ -80,6 +80,7 @@ public class PostsRestController {
   @GetMapping
   public List<PostResponse> readAll(
       HttpServletResponse response,
+      @RequestParam Optional<Long> posterId,
       @RequestParam Optional<Integer> page,
       @RequestParam Optional<Integer> size,
       @RequestParam Optional<List<String>> sort,
@@ -89,7 +90,10 @@ public class PostsRestController {
 
     Page<? extends Post> posts;
 
-    posts = service.readAll(pageable);
+    if (posterId.isPresent())
+      posts = service.readAllByPosterId(posterId.get(), pageable);
+    else
+      posts = service.readAll(pageable);
 
     response.setHeader("X-Total-Count", String.valueOf(posts.getTotalElements()));
 
