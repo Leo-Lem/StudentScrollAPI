@@ -81,8 +81,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
-      - name: print contents
-        run: ls -l
       - name: Deploy to server
         run: |
           echo "$SSH_HOST" > github_actions_key && chmod 600 github_actions_key
