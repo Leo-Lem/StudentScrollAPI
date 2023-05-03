@@ -3,7 +3,7 @@ package studentscroll.api.unit.posts;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -122,7 +122,7 @@ public class PostsRestControllerTests {
     return (EventPost) new EventPost(
         "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
-        LocalDate.now(),
+        LocalDateTime.now(),
         new Location("Jimmy's House", 1.0, 1.0))
         .setPoster(new Student().setId(1L));
   }

@@ -1,6 +1,6 @@
 package studentscroll.api.posts.data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import jakarta.persistence.*;
@@ -22,7 +22,7 @@ public class Post {
   private Long id;
 
   @Column(name = "timestamp")
-  private final LocalDate timestamp = LocalDate.now();
+  private final LocalDateTime timestamp = LocalDateTime.now();
 
   @Column(name = "title")
   @NonNull

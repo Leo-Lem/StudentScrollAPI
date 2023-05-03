@@ -1,6 +1,6 @@
 package studentscroll.api.posts.web.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.*;
 import studentscroll.api.shared.Location;
@@ -14,7 +14,7 @@ public class UpdatePostRequest {
 
   private final String newDescription;
 
-  private final LocalDate newDate;
+  private final LocalDateTime newDate;
 
   private final Location newLocation;
 

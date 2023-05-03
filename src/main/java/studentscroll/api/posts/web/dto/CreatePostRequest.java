@@ -1,11 +1,9 @@
 package studentscroll.api.posts.web.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.*;
-import studentscroll.api.posts.data.ContentPost;
-import studentscroll.api.posts.data.EventPost;
-import studentscroll.api.posts.data.Post;
+import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.Location;
 
 @Data
@@ -23,7 +21,7 @@ public class CreatePostRequest {
   // event posts
   private final String description;
 
-  private final LocalDate date;
+  private final LocalDateTime date;
 
   private final Location location;
 
