@@ -98,5 +98,5 @@ jobs:
           SSH_USER: ${{ vars.AWS_USER }}
           SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
       - name: Deploy to server
-        run: scp "/home/runner/work/StudentScrollAPI/StudentScrollAPI/api*.jar" "StudentScroll:/home/ubuntu/studentscroll/api/api.jar"
+        run: scp /home/runner/work/StudentScrollAPI/StudentScrollAPI/api*.jar StudentScroll:/home/ubuntu/studentscroll/api/api.jar
         
