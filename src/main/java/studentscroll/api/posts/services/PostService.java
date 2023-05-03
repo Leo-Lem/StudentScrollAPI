@@ -1,11 +1,17 @@
 package studentscroll.api.posts.services;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
+import lombok.val;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.Location;
 import studentscroll.api.students.data.StudentRepository;
@@ -24,7 +30,7 @@ public class PostService {
       @NonNull String title,
       @NonNull Set<String> tags,
       @NonNull String description,
-      @NonNull LocalDate date,
+      @NonNull LocalDateTime date,
       @NonNull Location location) throws EntityNotFoundException {
     return (EventPost) create(posterId, new EventPost(title, tags, description, date, location));
   }
@@ -37,9 +43,37 @@ public class PostService {
     return (ContentPost) create(posterId, new ContentPost(title, tags, content));
   }
 
-  public Post read(
-      @NonNull Long postID) throws EntityNotFoundException {
+  public Post read(@NonNull Long postID) throws EntityNotFoundException {
     return repo.findById(postID).orElseThrow(() -> new EntityNotFoundException());
+  }
+
+  public Page<Post> readAll(@NonNull Pageable pageable) {
+    return repo.findAll(pageable);
+  }
+
+  public Page<Post> readAllByPosterId(@NonNull Long posterId, @NonNull Pageable pageable) {
+    return repo.findByPosterId(posterId, pageable);
+  }
+
+  public Page<Post> readAllByTag(@NonNull String tag, @NonNull Pageable pageable) {
+    return repo.findByTags(tag, pageable);
+  }
+
+  public Page<ContentPost> readByContent(@NonNull String pattern, @NonNull Pageable pageable) {
+    return repo.findByContentLike(pattern, pageable);
+  }
+
+  public Pageable createPageable(
+      @NonNull Optional<Integer> page,
+      @NonNull Optional<Integer> size,
+      @NonNull Optional<List<String>> sort,
+      @NonNull Optional<Boolean> sortAscending) {
+    val sortOrder = sort
+        .map(s -> Sort.by(sortAscending.orElse(true) ? Sort.Direction.ASC : Sort.Direction.DESC,
+            s.toArray(new String[0])))
+        .orElse(Sort.unsorted());
+
+    return page.map(p -> (Pageable) PageRequest.of(p, size.orElse(10), sortOrder)).orElse(Pageable.unpaged());
   }
 
   public Post update(
@@ -47,7 +81,7 @@ public class PostService {
       @NonNull Optional<String> newTitle,
       @NonNull Optional<Set<String>> newTags,
       @NonNull Optional<String> newDescription,
-      @NonNull Optional<LocalDate> newDate,
+      @NonNull Optional<LocalDateTime> newDate,
       @NonNull Optional<Location> newLocation,
       @NonNull Optional<String> newContent) throws EntityNotFoundException {
     try {

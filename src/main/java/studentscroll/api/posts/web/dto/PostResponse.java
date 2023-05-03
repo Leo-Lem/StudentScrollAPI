@@ -1,6 +1,6 @@
 package studentscroll.api.posts.web.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -29,7 +29,7 @@ public class PostResponse {
 
   private final String description;
 
-  private final LocalDate date;
+  private final LocalDateTime date;
 
   private final Location location;
 

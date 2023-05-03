@@ -3,7 +3,7 @@ package studentscroll.api.integration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,93 +24,93 @@ import studentscroll.api.students.web.dto.CreateStudentRequest;
 @DirtiesContext
 public class CRUDPostIntegrationTest {
 
-  @Autowired
-  private MockMvc mockMVC;
+    @Autowired
+    private MockMvc mockMVC;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-  @Test
-  public void crudPostIntegrationTest() throws Exception {
-    createStudent();
+    @Test
+    public void crudPostIntegrationTest() throws Exception {
+        createStudent();
 
-    val createContentPostRequest = new CreatePostRequest(
-        1L, "Title", new String[] { "TAG", "ANOTHER_TAG" }, null, null, null, "Some content here");
-    val updateContentPostRequest = new UpdatePostRequest(
-        "My new title", null, null, null, null, "some new content");
+        val createContentPostRequest = new CreatePostRequest(
+                1L, "Title", new String[] { "TAG", "ANOTHER_TAG" }, null, null, null, "Some content here");
+        val updateContentPostRequest = new UpdatePostRequest(
+                "My new title", null, null, null, null, "some new content");
 
-    val createEventPostRequest = new CreatePostRequest(
-        1L, "Title", new String[] { "TAG", "ANOTHER_TAG" },
-        "Some description here", LocalDate.now(), new Location("", 1.0, 1.0), null);
-    val updateEventPostRequest = new UpdatePostRequest(
-        "My new title", null, "some new content", null, null, null);
+        val createEventPostRequest = new CreatePostRequest(
+                1L, "Title", new String[] { "TAG", "ANOTHER_TAG" },
+                "Some description here", LocalDateTime.now(), new Location("", 1.0, 1.0), null);
+        val updateEventPostRequest = new UpdatePostRequest(
+                "My new title", null, "some new content", null, null, null);
 
-    val invalidCreatePostRequest = new CreatePostRequest(1L, "Some title", new String[] {}, null, null, null, null);
+        val invalidCreatePostRequest = new CreatePostRequest(1L, "Some title", new String[] {}, null, null, null, null);
 
-    mockMVC.perform(
-        get("/posts/1"))
-        .andExpect(status().isNotFound());
+        mockMVC.perform(
+                get("/posts/1"))
+                .andExpect(status().isNotFound());
 
-    mockMVC.perform(
-        put("/posts/1")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(updateContentPostRequest)))
-        .andExpect(status().isNotFound());
+        mockMVC.perform(
+                put("/posts/1")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(updateContentPostRequest)))
+                .andExpect(status().isNotFound());
 
-    mockMVC.perform(
-        delete("/posts/1"))
-        .andExpect(status().isNotFound());
+        mockMVC.perform(
+                delete("/posts/1"))
+                .andExpect(status().isNotFound());
 
-    mockMVC.perform(
-        post("/posts")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(createContentPostRequest)))
-        .andExpect(status().isCreated());
+        mockMVC.perform(
+                post("/posts")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(createContentPostRequest)))
+                .andExpect(status().isCreated());
 
-    mockMVC.perform(
-        post("/posts")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(createEventPostRequest)))
-        .andExpect(status().isCreated());
+        mockMVC.perform(
+                post("/posts")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(createEventPostRequest)))
+                .andExpect(status().isCreated());
 
-    mockMVC.perform(
-        post("/posts")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(invalidCreatePostRequest)))
-        .andExpect(status().isBadRequest());
+        mockMVC.perform(
+                post("/posts")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(invalidCreatePostRequest)))
+                .andExpect(status().isBadRequest());
 
-    mockMVC.perform(
-        get("/posts/1"))
-        .andExpect(status().isOk());
+        mockMVC.perform(
+                get("/posts/1"))
+                .andExpect(status().isOk());
 
-    mockMVC.perform(
-        put("/posts/1")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(updateContentPostRequest)))
-        .andExpect(status().isOk());
+        mockMVC.perform(
+                put("/posts/1")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(updateContentPostRequest)))
+                .andExpect(status().isOk());
 
-    mockMVC.perform(
-        put("/posts/2")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(updateEventPostRequest)))
-        .andExpect(status().isOk());
+        mockMVC.perform(
+                put("/posts/2")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(updateEventPostRequest)))
+                .andExpect(status().isOk());
 
-    mockMVC.perform(
-        delete("/posts/1"))
-        .andExpect(status().isNoContent());
+        mockMVC.perform(
+                delete("/posts/1"))
+                .andExpect(status().isNoContent());
 
-    mockMVC.perform(
-        delete("/posts/1"))
-        .andExpect(status().isNotFound());
-  }
+        mockMVC.perform(
+                delete("/posts/1"))
+                .andExpect(status().isNotFound());
+    }
 
-  private void createStudent() throws Exception {
-    val registerRequest = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
+    private void createStudent() throws Exception {
+        val registerRequest = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
 
-    mockMVC.perform(
-        post("/students")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(registerRequest)));
-  }
+        mockMVC.perform(
+                post("/students")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(registerRequest)));
+    }
 
 }

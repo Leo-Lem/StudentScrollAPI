@@ -3,9 +3,11 @@ package studentscroll.api.posts.web;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
@@ -71,6 +73,46 @@ public class PostsRestController {
   public PostResponse read(
       @PathVariable Long postId) throws EntityNotFoundException {
     return new PostResponse(service.read(postId));
+  }
+
+  @Operation(summary = "Find all matching posts.")
+  @ApiResponse(responseCode = "200", description = "Returning posts.")
+  @GetMapping
+  public List<PostResponse> readAll(
+      HttpServletResponse response,
+      @RequestParam Optional<Long> posterId,
+      @RequestParam Optional<Integer> page,
+      @RequestParam Optional<Integer> size,
+      @RequestParam Optional<List<String>> sort,
+      @RequestParam Optional<Boolean> sortAscending) {
+
+    val pageable = service.createPageable(page, size, sort, sortAscending);
+
+    Page<? extends Post> posts;
+
+    if (posterId.isPresent())
+      posts = service.readAllByPosterId(posterId.get(), pageable);
+    else
+      posts = service.readAll(pageable);
+
+    response.setHeader("X-Total-Count", String.valueOf(posts.getTotalElements()));
+
+    response.addHeader("Link", buildPageLinkHeader("first", 0, posts));
+    response.addHeader("Link", buildPageLinkHeader("last", posts.getTotalPages(), posts));
+
+    if (posts.hasNext())
+      response.addHeader("Link", buildPageLinkHeader("next", posts.getNumber() + 1, posts));
+    if (posts.hasPrevious())
+      response.addHeader("Link", buildPageLinkHeader("previous", posts.getNumber() - 1, posts));
+
+    return posts.stream().map(PostResponse::new).toList();
+  }
+
+  private String buildPageLinkHeader(String rel, Integer page, Page<? extends Post> posts) {
+    val builder = ServletUriComponentsBuilder.fromCurrentRequest();
+    builder.replaceQueryParam("page", page);
+    builder.replaceQueryParam("size", posts.getSize());
+    return "<" + builder.toUriString() + ">; rel=\"" + rel + "\"";
   }
 
   @Operation(summary = "Update the post.")

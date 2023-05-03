@@ -1,6 +1,6 @@
 package studentscroll.api.posts.data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -20,13 +20,13 @@ public class EventPost extends Post {
 
   @Column(name = "date")
   @NonNull
-  private LocalDate date;
+  private LocalDateTime date;
 
   @Embedded
   @NonNull
   private Location location;
 
-  public EventPost(String title, Set<String> tags, String description, LocalDate date, Location location) {
+  public EventPost(String title, Set<String> tags, String description, LocalDateTime date, Location location) {
     super(title, tags);
     this.description = description;
     this.date = date;
