@@ -2,7 +2,7 @@
 
 This is the REST API behind the StudentScroll app ([OpenAPI specs](https://studentscroll.net/api/v1/docs/swagger)).
 
-[![CI](https://github.com/Leo-Lem/StudentScrollAPI/actions/workflows/maven.yml/badge.svg)](https://github.com/Leo-Lem/StudentScrollAPI/actions/workflows/maven.yml)
+[![CI/CD](https://github.com/Leo-Lem/StudentScrollAPI/actions/workflows/cicd.yml/badge.svg)](https://github.com/Leo-Lem/StudentScrollAPI/actions/workflows/cicd.yml)
 
 ## Setting up Maven for macOS
 

@@ -4,8 +4,6 @@ on:
   push:
     branches: ["main"]
     paths-ignore: ["**/*.md"]
-  pull_request:
-    branches: ["main"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,7 +16,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{env.JDK_VERSION}}
@@ -31,7 +28,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{env.JDK_VERSION}}
@@ -44,7 +40,6 @@ jobs:
 
   package:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{env.JDK_VERSION}}
@@ -62,7 +57,6 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{env.JDK_VERSION}}

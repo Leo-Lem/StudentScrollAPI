@@ -1,0 +1,62 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  JDK_VERSION: "17"
+  JDK_DISTRIBUTION: "temurin"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B compile --file pom.xml
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B test --file pom.xml
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B package --file pom.xml
+
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JDK_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JDK_VERSION}}
+          distribution: ${{env.JDK_DISTRIBUTION}}
+          cache: "maven"
+      - run: mvn -B integration-test --file pom.xml
