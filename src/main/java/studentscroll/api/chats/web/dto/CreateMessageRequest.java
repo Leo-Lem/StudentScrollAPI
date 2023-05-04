@@ -1,5 +1,15 @@
 package studentscroll.api.chats.web.dto;
 
-public class CreateMessageRequest {
+import lombok.*;
 
+@Data
+public class CreateMessageRequest {
+    @NonNull
+    private final String content;
+
+    @NonNull
+    private final Long senderId;
+
+    @NonNull
+    private final Long receiverId;
 }

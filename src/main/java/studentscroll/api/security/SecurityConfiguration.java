@@ -63,8 +63,9 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.GET,
                 "/students/{studentId}/profile", "/posts/{postId}", "/posts")
             .authenticated()
-            .requestMatchers(HttpMethod.POST, "/posts").authenticated())
+            .requestMatchers(HttpMethod.POST, "/posts", "/chats").authenticated())
         .authorizeHttpRequests(authz -> authz
+            .requestMatchers("/chats/{chatId}").authenticated() // TODO: adjust permissions
             .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())
