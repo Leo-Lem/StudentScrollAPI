@@ -1,9 +1,9 @@
-name: CI
+name: CI/CD
 
 on:
   push:
     branches: ["main"]
-    paths-ignore: ["**/*.md", "**/LICENSE"]
+    paths-ignore: ["**/*.md"]
   pull_request:
     branches: ["main"]
 
@@ -54,6 +54,11 @@ jobs:
           distribution: ${{env.JDK_DISTRIBUTION}}
           cache: "maven"
       - run: mvn -B package --file pom.xml
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: target/api*.jar
 
   integration-test:
     runs-on: ubuntu-latest
@@ -67,3 +72,32 @@ jobs:
           distribution: ${{env.JDK_DISTRIBUTION}}
           cache: "maven"
       - run: mvn -B integration-test --file pom.xml
+
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/github-actions-key
+          chmod 600 ~/.ssh/github-actions-key
+          cat >>~/.ssh/config <<END
+          Host StudentScroll
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/github-actions-key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_HOST: ${{ secrets.AWS_HOST }}
+          SSH_USER: ${{ secrets.AWS_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+      - name: Deploy to server
+        run: |
+          scp /home/runner/work/StudentScrollAPI/StudentScrollAPI/api*.jar StudentScroll:/home/ubuntu/studentscroll/api/api.jar
+          ssh StudentScroll 'sudo systemctl restart studentscrollapi'
