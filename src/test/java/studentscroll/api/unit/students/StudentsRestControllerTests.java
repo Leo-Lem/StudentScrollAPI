@@ -48,6 +48,7 @@ public class StudentsRestControllerTests {
         .thenReturn(new Student(email, "abc123", new Profile(name)).setId(1L));
 
     StudentResponse response = controller.create(request, mock(HttpServletResponse.class));
+    
     assertNotNull(response.getId());
     assertEquals(name, response.getName());
     assertEquals(email, response.getEmail());

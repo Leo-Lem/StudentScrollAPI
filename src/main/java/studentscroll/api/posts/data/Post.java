@@ -34,6 +34,6 @@ public class Post {
 
   @JoinColumn(name = "student_id")
   @ManyToOne(fetch = FetchType.EAGER)
-  public Student poster;
+  private Student poster;
 
 }
