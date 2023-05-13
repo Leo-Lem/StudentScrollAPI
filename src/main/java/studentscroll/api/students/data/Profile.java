@@ -25,6 +25,13 @@ public class Profile {
   @Column(name = "interests")
   private Set<String> interests = new HashSet<>();
 
+  @ManyToMany
+  @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+  private Set<Student> followers = new HashSet<>();
+
+  @ManyToMany(mappedBy = "followers")
+  private Set<Student> follows = new HashSet<>();
+
   @Embedded
   private Location location;
 
