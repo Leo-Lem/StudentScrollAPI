@@ -8,6 +8,7 @@ import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.students.data.*;
@@ -106,8 +107,44 @@ public class FollowersServiceTests {
 
     assertThrows(EntityNotFoundException.class, () -> service.readAllFollowers(1L));
     assertThrows(EntityNotFoundException.class, () -> service.readAllFollows(1L));
-    assertThrows(EntityNotFoundException.class, () -> service.follow(1L, 1L));
-    assertThrows(EntityNotFoundException.class, () -> service.unfollow(1L, 1L));
+    assertThrows(EntityNotFoundException.class, () -> service.follow(1L, 2L));
+    assertThrows(EntityNotFoundException.class, () -> service.unfollow(1L, 2L));
+  }
+
+  @Test
+  public void givenStudentIsAlreadyFollowing_whenFollowing_thenThrowsIllegalStateException() {
+    val student = exampleStudent();
+    val follower = exampleStudent();
+    student.getProfile().getFollowers().add(follower);
+
+    when(repo.findById(student.getId()))
+        .thenReturn(Optional.of(student));
+
+    when(repo.findById(follower.getId()))
+        .thenReturn(Optional.of(follower));
+
+    assertThrows(EntityExistsException.class, () -> service.follow(student.getId(), follower.getId()));
+  }
+
+  @Test
+  public void givenStudentIsNotFollowing_whenUnfollowing_thenThrowsEntityNotFoundException() {
+    val student = exampleStudent();
+    val follower = exampleStudent();
+
+    when(repo.findById(student.getId()))
+        .thenReturn(Optional.of(student));
+
+    when(repo.findById(follower.getId()))
+        .thenReturn(Optional.of(follower));
+
+    assertThrows(EntityNotFoundException.class, () -> service.unfollow(student.getId(), follower.getId()));
+  }
+
+  @Test
+  public void givenStudentIdIsFollowerId_whenFollowing_thenThrowsIllegalArgumentException() {
+    val student = exampleStudent();
+
+    assertThrows(IllegalArgumentException.class, () -> service.follow(student.getId(), student.getId()));
   }
 
   private Student exampleStudent() {

@@ -36,4 +36,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
   }
 
+  @ExceptionHandler(value = IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ResponseEntity<Object> handleBadRequest(Exception e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
+
 }

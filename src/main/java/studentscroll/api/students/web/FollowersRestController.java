@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.*;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import studentscroll.api.students.services.FollowersService;
 
@@ -49,20 +50,23 @@ public class FollowersRestController {
   @Operation(summary = "Follow the student.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Followed the student."),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
+      @ApiResponse(responseCode = "400", description = "Student cannot follow themselves.", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content),
+      @ApiResponse(responseCode = "409", description = "Student is already followed.", content = @Content)
+  })
   @SecurityRequirement(name = "token")
   @PostMapping("/followers/{followerId}")
   @ResponseStatus(HttpStatus.CREATED)
   public Long follow(
       @PathVariable Long studentId,
-      @PathVariable Long followerId) throws EntityNotFoundException {
+      @PathVariable Long followerId) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
     return service.follow(studentId, followerId);
   }
 
   @Operation(summary = "Unfollow the student.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Unfollowed the student."),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
+      @ApiResponse(responseCode = "404", description = "Unfollower is not following or student does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @DeleteMapping("/followers/{followerId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
