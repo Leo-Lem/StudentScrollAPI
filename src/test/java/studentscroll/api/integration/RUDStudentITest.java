@@ -19,7 +19,7 @@ import studentscroll.api.students.web.dto.UpdateStudentRequest;
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class RUDStudentIntegrationTest {
+public class RUDStudentITest {
 
   @Autowired
   private MockMvc mockMVC;

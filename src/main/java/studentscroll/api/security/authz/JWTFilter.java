@@ -1,6 +1,7 @@
 package studentscroll.api.security.authz;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,9 +43,9 @@ public class JWTFilter extends OncePerRequestFilter {
         }
       }
     } catch (ExpiredJwtException e) {
-      System.err.println("JWT is expired.");
+      Logger.getLogger("JWTFilter").warning("JWT is expired.");
     } catch (Exception e) {
-      System.err.println("Failed to authenticate: " + e.getMessage());
+      Logger.getLogger("JWTFilter").warning("Failed to authenticate: " + e.getMessage());
     }
 
     filterChain.doFilter(request, response);
@@ -59,7 +60,7 @@ public class JWTFilter extends OncePerRequestFilter {
         token = headerAuth.substring(7, headerAuth.length());
       else {
         token = headerAuth;
-        System.out.println("Header is missing Bearer prefix.");
+        Logger.getLogger("JWTFilter").warning("Header is missing Bearer prefix.");
       }
 
       return new JSONWebToken(token);

@@ -9,20 +9,20 @@ import lombok.*;
 @AllArgsConstructor
 public class Settings {
 
-  @Column(name = "isNotified")
-  private Boolean isNotified = false;
-
-  @Column(name = "isLocated")
-  private Boolean isLocated = false;
-
   @Column(name = "theme")
   private String theme = "DARK";
 
   @Column(name = "locale")
   private String locale = "EN";
 
-  @Column(name = "privacy")
-  private Privacy privacy = Privacy.VISIBLE;
+  @Column(name = "isLocated")
+  private Boolean isLocated = false;
+
+  // @Column(name = "isNotified")
+  // private Boolean isNotified = false;
+
+  // @Column(name = "privacy")
+  // private String privacy = "VISIBLE";
 
   // @OneToMany
   // @JoinColumn

@@ -30,12 +30,6 @@ public class StudentsRestController {
   @Autowired
   private StudentService studentService;
 
-  @Autowired
-  private ProfileService profileService;
-
-  // @Autowired
-  // private SettingsService settingsService;
-
   @Operation(summary = "Create a new student.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the student."),
@@ -96,34 +90,6 @@ public class StudentsRestController {
   public void delete(
       @PathVariable Long studentId) throws EntityNotFoundException {
     studentService.delete(studentId);
-  }
-
-  @Operation(summary = "Find profile of the student.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the profile."),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @GetMapping("/{studentId}/profile")
-  public ProfileResponse readProfile(
-      @PathVariable Long studentId) throws EntityNotFoundException {
-    return new ProfileResponse(profileService.read(studentId));
-  }
-
-  @Operation(summary = "Update profile of the student.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the profile."),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @PutMapping("/{studentId}/profile")
-  public ProfileResponse updateProfile(
-      @PathVariable Long studentId, @RequestBody UpdateProfileRequest request) throws EntityNotFoundException {
-    return new ProfileResponse(profileService.update(
-        studentId,
-        Optional.ofNullable(request.getNewName()),
-        Optional.ofNullable(request.getNewBio()),
-        Optional.ofNullable(request.getNewIcon()),
-        Optional.ofNullable(request.getNewInterests()).map(Set::of),
-        Optional.ofNullable(request.getNewLocation())));
   }
 
 }

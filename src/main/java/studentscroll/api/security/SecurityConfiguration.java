@@ -24,10 +24,13 @@ public class SecurityConfiguration {
   private UserDetailsServiceImpl userDetailsService;
 
   @Autowired
-  private IsStudentAuthorizationManager isStudentAuthz;
+  private IsStudentAuthz isStudentAuthz;
 
   @Autowired
-  private IsPosterAuthorizationManager isPosterAuthz;
+  private IsPosterAuthz isPosterAuthz;
+
+  @Autowired
+  private isSenderOrReceiverAuthz isSenderOrReceiverAuthz;
 
   @Bean
   public JWTFilter jwtFilter() {
@@ -65,7 +68,7 @@ public class SecurityConfiguration {
             .authenticated()
             .requestMatchers(HttpMethod.POST, "/posts", "/chats").authenticated())
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/chats/{chatId}").authenticated() // TODO: adjust permissions
+            .requestMatchers("/chats/{chatId}").access(isSenderOrReceiverAuthz)
             .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())

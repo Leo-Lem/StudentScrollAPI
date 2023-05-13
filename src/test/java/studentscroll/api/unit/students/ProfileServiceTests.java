@@ -26,7 +26,7 @@ public class ProfileServiceTests {
   }
 
   @Test
-  public void givenProfileExists_whenReadingProfile_thenReturnsCorrectProfile() {
+  public void givenStudentExists_whenReadingProfile_thenReturnsCorrectProfile() {
     Student student = exampleStudent();
     Profile example = exampleProfile();
     student.setProfile(example);
@@ -40,7 +40,7 @@ public class ProfileServiceTests {
   }
 
   @Test
-  public void givenProfileDoesNotExist_whenReadingProfile_thenThrowsEntityNotFoundException() {
+  public void givenStudentDoesNotExist_whenReadingProfile_thenThrowsEntityNotFoundException() {
     Long studentID = 1L;
 
     when(repo.findById(studentID))
@@ -50,7 +50,7 @@ public class ProfileServiceTests {
   }
 
   @Test
-  public void givenProfileExists_whenUpdatingAllProfileInformation_thenAllProfileInformationIsUpdated() {
+  public void givenStudentExists_whenUpdatingAllProfileInformation_thenAllProfileInformationIsUpdated() {
     Student student = exampleStudent();
     Profile example = exampleProfile();
 
@@ -76,7 +76,7 @@ public class ProfileServiceTests {
   }
 
   @Test
-  public void givenProfileExists_whenUpdatingOnlySomeInformation_thenOnlyThatInformationIsUpdated() {
+  public void givenStudentExists_whenUpdatingOnlySomeInformation_thenOnlyThatInformationIsUpdated() {
     Student student = exampleStudent();
     Profile example = exampleProfile();
 

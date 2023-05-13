@@ -25,22 +25,22 @@ public class ProfileService {
 
   public Profile update(
       @NonNull Long studentID,
-      @NonNull Optional<String> name,
-      @NonNull Optional<String> bio,
-      @NonNull Optional<String> icon,
-      @NonNull Optional<Set<String>> interests,
-      @NonNull Optional<Location> location) throws EntityNotFoundException {
+      @NonNull Optional<String> newName,
+      @NonNull Optional<String> newBio,
+      @NonNull Optional<String> newIcon,
+      @NonNull Optional<Set<String>> newInterests,
+      @NonNull Optional<Location> newLocation) throws EntityNotFoundException {
 
     Student student = repo
         .findById(studentID)
         .orElseThrow(() -> new EntityNotFoundException("Student does not exist."));
 
     Profile profile = student.getProfile();
-    name.ifPresent(unwrapped -> profile.setName(unwrapped));
-    bio.ifPresent(unwrapped -> profile.setBio(unwrapped));
-    icon.ifPresent(unwrapped -> profile.setIcon(unwrapped));
-    interests.ifPresent(unwrapped -> profile.setInterests(unwrapped));
-    location.ifPresent(unwrapped -> profile.setLocation(Optional.of(unwrapped)));
+    newName.ifPresent(unwrapped -> profile.setName(unwrapped));
+    newBio.ifPresent(unwrapped -> profile.setBio(unwrapped));
+    newIcon.ifPresent(unwrapped -> profile.setIcon(unwrapped));
+    newInterests.ifPresent(unwrapped -> profile.setInterests(unwrapped));
+    newLocation.ifPresent(unwrapped -> profile.setLocation(Optional.of(unwrapped)));
     student.setProfile(profile);
 
     return repo.save(student).getProfile();
