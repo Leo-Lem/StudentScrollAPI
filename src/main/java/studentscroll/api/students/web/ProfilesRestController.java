@@ -13,7 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import studentscroll.api.students.services.ProfileService;
 import studentscroll.api.students.web.dto.*;
 
-@Tag(name = "Profiles", description = "Everything related to profiles.")
+@Tag(name = "Profiles", description = "Everything related to a student's profiles.")
 @RestController
 @RequestMapping("/students/{studentId}/profile")
 public class ProfilesRestController {

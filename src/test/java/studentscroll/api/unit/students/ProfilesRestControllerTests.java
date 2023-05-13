@@ -7,7 +7,6 @@ import java.util.*;
 
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-import org.springframework.security.authentication.AuthenticationManager;
 
 import jakarta.persistence.*;
 import lombok.val;
@@ -20,13 +19,7 @@ import studentscroll.api.students.web.dto.*;
 public class ProfilesRestControllerTests {
 
   @Mock
-  private AuthenticationManager authManager;
-
-  @Mock
-  private StudentService studentService;
-
-  @Mock
-  private ProfileService profileService;
+  private ProfileService service;
 
   @InjectMocks
   private ProfilesRestController controller;
@@ -41,7 +34,7 @@ public class ProfilesRestControllerTests {
     val studentID = 1L;
     val profile = exampleProfile();
 
-    when(profileService.read(studentID))
+    when(service.read(studentID))
         .thenReturn(profile);
 
     assertNotNull(controller.readProfile(studentID));
@@ -51,10 +44,10 @@ public class ProfilesRestControllerTests {
   public void givenStudentDoesNotExist_whenGettingUpdatingProfile_thenThrowsEntityNotFoundException() {
     val studentID = 1L;
 
-    when(profileService.read(studentID))
+    when(service.read(studentID))
         .thenThrow(new EntityNotFoundException());
 
-    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
+    when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenThrow(new EntityNotFoundException());
 
     assertThrows(EntityNotFoundException.class, () -> controller.readProfile(studentID));
@@ -72,7 +65,7 @@ public class ProfilesRestControllerTests {
         profile.getInterests().toArray(new String[] {}),
         profile.getLocation().orElse(null));
 
-    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
+    when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(profile);
 
     ProfileResponse response = controller.updateProfile(1L, request);
@@ -92,7 +85,7 @@ public class ProfilesRestControllerTests {
     val updatedProfile = new Profile(
         name, profile.getBio(), icon, profile.getInterests(), profile.getLocation().orElse(null));
 
-    when(profileService.update(anyLong(), any(), any(), any(), any(), any()))
+    when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(updatedProfile);
 
     ProfileResponse response = controller.updateProfile(1L, request);
