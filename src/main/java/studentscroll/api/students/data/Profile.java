@@ -44,4 +44,9 @@ public class Profile {
     return this;
   }
 
+  public Profile addFollower(Student follower) {
+    followers.add(follower);
+    return this;
+  }
+
 }
