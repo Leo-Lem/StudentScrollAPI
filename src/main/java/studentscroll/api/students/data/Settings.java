@@ -10,10 +10,10 @@ import lombok.*;
 public class Settings {
 
   @Column(name = "theme")
-  private String theme = "DARK";
+  private String theme = "system";
 
   @Column(name = "locale")
-  private String locale = "EN";
+  private String locale = "en";
 
   @Column(name = "isLocated")
   private Boolean isLocated = false;

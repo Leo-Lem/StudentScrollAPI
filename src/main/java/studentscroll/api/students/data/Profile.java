@@ -20,7 +20,7 @@ public class Profile {
   private String bio = "";
 
   @Column(name = "icon")
-  private String icon = "PERSON";
+  private String icon = "default";
 
   @Column(name = "interests")
   private Set<String> interests = new HashSet<>();
