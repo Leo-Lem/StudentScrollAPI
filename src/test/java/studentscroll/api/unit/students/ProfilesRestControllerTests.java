@@ -41,7 +41,7 @@ public class ProfilesRestControllerTests {
   }
 
   @Test
-  public void givenStudentDoesNotExist_whenGettingUpdatingProfile_thenThrowsEntityNotFoundException() {
+  public void givenStudentDoesNotExist_whenGettingOrUpdatingProfile_thenThrowsEntityNotFoundException() {
     val studentID = 1L;
 
     when(service.read(studentID))

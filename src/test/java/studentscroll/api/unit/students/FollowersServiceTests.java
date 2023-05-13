@@ -7,11 +7,13 @@ import static org.mockito.Mockito.when;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.FollowersService;
 
-public class FollowersServiceTest {
+public class FollowersServiceTests {
 
   @Mock
   private StudentRepository repo;
@@ -99,6 +101,13 @@ public class FollowersServiceTest {
 
   @Test
   public void givenStudentDoesNotExist_whenReadingFollowersOrReadingFollowsOrFollowingOrUnfollowing_thenThrowsEntityNotFoundException() {
+    when(repo.findById(any(Long.class)))
+        .thenReturn(Optional.empty());
+
+    assertThrows(EntityNotFoundException.class, () -> service.readAllFollowers(1L));
+    assertThrows(EntityNotFoundException.class, () -> service.readAllFollows(1L));
+    assertThrows(EntityNotFoundException.class, () -> service.follow(1L, 1L));
+    assertThrows(EntityNotFoundException.class, () -> service.unfollow(1L, 1L));
   }
 
   private Student exampleStudent() {

@@ -29,7 +29,8 @@ public class Profile {
   @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
   private Set<Student> followers = new HashSet<>();
 
-  @ManyToMany(mappedBy = "followers")
+  @ManyToMany
+  @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
   private Set<Student> follows = new HashSet<>();
 
   @Embedded
