@@ -15,14 +15,14 @@ public class Settings {
   @Column(name = "locale")
   private String locale = "EN";
 
-  @Column(name = "isNotified")
-  private Boolean isNotified = false;
-
   @Column(name = "isLocated")
   private Boolean isLocated = false;
 
-  @Column(name = "privacy")
-  private String privacy = "VISIBLE";
+  // @Column(name = "isNotified")
+  // private Boolean isNotified = false;
+
+  // @Column(name = "privacy")
+  // private String privacy = "VISIBLE";
 
   // @OneToMany
   // @JoinColumn
