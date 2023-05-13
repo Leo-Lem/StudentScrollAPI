@@ -34,7 +34,6 @@ public class StudentsRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the student."),
       @ApiResponse(responseCode = "409", description = "Email is already in use.", content = @Content) })
-  @SecurityRequirement(name = "token")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public StudentResponse create(
