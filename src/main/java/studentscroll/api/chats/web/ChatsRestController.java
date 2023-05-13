@@ -45,7 +45,7 @@ public class ChatsRestController {
       @ApiResponse(responseCode = "200", description = "Found the message."),
       @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
-  @GetMapping("/{id}")
+  @GetMapping("/{chatId}")
   public MessageResponse read(@PathVariable Long id) throws EntityNotFoundException {
     return new MessageResponse(service.read(id));
   }
@@ -55,7 +55,7 @@ public class ChatsRestController {
       @ApiResponse(responseCode = "200", description = "Updated the message."),
       @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
-  @PutMapping("/{id}")
+  @PutMapping("/{chatId}")
   public MessageResponse update(
       @PathVariable Long id, @RequestBody String newContent) throws EntityNotFoundException {
     var message = service.read(id);
@@ -70,7 +70,7 @@ public class ChatsRestController {
       @ApiResponse(responseCode = "204", description = "Deleted the message.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{chatId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
       @PathVariable Long id) throws EntityNotFoundException {

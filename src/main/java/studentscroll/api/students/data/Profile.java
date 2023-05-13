@@ -27,11 +27,11 @@ public class Profile {
 
   @ManyToMany
   @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
-  private Set<Student> followers = new HashSet<>();
+  private List<Student> followers = new ArrayList<>();
 
   @ManyToMany
   @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-  private Set<Student> follows = new HashSet<>();
+  private List<Student> follows = new ArrayList<>();
 
   @Embedded
   private Location location;

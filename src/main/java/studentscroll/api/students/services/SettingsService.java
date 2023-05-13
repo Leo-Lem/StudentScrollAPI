@@ -21,7 +21,7 @@ public class SettingsService {
       @NonNull Long studentID) throws EntityNotFoundException {
     return repo
         .findById(studentID)
-        .orElseThrow(() -> new EntityNotFoundException("Student does not exist."))
+        .orElseThrow(EntityNotFoundException::new)
         .getSettings();
   }
 
@@ -32,7 +32,7 @@ public class SettingsService {
       @NonNull Optional<Boolean> newIsLocated) throws EntityNotFoundException {
     Student student = repo
         .findById(studentID)
-        .orElseThrow(() -> new EntityNotFoundException("Student does not exist."));
+        .orElseThrow(EntityNotFoundException::new);
 
     Settings profile = student.getSettings();
     newTheme.ifPresent(unwrapped -> profile.setTheme(unwrapped));

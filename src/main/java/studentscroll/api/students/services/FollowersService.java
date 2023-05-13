@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
+import studentscroll.api.students.data.*;
+
+// TODO: validate that follower is not the same as student
+// TODO: validate that follower does not already follow student
 
 @Service
 public class FollowersService {
@@ -21,6 +23,7 @@ public class FollowersService {
   public Set<Long> readAllFollowers(
       @NonNull Long studentID) throws EntityNotFoundException {
     val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
+    System.out.println(student.getProfile().getFollowers().stream().map(Student::getId).collect(Collectors.toSet()));
     return student.getProfile().getFollowers().stream().map(Student::getId).collect(Collectors.toSet());
   }
 
@@ -36,7 +39,8 @@ public class FollowersService {
     val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
     val follower = repo.findById(followerID).orElseThrow(EntityNotFoundException::new);
     student.getProfile().getFollowers().add(follower);
-    return repo.save(student).getId();
+    repo.save(student);
+    return followerID;
   }
 
   public void unfollow(
@@ -45,6 +49,7 @@ public class FollowersService {
     val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
     val follower = repo.findById(followerID).orElseThrow(EntityNotFoundException::new);
     student.getProfile().getFollowers().remove(follower);
+    repo.save(student);
   }
 
 }

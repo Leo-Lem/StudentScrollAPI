@@ -29,7 +29,7 @@ public class FollowersServiceTests {
   @Test
   public void givenStudentExists_whenReadingAllFollowers_thenReturnsCorrectFollowers() {
     val student = exampleStudent();
-    val followers = Set.of(exampleStudent(), exampleStudent());
+    val followers = List.of(exampleStudent(), exampleStudent());
     student.getProfile().setFollowers(followers);
 
     when(repo.findById(student.getId()))
@@ -46,7 +46,7 @@ public class FollowersServiceTests {
   @Test
   public void givenStudentExists_whenReadingAllFollows_thenReturnsCorrectFollows() {
     val student = exampleStudent();
-    val follows = Set.of(exampleStudent(), exampleStudent());
+    val follows = List.of(exampleStudent(), exampleStudent());
     student.getProfile().setFollows(follows);
 
     when(repo.findById(student.getId()))

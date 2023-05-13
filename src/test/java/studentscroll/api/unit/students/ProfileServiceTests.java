@@ -115,8 +115,8 @@ public class ProfileServiceTests {
             """,
         "PIGS",
         Set.of("farming", "construction", "redneck"),
-        new HashSet<>(),
-        new HashSet<>(),
+        new ArrayList<>(),
+        new ArrayList<>(),
         new Location("Rural Route 9, Springfield", 44.046111, -123.021944));
   }
 

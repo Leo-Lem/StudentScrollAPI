@@ -33,7 +33,7 @@ public class StudentService {
       @NonNull Long studentId) throws EntityNotFoundException {
     return repo
         .findById(studentId)
-        .orElseThrow(() -> new EntityNotFoundException());
+        .orElseThrow(EntityNotFoundException::new);
   }
 
   public Student update(

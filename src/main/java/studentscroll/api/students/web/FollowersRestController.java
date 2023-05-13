@@ -16,11 +16,35 @@ import studentscroll.api.students.services.FollowersService;
 
 @Tag(name = "Followers", description = "Everything related to a student's followers.")
 @RestController
-@RequestMapping("/students/{studentId}/profile")
+@RequestMapping("/students/{studentId}")
 public class FollowersRestController {
 
   @Autowired
   private FollowersService service;
+
+  @Operation(summary = "Find all followers.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Returning followers."),
+      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
+  @SecurityRequirement(name = "token")
+  @GetMapping("/followers")
+  @ResponseStatus(HttpStatus.OK)
+  public Set<Long> readAllFollowers(
+      @PathVariable Long studentId) throws EntityNotFoundException {
+    return service.readAllFollowers(studentId);
+  }
+
+  @Operation(summary = "Find all follows.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Returning follows."),
+      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
+  @SecurityRequirement(name = "token")
+  @GetMapping("/follows")
+  @ResponseStatus(HttpStatus.OK)
+  public Set<Long> readAllFollows(
+      @PathVariable Long studentId) throws EntityNotFoundException {
+    return service.readAllFollows(studentId);
+  }
 
   @Operation(summary = "Follow the student.")
   @ApiResponses(value = {
@@ -33,26 +57,6 @@ public class FollowersRestController {
       @PathVariable Long studentId,
       @PathVariable Long followerId) throws EntityNotFoundException {
     return service.follow(studentId, followerId);
-  }
-
-  @Operation(summary = "Find all followers.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Returning followers."),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @GetMapping("/followers")
-  public Set<Long> readAllFollowers(
-      @PathVariable Long studentId) throws EntityNotFoundException {
-    return service.readAllFollowers(studentId);
-  }
-
-  @Operation(summary = "Find all follows.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Returning follows."),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @GetMapping("/follows")
-  public Set<Long> readAllFollows(
-      @PathVariable Long studentId) throws EntityNotFoundException {
-    return service.readAllFollows(studentId);
   }
 
   @Operation(summary = "Unfollow the student.")
