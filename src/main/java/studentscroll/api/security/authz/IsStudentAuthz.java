@@ -2,7 +2,6 @@ package studentscroll.api.security.authz;
 
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
@@ -10,22 +9,22 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 
 import lombok.val;
-import studentscroll.api.posts.data.*;
 import studentscroll.api.students.data.*;
 
 @Component
-public class IsPosterAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
-
-  @Autowired
-  private PostRepository repo;
+public class IsStudentAuthz implements AuthorizationManager<RequestAuthorizationContext> {
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    val principalId = ((Student) supplier.get().getPrincipal()).getId();
-    val requestPostId = Long.parseLong(context.getVariables().get("postId"));
-    val posterId = repo.findById(requestPostId).map(Post::getPoster).map(Student::getId);
+    val principal = supplier.get().getPrincipal();
 
-    return new AuthorizationDecision(posterId.map(id -> id.equals(principalId)).orElse(false));
+    if (!(principal instanceof Student))
+      return new AuthorizationDecision(false);
+
+    val principalID = ((Student) principal).getId();
+    val requestID = Long.parseLong(context.getVariables().get("studentId"));
+
+    return new AuthorizationDecision(principalID.equals(requestID));
   }
 
 }

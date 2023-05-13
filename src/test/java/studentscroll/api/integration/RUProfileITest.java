@@ -17,7 +17,7 @@ import studentscroll.api.students.web.dto.*;
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class PuttingAndGettingProfileIntegrationTest {
+public class RUProfileITest {
 
   @Autowired
   private MockMvc mockMVC;
@@ -30,14 +30,16 @@ public class PuttingAndGettingProfileIntegrationTest {
     mockMVC.perform(
         post("/students")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(new CreateStudentRequest("John Silver", "abc@xyz.com", "1234"))))
+            .content(objectMapper
+                .writeValueAsString(new CreateStudentRequest("John Silver", "abc@xyz.com", "1234"))))
         .andExpect(jsonPath("$.id").value(1L));
 
     mockMVC.perform(
         put("/students/1/profile")
             .contentType("application/json")
             .content(objectMapper
-                .writeValueAsString(new UpdateProfileRequest("Donny", "Hello, I'm Donny.", "SHARK", null, null))))
+                .writeValueAsString(
+                    new UpdateProfileRequest("Donny", "Hello, I'm Donny.", "SHARK", null, null))))
         .andExpect(status().isOk());
 
     mockMVC.perform(get("/students/1/profile"))
