@@ -41,7 +41,7 @@ public class ProfilesRestControllerTests {
   }
 
   @Test
-  public void givenStudentDoesNotExist_whenGettingUpdatingProfile_thenThrowsEntityNotFoundException() {
+  public void givenStudentDoesNotExist_whenGettingOrUpdatingProfile_thenThrowsEntityNotFoundException() {
     val studentID = 1L;
 
     when(service.read(studentID))
@@ -83,7 +83,13 @@ public class ProfilesRestControllerTests {
     val request = new UpdateProfileRequest(name, null, icon, null, null);
 
     val updatedProfile = new Profile(
-        name, profile.getBio(), icon, profile.getInterests(), profile.getLocation().orElse(null));
+        name,
+        profile.getBio(),
+        icon,
+        profile.getInterests(),
+        profile.getFollowers(),
+        profile.getFollows(),
+        profile.getLocation().orElse(null));
 
     when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(updatedProfile);
@@ -102,6 +108,8 @@ public class ProfilesRestControllerTests {
         "James Bond is a fictional character created by British novelist Ian Fleming in 1953.",
         "SPORTS_CAR",
         Set.of("SPY", "CARS", "WEAPONS"),
+        new ArrayList<>(),
+        new ArrayList<>(),
         new Location("MI6 building", 51.487222, -0.124167));
   }
 

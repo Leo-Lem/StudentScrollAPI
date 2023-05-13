@@ -38,7 +38,7 @@ public class SettingsRestControllerTests {
   }
 
   @Test
-  public void givenStudentDoesNotExist_whenGettingUpdatingSettings_thenThrowsEntityNotFoundException() {
+  public void givenStudentDoesNotExist_whenGettingOrUpdatingSettings_thenThrowsEntityNotFoundException() {
     val studentID = 1L;
 
     when(service.read(studentID))

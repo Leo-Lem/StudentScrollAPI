@@ -25,6 +25,14 @@ public class Profile {
   @Column(name = "interests")
   private Set<String> interests = new HashSet<>();
 
+  @ManyToMany
+  @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+  private List<Student> followers = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+  private List<Student> follows = new ArrayList<>();
+
   @Embedded
   private Location location;
 
@@ -34,6 +42,11 @@ public class Profile {
 
   public Profile setLocation(Optional<Location> newLocation) {
     this.location = newLocation.orElse(null);
+    return this;
+  }
+
+  public Profile addFollower(Student follower) {
+    followers.add(follower);
     return this;
   }
 

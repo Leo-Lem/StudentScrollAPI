@@ -19,7 +19,7 @@ public class ProfileService {
       @NonNull Long studentID) throws EntityNotFoundException {
     return repo
         .findById(studentID)
-        .orElseThrow(() -> new EntityNotFoundException("Student does not exist."))
+        .orElseThrow(EntityNotFoundException::new)
         .getProfile();
   }
 
@@ -33,7 +33,7 @@ public class ProfileService {
 
     Student student = repo
         .findById(studentID)
-        .orElseThrow(() -> new EntityNotFoundException("Student does not exist."));
+        .orElseThrow(EntityNotFoundException::new);
 
     Profile profile = student.getProfile();
     newName.ifPresent(unwrapped -> profile.setName(unwrapped));
