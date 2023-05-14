@@ -13,7 +13,7 @@ public class Settings {
   private String theme = "system";
 
   @Column(name = "locale")
-  private String locale = "en";
+  private String locale = "system";
 
   @Column(name = "isLocated")
   private Boolean isLocated = false;
