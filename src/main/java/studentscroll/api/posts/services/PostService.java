@@ -2,6 +2,7 @@ package studentscroll.api.posts.services;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -53,7 +54,8 @@ public class PostService {
     if (followIds.isEmpty())
       return repo.findAll(pageable);
     else {
-      var posts = repo.findByPosterIdIn(followIds, pageable);
+      val posts = repo.findByPosterIdIn(
+          Stream.concat(followIds.stream(), Stream.of(student.getId())).toList(), pageable);
 
       if (posts.isEmpty())
         return repo.findAll(pageable);

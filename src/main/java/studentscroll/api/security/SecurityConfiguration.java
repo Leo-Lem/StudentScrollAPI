@@ -30,6 +30,9 @@ public class SecurityConfiguration {
   private IsPosterAuthz isPosterAuthz;
 
   @Autowired
+  private isFollowerAuthz isFollowerAuthz;
+
+  @Autowired
   private isSenderOrReceiverAuthz isSenderOrReceiverAuthz;
 
   @Bean
@@ -69,8 +72,11 @@ public class SecurityConfiguration {
                 "/students/{studentId}/followers",
                 "/students/{studentId}/follows")
             .authenticated()
-            .requestMatchers(HttpMethod.POST, "/posts", "/chats").authenticated())
+            .requestMatchers(HttpMethod.POST, "/posts", "/chats")
+            .authenticated())
         .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.POST, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
+            .requestMatchers(HttpMethod.DELETE, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
             .requestMatchers("/chats/{chatId}").access(isSenderOrReceiverAuthz)
             .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
