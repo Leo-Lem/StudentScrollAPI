@@ -80,7 +80,7 @@ public class PostsRestController {
   @GetMapping
   public List<PostResponse> readAll(
       HttpServletResponse response,
-      @RequestParam Optional<Long> posterId,
+      @RequestParam Optional<List<Long>> posterIds,
       @RequestParam Optional<Integer> page,
       @RequestParam Optional<Integer> size,
       @RequestParam Optional<List<String>> sort,
@@ -90,8 +90,8 @@ public class PostsRestController {
 
     Page<? extends Post> posts;
 
-    if (posterId.isPresent())
-      posts = service.readAllByPosterId(posterId.get(), pageable);
+    if (posterIds.isPresent())
+      posts = service.readAllByPosterIds(posterIds.get(), pageable);
     else
       posts = service.readAll(pageable);
 

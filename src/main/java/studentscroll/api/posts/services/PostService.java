@@ -5,12 +5,14 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.Location;
+import studentscroll.api.students.data.Student;
 import studentscroll.api.students.data.StudentRepository;
 
 @Service
@@ -45,11 +47,23 @@ public class PostService {
   }
 
   public Page<Post> readAll(@NonNull Pageable pageable) {
-    return repo.findAll(pageable);
+    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    val followIds = student.getProfile().getFollows().stream().map(f -> f.getId()).toList();
+
+    if (followIds.isEmpty())
+      return repo.findAll(pageable);
+    else {
+      var posts = repo.findByPosterIdIn(followIds, pageable);
+
+      if (posts.isEmpty())
+        return repo.findAll(pageable);
+      else
+        return posts;
+    }
   }
 
-  public Page<Post> readAllByPosterId(@NonNull Long posterId, @NonNull Pageable pageable) {
-    return repo.findByPosterId(posterId, pageable);
+  public Page<Post> readAllByPosterIds(@NonNull List<Long> posterIds, @NonNull Pageable pageable) {
+    return repo.findByPosterIdIn(posterIds, pageable);
   }
 
   public Page<Post> readAllByTag(@NonNull String tag, @NonNull Pageable pageable) {
