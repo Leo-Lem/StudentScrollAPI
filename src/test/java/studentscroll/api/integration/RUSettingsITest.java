@@ -39,7 +39,7 @@ public class RUSettingsITest {
             .contentType("application/json")
             .content(objectMapper
                 .writeValueAsString(
-                    new UpdateSettingsRequest("DARK", "DE", false))))
+                    new UpdateSettingsRequest("DARK", "DE"))))
         .andExpect(status().isOk());
 
     mockMVC.perform(get("/students/1/settings"))

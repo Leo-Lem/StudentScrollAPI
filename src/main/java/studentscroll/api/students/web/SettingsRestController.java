@@ -43,7 +43,6 @@ public class SettingsRestController {
     return new SettingsResponse(SettingsService.update(
         studentId,
         Optional.ofNullable(request.getNewTheme()),
-        Optional.ofNullable(request.getNewLocale()),
-        Optional.ofNullable(request.getNewIsLocated())));
+        Optional.ofNullable(request.getNewLocale())));
   }
 }

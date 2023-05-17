@@ -7,5 +7,5 @@ public class UpdateSettingsRequest {
 
   private final String newTheme;
   private final String newLocale;
-  private final Boolean newIsLocated;
+
 }

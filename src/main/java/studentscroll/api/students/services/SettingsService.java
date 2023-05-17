@@ -28,8 +28,7 @@ public class SettingsService {
   public Settings update(
       @NonNull Long studentID,
       @NonNull Optional<String> newTheme,
-      @NonNull Optional<String> newLocale,
-      @NonNull Optional<Boolean> newIsLocated) throws EntityNotFoundException {
+      @NonNull Optional<String> newLocale) throws EntityNotFoundException {
     Student student = repo
         .findById(studentID)
         .orElseThrow(EntityNotFoundException::new);
@@ -37,7 +36,6 @@ public class SettingsService {
     Settings profile = student.getSettings();
     newTheme.ifPresent(unwrapped -> profile.setTheme(unwrapped));
     newLocale.ifPresent(unwrapped -> profile.setLocale(unwrapped));
-    newIsLocated.ifPresent(unwrapped -> profile.setIsLocated(unwrapped));
     student.setSettings(profile);
 
     return repo.save(student).getSettings();

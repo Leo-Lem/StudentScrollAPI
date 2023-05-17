@@ -15,9 +15,6 @@ public class Settings {
   @Column(name = "locale")
   private String locale = "system";
 
-  @Column(name = "isLocated")
-  private Boolean isLocated = false;
-
   // @Column(name = "isNotified")
   // private Boolean isNotified = false;
 

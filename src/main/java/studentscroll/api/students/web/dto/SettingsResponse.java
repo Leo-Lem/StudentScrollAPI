@@ -10,12 +10,10 @@ public class SettingsResponse {
 
   private final String theme;
   private final String locale;
-  private final Boolean isLocated;
 
   public SettingsResponse(Settings settings) {
     this(
         settings.getTheme(),
-        settings.getLocale(),
-        settings.getIsLocated());
+        settings.getLocale());
   }
 }

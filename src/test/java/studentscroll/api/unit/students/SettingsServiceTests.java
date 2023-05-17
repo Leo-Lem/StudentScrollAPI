@@ -62,12 +62,10 @@ public class SettingsServiceTests {
     Settings Settings = service.update(
         student.getId(),
         Optional.of(example.getTheme()),
-        Optional.of(example.getLocale()),
-        Optional.of(example.getIsLocated()));
+        Optional.of(example.getLocale()));
 
     assertEquals(example.getTheme(), Settings.getTheme());
     assertEquals(example.getLocale(), Settings.getLocale());
-    assertEquals(example.getIsLocated(), Settings.getIsLocated());
   }
 
   @Test
@@ -84,12 +82,10 @@ public class SettingsServiceTests {
     Settings Settings = service.update(
         student.getId(),
         Optional.of(example.getTheme()),
-        Optional.empty(),
         Optional.empty());
 
     assertEquals(example.getTheme(), Settings.getTheme());
     assertNotEquals(example.getLocale(), Settings.getLocale());
-    assertNotEquals(example.getIsLocated(), Settings.getIsLocated());
   }
 
   private Student exampleStudent() {
@@ -97,7 +93,7 @@ public class SettingsServiceTests {
   }
 
   private Settings exampleSettings() {
-    return new Settings("LIGHT", "DE", true);
+    return new Settings("LIGHT", "DE");
   }
 
 }

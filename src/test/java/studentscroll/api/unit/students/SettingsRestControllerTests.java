@@ -44,12 +44,12 @@ public class SettingsRestControllerTests {
     when(service.read(studentID))
         .thenThrow(new EntityNotFoundException());
 
-    when(service.update(anyLong(), any(), any(), any()))
+    when(service.update(anyLong(), any(), any()))
         .thenThrow(new EntityNotFoundException());
 
     assertThrows(EntityNotFoundException.class, () -> controller.readSettings(studentID));
     assertThrows(EntityNotFoundException.class, () -> controller.updateSettings(
-        studentID, new UpdateSettingsRequest(null, null, null)));
+        studentID, new UpdateSettingsRequest(null, null)));
   }
 
   @Test
@@ -57,38 +57,34 @@ public class SettingsRestControllerTests {
     val settings = exampleSettings();
     val request = new UpdateSettingsRequest(
         settings.getTheme(),
-        settings.getLocale(),
-        settings.getIsLocated());
+        settings.getLocale());
 
-    when(service.update(anyLong(), any(), any(), any()))
+    when(service.update(anyLong(), any(), any()))
         .thenReturn(settings);
 
     SettingsResponse response = controller.updateSettings(1L, request);
     assertEquals(settings.getTheme(), response.getTheme());
     assertEquals(settings.getLocale(), response.getLocale());
-    assertEquals(settings.getIsLocated(), response.getIsLocated());
   }
 
   @Test
   public void givenStudentExists_whenUpdatingOnlySomeFields_thenLeavesOthersUnchanged() {
     val settings = exampleSettings();
-    String theme = "LIGHT", locale = "DE";
-    val request = new UpdateSettingsRequest(theme, locale, null);
+    String theme = "LIGHT";
+    val request = new UpdateSettingsRequest(theme, null);
 
     val updatedSettings = new Settings(
-        theme, locale, settings.getIsLocated());
+        theme, settings.getLocale());
 
-    when(service.update(anyLong(), any(), any(), any()))
+    when(service.update(anyLong(), any(), any()))
         .thenReturn(updatedSettings);
 
     SettingsResponse response = controller.updateSettings(1L, request);
     assertEquals(theme, response.getTheme());
-    assertEquals(locale, response.getLocale());
-    assertEquals(settings.getIsLocated(), response.getIsLocated());
   }
 
   private Settings exampleSettings() {
-    return new Settings("LIGHT", "DE", true);
+    return new Settings("LIGHT", "DE");
   }
 
 }

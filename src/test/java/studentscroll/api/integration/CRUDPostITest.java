@@ -42,7 +42,7 @@ public class CRUDPostITest {
 
     val createEventPostRequest = new CreatePostRequest(
         1L, "Title", new String[] { "TAG", "ANOTHER_TAG" },
-        "Some description here", LocalDateTime.now(), new Location("", 1.0, 1.0), null);
+        "Some description here", LocalDateTime.now(), new Location(1.0, 1.0), null);
     val updateEventPostRequest = new UpdatePostRequest(
         "My new title", null, "some new content", null, null, null);
 
