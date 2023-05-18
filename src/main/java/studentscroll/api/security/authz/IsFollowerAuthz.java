@@ -16,10 +16,14 @@ public class IsFollowerAuthz implements AuthorizationManager<RequestAuthorizatio
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    val principalId = ((Student) supplier.get().getPrincipal()).getId();
+    val principal = supplier.get().getPrincipal();
+
+    if (!(principal instanceof Student))
+      return new AuthorizationDecision(false);
+
     val followerId = Long.parseLong(context.getVariables().get("followerId"));
 
-    return new AuthorizationDecision(principalId.equals(followerId));
+    return new AuthorizationDecision(((Student) principal).getId().equals(followerId));
   }
 
 }

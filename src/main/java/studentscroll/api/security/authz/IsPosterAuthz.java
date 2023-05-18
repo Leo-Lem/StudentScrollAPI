@@ -21,11 +21,15 @@ public class IsPosterAuthz implements AuthorizationManager<RequestAuthorizationC
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    val principalId = ((Student) supplier.get().getPrincipal()).getId();
+    val principal = supplier.get().getPrincipal();
+
+    if (!(principal instanceof Student))
+      return new AuthorizationDecision(false);
+
     val requestPostId = Long.parseLong(context.getVariables().get("postId"));
     val posterId = repo.findById(requestPostId).map(Post::getPoster).map(Student::getId);
 
-    return new AuthorizationDecision(posterId.map(id -> id.equals(principalId)).orElse(false));
+    return new AuthorizationDecision(posterId.map(id -> id.equals(((Student) principal).getId())).orElse(false));
   }
 
 }

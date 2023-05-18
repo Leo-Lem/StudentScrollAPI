@@ -21,10 +21,9 @@ public class IsStudentAuthz implements AuthorizationManager<RequestAuthorization
     if (!(principal instanceof Student))
       return new AuthorizationDecision(false);
 
-    val principalID = ((Student) principal).getId();
     val requestID = Long.parseLong(context.getVariables().get("studentId"));
 
-    return new AuthorizationDecision(principalID.equals(requestID));
+    return new AuthorizationDecision(((Student) principal).getId().equals(requestID));
   }
 
 }

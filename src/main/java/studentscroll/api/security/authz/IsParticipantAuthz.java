@@ -21,14 +21,19 @@ public class IsParticipantAuthz implements AuthorizationManager<RequestAuthoriza
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    val principalId = ((Student) supplier.get().getPrincipal()).getId();
+    val principal = supplier.get().getPrincipal();
+
+    if (!(principal instanceof Student))
+      return new AuthorizationDecision(false);
+
     val requestChatId = Long.parseLong(context.getVariables().get("chatId"));
 
     val chat = repo.findById(requestChatId);
 
     return new AuthorizationDecision(
         chat.isPresent()
-            && chat.get().getParticipants().stream().anyMatch(participant -> participant.getId().equals(principalId)));
+            && chat.get().getParticipants().stream()
+                .anyMatch(participant -> participant.getId().equals(((Student) principal).getId())));
   }
 
 }

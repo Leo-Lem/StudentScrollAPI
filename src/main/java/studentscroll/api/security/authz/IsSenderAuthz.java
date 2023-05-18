@@ -21,14 +21,18 @@ public class IsSenderAuthz implements AuthorizationManager<RequestAuthorizationC
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-    val principalId = ((Student) supplier.get().getPrincipal()).getId();
+    val principal = supplier.get().getPrincipal();
+
+    if (!(principal instanceof Student))
+      return new AuthorizationDecision(false);
+
     val messageId = Long.parseLong(context.getVariables().get("messageId"));
 
     val message = repo.findById(messageId);
 
     return new AuthorizationDecision(
         message.isPresent()
-            && message.get().getSender().getId().equals(principalId));
+            && message.get().getSender().getId().equals(((Student) principal).getId()));
   }
 
 }

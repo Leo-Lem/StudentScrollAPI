@@ -17,11 +17,11 @@ public class Chat {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @ManyToMany(cascade = CascadeType.REMOVE)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "student_chat", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
   private List<Student> participants = new ArrayList<>();
 
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   @NonNull
   private List<Message> messages = new ArrayList<>();
 

@@ -42,10 +42,10 @@ public class Student implements UserDetails {
   @Embedded
   private Settings settings = new Settings();
 
-  @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private Set<Post> posts;
 
-  @ManyToMany(mappedBy = "participants")
+  @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
   private List<Chat> chats = new ArrayList<>();
 
   public Student addPost(Post post) {

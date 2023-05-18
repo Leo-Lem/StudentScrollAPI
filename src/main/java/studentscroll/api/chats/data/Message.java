@@ -3,17 +3,14 @@ package studentscroll.api.chats.data;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import studentscroll.api.students.data.Student;
 
 @Entity(name = "message")
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Accessors(chain = true)
 public class Message {
 
@@ -28,12 +25,12 @@ public class Message {
   @Column(name = "timestamp")
   private LocalDateTime timeStamp = LocalDateTime.now();
 
-  @JoinColumn(name = "sender_id")
   @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "sender_id")
   private Student sender;
 
-  @JoinColumn(name = "chat_id")
   @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "chat_id")
   private Chat chat;
 
 }

@@ -38,9 +38,6 @@ public class SecurityConfiguration {
   @Autowired
   private IsSenderAuthz isSenderAuthz;
 
-  @Autowired
-  ParticipantIdIsSelfAuthz participantIdIsSelfAuthz;
-
   @Bean
   public JWTFilter jwtFilter() {
     return new JWTFilter();
@@ -79,12 +76,12 @@ public class SecurityConfiguration {
                 "/students/{studentId}/follows")
             .authenticated()
             .requestMatchers(HttpMethod.POST, "/posts", "/chats")
-            .authenticated())
+            .authenticated()
+            .requestMatchers(HttpMethod.GET, "chats").authenticated())
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.POST, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
             .requestMatchers(HttpMethod.DELETE, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz))
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers(HttpMethod.GET, "chats").access(participantIdIsSelfAuthz)
             .requestMatchers("/chats/{chatId}").access(isParticipantAuthz)
             .requestMatchers(HttpMethod.POST, "/chats/{chatId}/messages").access(isParticipantAuthz)
             .requestMatchers(HttpMethod.GET, "/chats/{chatId}/messages/{messageId}").access(isParticipantAuthz)

@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -46,6 +48,7 @@ public class MessagesRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Found the message."),
       @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
+  @Parameter(in = ParameterIn.PATH, name = "chatId", required = true)
   @SecurityRequirement(name = "token")
   @GetMapping("/{messageId}")
   public MessageResponse read(@PathVariable Long messageId) throws EntityNotFoundException {
@@ -56,6 +59,7 @@ public class MessagesRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated the message."),
       @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
+  @Parameter(in = ParameterIn.PATH, name = "chatId", required = true)
   @SecurityRequirement(name = "token")
   @PutMapping("/{messageId}")
   public MessageResponse update(
@@ -67,6 +71,7 @@ public class MessagesRestController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Deleted the message.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
+  @Parameter(in = ParameterIn.PATH, name = "chatId", required = true)
   @SecurityRequirement(name = "token")
   @DeleteMapping("/{messageId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
