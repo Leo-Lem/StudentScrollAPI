@@ -1,5 +1,6 @@
 package studentscroll.api.chats.services;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,13 @@ public class ChatService {
       throw new EntityNotFoundException();
 
     repo.deleteById(id);
+  }
+
+  public List<Chat> readByParticipantId(
+      @NonNull Long studentId) throws EntityNotFoundException {
+    if (!studentRepo.existsById(studentId))
+      throw new EntityNotFoundException();
+
+    return repo.findByParticipantsId(studentId);
   }
 }

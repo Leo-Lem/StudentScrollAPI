@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -102,4 +103,30 @@ public class ChatServiceTests {
         EntityNotFoundException.class,
         () -> service.delete(1L));
   }
+
+  @Test
+  public void givenChatAndParticipantExist_whenReadingByParticipantId_thenReturnsChat() {
+    Chat chat = new Chat();
+
+    when(studentRepo.existsById(anyLong()))
+        .thenReturn(true);
+
+    when(repo.findByParticipantsId(anyLong()))
+        .thenReturn(List.of(chat));
+
+    List<Chat> chats = service.readByParticipantId(1L);
+
+    assertEquals(chat, chats.get(0));
+  }
+
+  @Test
+  public void givenStudentDoesntExist_whenReadingByParticipantId_thenThrowEntityNotFoundException() {
+    when(studentRepo.existsById(anyLong()))
+        .thenReturn(false);
+
+    assertThrows(
+        EntityNotFoundException.class,
+        () -> service.readByParticipantId(1L));
+  }
+
 }
