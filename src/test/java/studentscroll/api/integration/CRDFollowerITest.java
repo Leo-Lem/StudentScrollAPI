@@ -28,7 +28,7 @@ public class CRDFollowerITest {
   private ObjectMapper objectMapper;
 
   @Test
-  public void crdFollowerIntegrationTest() throws Exception {
+  public void test() throws Exception {
     Long firstStudentId = 1L, secondStudentId = 2L;
 
     getFollowers(firstStudentId).andExpect(status().isNotFound());

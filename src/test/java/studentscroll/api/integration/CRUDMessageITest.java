@@ -31,7 +31,7 @@ public class CRUDMessageITest {
   private ObjectMapper objectMapper;
 
   @Test
-  public void crudMessageITest() throws Exception {
+  public void test() throws Exception {
     val participantIds = createStudents();
     val chatId = createChat(participantIds);
 
@@ -50,6 +50,7 @@ public class CRUDMessageITest {
     updateMessage(chatId, messageId).andExpect(status().isOk());
 
     deleteMessage(chatId, messageId).andExpect(status().isNoContent());
+    deleteMessage(chatId, messageId).andExpect(status().isNotFound());
   }
 
   private ResultActions sendMessage(Long chatId, Long senderId) throws Exception {

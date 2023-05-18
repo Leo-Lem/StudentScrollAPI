@@ -31,14 +31,12 @@ public class RegisterAndSigninITest {
   private String email = "jwayne@xyz.com", password = "1234";
 
   @Test
-  public void registerAndSignin() throws Exception {
-
+  public void test() throws Exception {
     createStudent().andExpect(status().isCreated());
 
     createStudent().andExpect(status().isConflict());
 
     signIn().andExpect(status().isOk());
-
   }
 
   private ResultActions createStudent() throws Exception {

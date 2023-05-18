@@ -32,8 +32,8 @@ public class Post {
   @NonNull
   private Set<String> tags;
 
-  @JoinColumn(name = "student_id")
   @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "student_id")
   private Student poster;
 
 }

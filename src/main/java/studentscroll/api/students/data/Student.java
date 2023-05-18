@@ -43,13 +43,18 @@ public class Student implements UserDetails {
   private Settings settings = new Settings();
 
   @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private Set<Post> posts;
+  private List<Post> posts = new ArrayList<>();
 
   @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
   private List<Chat> chats = new ArrayList<>();
 
   public Student addPost(Post post) {
     posts.add(post);
+    return this;
+  }
+
+  public Student removePost(Post post) {
+    posts.remove(post);
     return this;
   }
 

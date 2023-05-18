@@ -30,7 +30,7 @@ public class CRDChatITest {
   private ObjectMapper objectMapper;
 
   @Test
-  public void crdChatITest() throws Exception {
+  public void test() throws Exception {
     createChat(Set.of(0L)).andExpect(status().isNotFound());
 
     val participantIds = createStudents();
@@ -50,7 +50,7 @@ public class CRDChatITest {
     getChats(1L).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value(chatId));
 
     deleteChat(chatId).andExpect(status().isNoContent());
-    deleteChat(0L).andExpect(status().isNotFound());
+    deleteChat(chatId).andExpect(status().isNotFound());
   }
 
   private ResultActions createChat(Set<Long> participantIds) throws Exception {

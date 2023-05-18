@@ -28,7 +28,7 @@ public class RUSettingsITest {
   private ObjectMapper objectMapper;
 
   @Test
-  public void puttingAndGettingSettings() throws Exception {
+  public void test() throws Exception {
     val id = 1L;
 
     getSettings(id).andExpect(status().isNotFound());

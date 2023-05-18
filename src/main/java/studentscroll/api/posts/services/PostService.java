@@ -121,11 +121,9 @@ public class PostService {
   }
 
   public void delete(
-      @NonNull Long postID) throws EntityNotFoundException {
-    if (!repo.existsById(postID))
-      throw new EntityNotFoundException();
-
-    repo.deleteById(postID);
+      @NonNull Long postId) throws EntityNotFoundException {
+    val post = read(postId);
+    studentRepo.save(post.getPoster().removePost(post));
   }
 
   private Post create(
@@ -134,6 +132,7 @@ public class PostService {
     post.setPoster(studentRepo
         .findById(posterId)
         .orElseThrow(() -> new EntityNotFoundException("Student does not exist.")));
+
     return repo.save(post);
   }
 

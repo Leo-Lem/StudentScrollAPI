@@ -32,7 +32,7 @@ public class CRUDPostITest {
   private ObjectMapper objectMapper;
 
   @Test
-  public void crudPostIntegrationTest() throws Exception {
+  public void test() throws Exception {
     createStudent();
 
     Long contentPostId = 1L, eventPostId = 2L;

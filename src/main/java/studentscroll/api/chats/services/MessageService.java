@@ -56,9 +56,7 @@ public class MessageService {
   @Transactional
   public void delete(
       @NonNull Long id) throws EntityNotFoundException {
-    if (!repo.existsById(id))
-      throw new EntityNotFoundException();
-
-    repo.deleteById(id);
+    val message = read(id);
+    chatRepo.save(message.getChat().removeMessage(message));
   }
 }

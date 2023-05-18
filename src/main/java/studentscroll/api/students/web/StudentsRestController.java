@@ -1,4 +1,4 @@
-package studentscroll.api.students;
+package studentscroll.api.students.web;
 
 import java.util.*;
 
@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.*;
 import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.shared.StudentLocation;
+import studentscroll.api.students.data.Student;
 import studentscroll.api.students.services.*;
 import studentscroll.api.students.web.dto.*;
 
@@ -62,11 +63,10 @@ public class StudentsRestController {
   @ApiResponse(responseCode = "200", description = "Found the students.")
   @SecurityRequirement(name = "token")
   @GetMapping
-  public List<StudentResponse> readAll(
+  public List<Long> readAll(
       @RequestParam Double lat,
       @RequestParam Double lng) throws EntityNotFoundException {
-    return studentService
-        .readAllNearLocation(new StudentLocation(lat, lng)).stream().map(StudentResponse::new).toList();
+    return studentService.readAllNearLocation(new StudentLocation(lat, lng)).stream().map(Student::getId).toList();
   }
 
   @Operation(summary = "Update the student.")

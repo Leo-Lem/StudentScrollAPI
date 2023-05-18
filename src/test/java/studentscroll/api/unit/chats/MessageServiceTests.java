@@ -84,16 +84,16 @@ public class MessageServiceTests {
 
   @Test
   public void givenMessageExists_whenDeletingMessage_thenDoesNotThrow() {
-    when(repo.existsById(anyLong()))
-        .thenReturn(true);
+    when(repo.findById(anyLong()))
+        .thenReturn(Optional.of(new Message().setChat(new Chat())));
 
     assertDoesNotThrow(() -> service.delete(1L));
   }
 
   @Test
   public void givenMessageDoesntExist_whenDeletingMessage_thenThrowEntityNotFoundException() {
-    when(repo.existsById(anyLong()))
-        .thenReturn(false);
+    when(repo.findById(anyLong()))
+        .thenReturn(Optional.empty());
 
     assertThrows(
         EntityNotFoundException.class,

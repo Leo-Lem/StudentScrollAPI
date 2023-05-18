@@ -29,7 +29,7 @@ public class RUDStudentITest {
   private ObjectMapper objectMapper;
 
   @Test
-  public void rudStudentIntegrationTest() throws Exception {
+  public void test() throws Exception {
     val id = 1L;
 
     getStudent(id).andExpect(status().isNotFound());

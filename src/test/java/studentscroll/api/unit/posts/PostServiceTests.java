@@ -9,6 +9,7 @@ import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.val;
 import studentscroll.api.posts.data.ContentPost;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.PostService;
@@ -34,22 +35,22 @@ public class PostServiceTests {
 
   @Test
   public void givenPostExists_whenDeletingPost_thenDoesNotThrow() {
-    Long postID = 1L;
+    Post post = exampleContentPost();
 
-    when(repo.existsById(postID))
-        .thenReturn(true);
+    when(repo.findById(post.getId()))
+        .thenReturn(Optional.of(post));
 
-    assertDoesNotThrow(() -> service.delete(postID));
+    assertDoesNotThrow(() -> service.delete(post.getId()));
   }
 
   @Test
   public void givenPostDoesNotExist_whenDeletingPost_thenThrowsEntityNotFoundException() {
-    Long postID = 1L;
+    val postId = 1L;
 
-    when(repo.existsById(postID))
-        .thenReturn(false);
+    when(repo.findById(postId))
+        .thenReturn(Optional.empty());
 
-    assertThrows(EntityNotFoundException.class, () -> service.delete(1L));
+    assertThrows(EntityNotFoundException.class, () -> service.delete(postId));
   }
 
   @Test

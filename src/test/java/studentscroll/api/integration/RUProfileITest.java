@@ -31,7 +31,7 @@ public class RUProfileITest {
   private StudentLocation location = new StudentLocation(0.0, 0.0);
 
   @Test
-  public void puttingAndGettingProfile() throws Exception {
+  public void test() throws Exception {
     val id = 1L;
 
     getProfile(id).andExpect(status().isNotFound());
@@ -44,7 +44,7 @@ public class RUProfileITest {
 
     updateProfile(id).andExpect(status().isOk());
 
-    getStudentByLocation().andExpect(jsonPath("$[0].id").value(id));
+    getStudentByLocation().andExpect(jsonPath("$[0]").value(id));
   }
 
   private ResultActions getStudentByLocation() throws Exception {
