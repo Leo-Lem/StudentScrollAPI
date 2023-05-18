@@ -9,7 +9,4 @@ public class CreateMessageRequest {
 
     @NonNull
     private final Long senderId;
-
-    @NonNull
-    private final Long receiverId;
 }

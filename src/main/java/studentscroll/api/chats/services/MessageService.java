@@ -22,9 +22,9 @@ public class MessageService {
     private ChatRepository chatRepo;
 
     public Message create(
-            @NonNull Long chatId,
             @NonNull String content,
-            @NonNull Long senderId) throws EntityNotFoundException {
+            @NonNull Long senderId,
+            @NonNull Long chatId) throws EntityNotFoundException {
 
         val message = new Message(content);
 

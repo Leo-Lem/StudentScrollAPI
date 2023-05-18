@@ -16,68 +16,11 @@ import lombok.val;
 import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.dto.*;
 
-@Tag(name = "Messages", description = "Everything related to chat messages.")
+@Tag(name = "Chats", description = "Everything related to chats.")
 @RestController
 @RequestMapping("/chats")
 public class ChatsRestController {
-  @Autowired
-  private MessageService service;
-
-  // @Operation(summary = "Create a new message.")
-  // @ApiResponses(value = {
-  // @ApiResponse(responseCode = "201", description = "Created the message."),
-  // @ApiResponse(responseCode = "404", description = "Sender or receiver does not
-  // exist.", content = @Content) })
-  // @SecurityRequirement(name = "token")
-  // @PostMapping
-  // @ResponseStatus(HttpStatus.CREATED)
-  // public MessageResponse create(
-  // @RequestBody CreateMessageRequest request, HttpServletResponse response)
-  // throws EntityNotFoundException {
-
-  // val message = service.create(request.getContent(), request.getSenderId());
-
-  // response.setHeader("Location", "/chats/" + message.getId());
-
-  // return new MessageResponse(message);
-  // }
-
-  @Operation(summary = "Find the message.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the message."),
-      @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @GetMapping("/{chatId}")
-  public MessageResponse read(@PathVariable Long id) throws EntityNotFoundException {
-    return new MessageResponse(service.read(id));
-  }
-
-  @Operation(summary = "Update the message.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the message."),
-      @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @PutMapping("/{chatId}")
-  public MessageResponse update(
-      @PathVariable Long id, @RequestBody String newContent) throws EntityNotFoundException {
-    var message = service.read(id);
-
-    message = service.update(id, newContent);
-
-    return new MessageResponse(message);
-  }
-
-  @Operation(summary = "Delete the message.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted the message.", content = @Content),
-      @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @DeleteMapping("/{chatId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(
-      @PathVariable Long id) throws EntityNotFoundException {
-    service.delete(id);
-  }
+ 
 
   // @Operation(summary = "Find the chats.")
   // @ApiResponses(value = {
