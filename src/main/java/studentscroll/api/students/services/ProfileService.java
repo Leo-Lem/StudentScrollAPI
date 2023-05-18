@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.EntityNotFoundException;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.*;
 
 @Service
@@ -29,7 +29,7 @@ public class ProfileService {
       @NonNull Optional<String> newBio,
       @NonNull Optional<String> newIcon,
       @NonNull Optional<Set<String>> newInterests,
-      @NonNull Optional<Location> newLocation) throws EntityNotFoundException {
+      @NonNull Optional<StudentLocation> newLocation) throws EntityNotFoundException {
 
     Student student = repo
         .findById(studentID)

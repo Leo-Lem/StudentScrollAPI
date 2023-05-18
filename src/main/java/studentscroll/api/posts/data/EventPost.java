@@ -5,7 +5,7 @@ import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 
 @Entity
 @DiscriminatorValue("event")
@@ -24,9 +24,9 @@ public class EventPost extends Post {
 
   @Embedded
   @NonNull
-  private Location location;
+  private StudentLocation location;
 
-  public EventPost(String title, Set<String> tags, String description, LocalDateTime date, Location location) {
+  public EventPost(String title, Set<String> tags, String description, LocalDateTime date, StudentLocation location) {
     super(title, tags);
     this.description = description;
     this.date = date;

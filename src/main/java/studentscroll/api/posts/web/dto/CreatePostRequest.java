@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import lombok.*;
 import studentscroll.api.posts.data.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 
 @Data
 public class CreatePostRequest {
@@ -23,7 +23,7 @@ public class CreatePostRequest {
 
   private final LocalDateTime date;
 
-  private final Location location;
+  private final StudentLocation location;
 
   // content posts
   private final String content;

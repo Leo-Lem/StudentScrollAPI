@@ -3,7 +3,7 @@ package studentscroll.api.students.data;
 import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 
 @Embeddable
 @Data
@@ -34,13 +34,13 @@ public class Profile {
   private List<Student> follows = new ArrayList<>();
 
   @Embedded
-  private Location location;
+  private StudentLocation location;
 
-  public Optional<Location> getLocation() {
+  public Optional<StudentLocation> getLocation() {
     return Optional.ofNullable(location);
   }
 
-  public Profile setLocation(Optional<Location> newLocation) {
+  public Profile setLocation(Optional<StudentLocation> newLocation) {
     this.location = newLocation.orElse(null);
     return this;
   }

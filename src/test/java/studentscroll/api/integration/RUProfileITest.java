@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.web.dto.*;
 
 @SpringBootTest
@@ -26,6 +27,8 @@ public class RUProfileITest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  private StudentLocation location = new StudentLocation(0.0, 0.0);
 
   @Test
   public void puttingAndGettingProfile() throws Exception {
@@ -40,6 +43,15 @@ public class RUProfileITest {
     getProfile(id).andExpect(status().isOk());
 
     updateProfile(id).andExpect(status().isOk());
+
+    getStudentByLocation().andExpect(jsonPath("$[0].id").value(id));
+  }
+
+  private ResultActions getStudentByLocation() throws Exception {
+    return mockMVC.perform(
+        get("/students")
+            .param("lat", String.valueOf(location.getLatitude() + 0.01))
+            .param("lng", String.valueOf(location.getLongitude() - 0.01)));
   }
 
   private ResultActions getProfile(Long id) throws Exception {
@@ -47,7 +59,7 @@ public class RUProfileITest {
   }
 
   private ResultActions updateProfile(Long id) throws Exception {
-    val request = new UpdateProfileRequest("John Silver", "Hello, I'm John.", "PIRATE", null, null);
+    val request = new UpdateProfileRequest("John Silver", "Hello, I'm John.", "PIRATE", null, location);
 
     return mockMVC.perform(
         put("/students/" + id + "/profile")

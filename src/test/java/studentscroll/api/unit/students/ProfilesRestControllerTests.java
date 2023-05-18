@@ -10,7 +10,7 @@ import org.mockito.*;
 
 import jakarta.persistence.*;
 import lombok.val;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.*;
 import studentscroll.api.students.web.ProfilesRestController;
@@ -110,7 +110,7 @@ public class ProfilesRestControllerTests {
         Set.of("SPY", "CARS", "WEAPONS"),
         new ArrayList<>(),
         new ArrayList<>(),
-        new Location("MI6 building", 51.487222, -0.124167));
+        new StudentLocation("MI6 building", 51.487222, -0.124167));
   }
 
 }

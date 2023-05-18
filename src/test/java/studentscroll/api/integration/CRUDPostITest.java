@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
 import studentscroll.api.posts.web.dto.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.web.dto.CreateStudentRequest;
 
 @SpringBootTest
@@ -76,7 +76,7 @@ public class CRUDPostITest {
   private ResultActions createEventPost() throws Exception {
     val request = new CreatePostRequest(
         1L, "Title", new String[] { "TAG", "ANOTHER_TAG" },
-        "Some description here", LocalDateTime.now(), new Location(1.0, 1.0), null);
+        "Some description here", LocalDateTime.now(), new StudentLocation(1.0, 1.0), null);
 
     return createPost(request);
   }

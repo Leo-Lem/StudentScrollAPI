@@ -1,6 +1,6 @@
 package studentscroll.api.students.services;
 
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.*;
 import lombok.NonNull;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.*;
 
 @Service
@@ -52,6 +53,20 @@ public class StudentService {
       throw new EntityNotFoundException();
 
     repo.deleteById(studentId);
+  }
+
+  public Set<Student> readAllNearLocation(StudentLocation location) {
+    double radiusInKm = 10.0; // Fixed radius of 10km
+
+    double latitudeRange = radiusInKm * 0.009; // Roughly 1km in latitude
+    double longitudeRange = radiusInKm * 0.014; // Roughly 1km in longitude
+
+    double minLatitude = location.getLatitude() - latitudeRange;
+    double maxLatitude = location.getLatitude() + latitudeRange;
+    double minLongitude = location.getLongitude() - longitudeRange;
+    double maxLongitude = location.getLongitude() + longitudeRange;
+
+    return repo.findStudentsNearLocation(minLatitude, maxLatitude, minLongitude, maxLongitude);
   }
 
 }

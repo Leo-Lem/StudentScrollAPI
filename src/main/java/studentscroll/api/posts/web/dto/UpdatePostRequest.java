@@ -3,7 +3,7 @@ package studentscroll.api.posts.web.dto;
 import java.time.LocalDateTime;
 
 import lombok.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 
 @Data
 public class UpdatePostRequest {
@@ -16,7 +16,7 @@ public class UpdatePostRequest {
 
   private final LocalDateTime newDate;
 
-  private final Location newLocation;
+  private final StudentLocation newLocation;
 
   private final String newContent;
 
