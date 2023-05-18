@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import studentscroll.api.chats.data.Chat;
 import studentscroll.api.posts.data.Post;
 
 @Entity(name = "student")
@@ -43,6 +44,9 @@ public class Student implements UserDetails {
 
   @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Post> posts;
+
+  @ManyToMany(mappedBy = "participants")
+  private List<Chat> chats = new ArrayList<>();
 
   public Student addPost(Post post) {
     posts.add(post);

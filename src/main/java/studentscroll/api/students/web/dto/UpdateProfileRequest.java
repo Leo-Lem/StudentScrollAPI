@@ -1,7 +1,7 @@
 package studentscroll.api.students.web.dto;
 
 import lombok.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 
 @Data
 public class UpdateProfileRequest {
@@ -10,6 +10,6 @@ public class UpdateProfileRequest {
   private final String newBio;
   private final String newIcon;
   private final String[] newInterests;
-  private final Location newLocation;
+  private final StudentLocation newLocation;
 
 }

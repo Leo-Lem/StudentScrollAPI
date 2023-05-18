@@ -12,7 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import studentscroll.api.posts.data.ContentPost;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.PostService;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.Student;
 import studentscroll.api.students.data.StudentRepository;
 
@@ -163,7 +163,7 @@ public class PostServiceTests {
         "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
         LocalDateTime.now(),
-        new Location("Jimmy's House", 1.0, 1.0))
+        new StudentLocation("Jimmy's House", 1.0, 1.0))
         .setPoster(new Student().setId(1L))
         .setId(1L);
   }

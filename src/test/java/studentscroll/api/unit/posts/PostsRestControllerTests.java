@@ -16,7 +16,7 @@ import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.PostsRestController;
 import studentscroll.api.posts.web.dto.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.Student;
 
 public class PostsRestControllerTests {
@@ -123,7 +123,7 @@ public class PostsRestControllerTests {
         "Petting Jimmy's Dog", Set.of("JIMMY", "DOG"),
         "Going to Jimmy's house to pet his dog.",
         LocalDateTime.now(),
-        new Location("Jimmy's House", 1.0, 1.0))
+        new StudentLocation("Jimmy's House", 1.0, 1.0))
         .setPoster(new Student().setId(1L));
   }
 

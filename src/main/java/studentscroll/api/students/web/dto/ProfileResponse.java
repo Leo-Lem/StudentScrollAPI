@@ -1,7 +1,7 @@
 package studentscroll.api.students.web.dto;
 
 import lombok.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.Profile;
 
 @Data
@@ -12,7 +12,7 @@ public class ProfileResponse {
   private final String bio;
   private final String icon;
   private final String[] interests;
-  private final Location location;
+  private final StudentLocation location;
 
   public ProfileResponse(Profile profile) {
     this(

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.*;
 import studentscroll.api.posts.data.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 
 @Data
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class PostResponse {
 
   private final LocalDateTime date;
 
-  private final Location location;
+  private final StudentLocation location;
 
   // content posts
 

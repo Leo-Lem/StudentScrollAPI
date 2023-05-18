@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Location {
+public class StudentLocation {
 
   @Column(name = "location_name")
   private String name = null;

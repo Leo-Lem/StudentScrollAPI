@@ -9,9 +9,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.val;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.web.dto.*;
 
 @SpringBootTest
@@ -25,25 +28,52 @@ public class RUProfileITest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  private StudentLocation location = new StudentLocation(0.0, 0.0);
+
   @Test
   public void puttingAndGettingProfile() throws Exception {
-    mockMVC.perform(
+    val id = 1L;
+
+    getProfile(id).andExpect(status().isNotFound());
+
+    updateProfile(id).andExpect(status().isNotFound());
+
+    createStudent().andExpect(jsonPath("$.id").value(id));
+
+    getProfile(id).andExpect(status().isOk());
+
+    updateProfile(id).andExpect(status().isOk());
+
+    getStudentByLocation().andExpect(jsonPath("$[0].id").value(id));
+  }
+
+  private ResultActions getStudentByLocation() throws Exception {
+    return mockMVC.perform(
+        get("/students")
+            .param("lat", String.valueOf(location.getLatitude() + 0.01))
+            .param("lng", String.valueOf(location.getLongitude() - 0.01)));
+  }
+
+  private ResultActions getProfile(Long id) throws Exception {
+    return mockMVC.perform(get("/students/" + id + "/profile"));
+  }
+
+  private ResultActions updateProfile(Long id) throws Exception {
+    val request = new UpdateProfileRequest("John Silver", "Hello, I'm John.", "PIRATE", null, location);
+
+    return mockMVC.perform(
+        put("/students/" + id + "/profile")
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(request)));
+  }
+
+  private ResultActions createStudent() throws Exception {
+    val request = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
+
+    return mockMVC.perform(
         post("/students")
             .contentType("application/json")
-            .content(objectMapper
-                .writeValueAsString(new CreateStudentRequest("John Silver", "abc@xyz.com", "1234"))))
-        .andExpect(jsonPath("$.id").value(1L));
-
-    mockMVC.perform(
-        put("/students/1/profile")
-            .contentType("application/json")
-            .content(objectMapper
-                .writeValueAsString(
-                    new UpdateProfileRequest("Donny", "Hello, I'm Donny.", "SHARK", null, null))))
-        .andExpect(status().isOk());
-
-    mockMVC.perform(get("/students/1/profile"))
-        .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(request)));
   }
 
 }

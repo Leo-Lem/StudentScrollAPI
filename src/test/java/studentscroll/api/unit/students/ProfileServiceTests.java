@@ -8,7 +8,7 @@ import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import jakarta.persistence.EntityNotFoundException;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.ProfileService;
 
@@ -117,7 +117,7 @@ public class ProfileServiceTests {
         Set.of("farming", "construction", "redneck"),
         new ArrayList<>(),
         new ArrayList<>(),
-        new Location("Rural Route 9, Springfield", 44.046111, -123.021944));
+        new StudentLocation("Rural Route 9, Springfield", 44.046111, -123.021944));
   }
 
 }

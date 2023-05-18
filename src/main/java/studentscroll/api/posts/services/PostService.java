@@ -12,7 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
 import studentscroll.api.posts.data.*;
-import studentscroll.api.shared.Location;
+import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.Student;
 import studentscroll.api.students.data.StudentRepository;
 
@@ -31,7 +31,7 @@ public class PostService {
       @NonNull Set<String> tags,
       @NonNull String description,
       @NonNull LocalDateTime date,
-      @NonNull Location location) throws EntityNotFoundException {
+      @NonNull StudentLocation location) throws EntityNotFoundException {
     return (EventPost) create(posterId, new EventPost(title, tags, description, date, location));
   }
 
@@ -95,7 +95,7 @@ public class PostService {
       @NonNull Optional<Set<String>> newTags,
       @NonNull Optional<String> newDescription,
       @NonNull Optional<LocalDateTime> newDate,
-      @NonNull Optional<Location> newLocation,
+      @NonNull Optional<StudentLocation> newLocation,
       @NonNull Optional<String> newContent) throws EntityNotFoundException {
     try {
       final Post post = read(postID);

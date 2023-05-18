@@ -15,14 +15,4 @@ public class Settings {
   @Column(name = "locale")
   private String locale = "system";
 
-  // @Column(name = "isNotified")
-  // private Boolean isNotified = false;
-
-  // @Column(name = "privacy")
-  // private String privacy = "VISIBLE";
-
-  // @OneToMany
-  // @JoinColumn
-  // private Set<Student> blocked;
-
 }

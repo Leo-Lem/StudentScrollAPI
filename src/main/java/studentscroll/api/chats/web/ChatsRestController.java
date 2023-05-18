@@ -1,5 +1,8 @@
 package studentscroll.api.chats.web;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,66 +17,61 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
 import studentscroll.api.chats.services.ChatService;
-import studentscroll.api.chats.web.dto.*;
+import studentscroll.api.chats.web.dto.ChatResponse;
 
-@Tag(name = "Messages", description = "Everything related to chat messages.")
+@Tag(name = "Chats", description = "Everything related to chats.")
 @RestController
 @RequestMapping("/chats")
 public class ChatsRestController {
   @Autowired
   private ChatService service;
 
-  @Operation(summary = "Create a new message.")
+  @Operation(summary = "Create a new chat.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created the message."),
-      @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
+      @ApiResponse(responseCode = "201", description = "Created the chat."),
+      @ApiResponse(responseCode = "404", description = "A participant does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public MessageResponse create(
-      @RequestBody CreateMessageRequest request, HttpServletResponse response) throws EntityNotFoundException {
+  public ChatResponse create(
+      @RequestBody Set<Long> participantIds,
+      HttpServletResponse response) throws EntityNotFoundException {
+    val chat = service.create(participantIds);
 
-    val message = service.create(request.getContent(), request.getSenderId(), request.getReceiverId());
+    response.setHeader("Location", "/chats/" + chat.getId());
 
-    response.setHeader("Location", "/chats/" + message.getId());
-
-    return new MessageResponse(message);
+    return new ChatResponse(chat);
   }
 
-  @Operation(summary = "Find the message.")
+  @Operation(summary = "Find the chat.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the message."),
-      @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
+      @ApiResponse(responseCode = "200", description = "Found the chat."),
+      @ApiResponse(responseCode = "404", description = "Chat does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @GetMapping("/{chatId}")
-  public MessageResponse read(@PathVariable Long id) throws EntityNotFoundException {
-    return new MessageResponse(service.read(id));
+  public ChatResponse read(@PathVariable Long chatId) throws EntityNotFoundException {
+    return new ChatResponse(service.read(chatId));
   }
 
-  @Operation(summary = "Update the message.")
+  @Operation(summary = "Delete the chat.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the message."),
-      @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @PutMapping("/{chatId}")
-  public MessageResponse update(
-      @PathVariable Long id, @RequestBody String newContent) throws EntityNotFoundException {
-    var message = service.read(id);
-
-    message = service.update(id, newContent);
-
-    return new MessageResponse(message);
-  }
-
-  @Operation(summary = "Delete the message.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted the message.", content = @Content),
-      @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
+      @ApiResponse(responseCode = "204", description = "Deleted the chat.", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Chat does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @DeleteMapping("/{chatId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
-      @PathVariable Long id) throws EntityNotFoundException {
-    service.delete(id);
+      @PathVariable Long chatId) throws EntityNotFoundException {
+    service.delete(chatId);
+  }
+
+  @Operation(summary = "Find the chats.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Found the chats."),
+      @ApiResponse(responseCode = "404", description = "Participant does not exist.", content = @Content) })
+  @SecurityRequirement(name = "token")
+  @GetMapping
+  public List<ChatResponse> readByParticipantId(@RequestParam Long participantId) throws EntityNotFoundException {
+    return service.readByParticipantId(participantId).stream().map(ChatResponse::new).collect(Collectors.toList());
   }
 }

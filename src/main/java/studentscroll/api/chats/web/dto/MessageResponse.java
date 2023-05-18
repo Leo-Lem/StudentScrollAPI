@@ -12,14 +12,15 @@ public class MessageResponse {
     private final Long id;
     private final String content;
     private final Long senderId;
-    private final Long receiverId;
+    private final Long chatid;
     private final LocalDateTime timestamp;
 
-    public MessageResponse(Message message){
-        this(message.getId(), 
-        message.getContent(),
-        message.getSender().getId(), 
-        message.getReceiver().getId(),
-        message.getTimeStamp());
+    public MessageResponse(Message message) {
+        this(
+                message.getId(),
+                message.getContent(),
+                message.getSender().getId(),
+                message.getChat().getId(),
+                message.getTimeStamp());
     }
 }

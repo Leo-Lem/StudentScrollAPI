@@ -12,7 +12,7 @@ import lombok.val;
 import studentscroll.api.students.data.Student;
 
 @Component
-public class isFollowerAuthz implements AuthorizationManager<RequestAuthorizationContext> {
+public class IsFollowerAuthz implements AuthorizationManager<RequestAuthorizationContext> {
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {

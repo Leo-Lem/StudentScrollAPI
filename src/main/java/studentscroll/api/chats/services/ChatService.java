@@ -1,61 +1,56 @@
 package studentscroll.api.chats.services;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.val;
-import studentscroll.api.chats.data.Message;
-import studentscroll.api.chats.data.MessageRepository;
+import lombok.*;
+import studentscroll.api.chats.data.*;
 import studentscroll.api.students.data.StudentRepository;
 
 @Service
 public class ChatService {
-    @Autowired
-    private MessageRepository repo;
 
-    @Autowired
-    private StudentRepository studentRepo;
+  @Autowired
+  private ChatRepository repo;
 
-    public Message create(
-            @NonNull String content,
-            @NonNull Long senderId,
-            @NonNull Long receiverId) throws EntityNotFoundException{
+  @Autowired
+  private StudentRepository studentRepo;
 
-                val message = new Message(content);
+  public Chat create(
+      @NonNull Set<Long> participants) throws EntityNotFoundException {
+    val chat = new Chat();
 
-                message.setSender(studentRepo
-                .findById(senderId)
-                .orElseThrow(() -> new EntityNotFoundException("Sender does not exist.")));
+    participants.forEach(id -> {
+      val student = studentRepo.findById(id).orElseThrow(EntityNotFoundException::new);
+      chat.addParticipant(student);
+    });
 
-                message.setReceiver(studentRepo
-                .findById(receiverId)
-                .orElseThrow(() -> new EntityNotFoundException("Receiver does not exist.")));
+    return repo.save(chat);
+  }
 
-            return repo.save(message);
-    }
+  public Chat read(
+      @NonNull Long id) throws EntityNotFoundException {
+    return repo
+        .findById(id)
+        .orElseThrow(EntityNotFoundException::new);
+  }
 
-    public Message read(
-            @NonNull Long id) throws EntityNotFoundException {
-        return repo
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException());
-    }
+  public void delete(
+      @NonNull Long id) throws EntityNotFoundException {
+    if (!repo.existsById(id))
+      throw new EntityNotFoundException();
 
-    public Message update(
-            @NonNull Long id,
-            @NonNull String newContent) throws EntityNotFoundException {
-        Message message = read(id);
-        message.setContent(newContent);       
-        return repo.save(message);
-    }
+    repo.deleteById(id);
+  }
 
-    public void delete(
-            @NonNull Long id) throws EntityNotFoundException {
-        if (!repo.existsById(id))
-            throw new EntityNotFoundException();
+  public List<Chat> readByParticipantId(
+      @NonNull Long studentId) throws EntityNotFoundException {
+    if (!studentRepo.existsById(studentId))
+      throw new EntityNotFoundException();
 
-        repo.deleteById(id);
-    }
+    return repo.findByParticipantsId(studentId);
+  }
 }

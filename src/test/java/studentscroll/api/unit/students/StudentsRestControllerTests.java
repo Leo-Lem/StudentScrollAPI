@@ -14,9 +14,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
+import studentscroll.api.students.StudentsRestController;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.*;
-import studentscroll.api.students.web.StudentsRestController;
 import studentscroll.api.students.web.dto.*;
 
 public class StudentsRestControllerTests {
