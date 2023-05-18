@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
-import studentscroll.api.chats.services.ChatService;
+import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.dto.*;
 
 @Tag(name = "Messages", description = "Everything related to chat messages.")
@@ -21,7 +21,7 @@ import studentscroll.api.chats.web.dto.*;
 @RequestMapping("/chats")
 public class ChatsRestController {
   @Autowired
-  private ChatService service;
+  private MessageService service;
 
   @Operation(summary = "Create a new message.")
   @ApiResponses(value = {
@@ -75,5 +75,15 @@ public class ChatsRestController {
   public void delete(
       @PathVariable Long id) throws EntityNotFoundException {
     service.delete(id);
+  }
+
+  @Operation(summary = "Find the chats.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Found the chats."),
+      @ApiResponse(responseCode = "404", description = "Chats doesn't exist.", content = @Content) })
+  @SecurityRequirement(name = "token")
+  @GetMapping("/{chatId}")
+  public MessageResponse getChats(@PathVariable Long id) throws EntityNotFoundException {
+    return new ChatResponse(service.read(id));
   }
 }

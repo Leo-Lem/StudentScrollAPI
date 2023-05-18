@@ -18,7 +18,7 @@ public class Message {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-  
+
   @Column(name = "content")
   @NonNull
   private String content;
@@ -33,5 +33,9 @@ public class Message {
   @JoinColumn(name = "receiver_id")
   @ManyToOne(fetch = FetchType.EAGER)
   private Student receiver;
+
+  @JoinColumn(name = "chat_id")
+  @ManyToOne(fetch = FetchType.EAGER)
+  private Chat chat;
 
 }
