@@ -23,22 +23,24 @@ public class ChatsRestController {
   @Autowired
   private MessageService service;
 
-  @Operation(summary = "Create a new message.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created the message."),
-      @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public MessageResponse create(
-      @RequestBody CreateMessageRequest request, HttpServletResponse response) throws EntityNotFoundException {
+  // @Operation(summary = "Create a new message.")
+  // @ApiResponses(value = {
+  // @ApiResponse(responseCode = "201", description = "Created the message."),
+  // @ApiResponse(responseCode = "404", description = "Sender or receiver does not
+  // exist.", content = @Content) })
+  // @SecurityRequirement(name = "token")
+  // @PostMapping
+  // @ResponseStatus(HttpStatus.CREATED)
+  // public MessageResponse create(
+  // @RequestBody CreateMessageRequest request, HttpServletResponse response)
+  // throws EntityNotFoundException {
 
-    val message = service.create(request.getContent(), request.getSenderId(), request.getReceiverId());
+  // val message = service.create(request.getContent(), request.getSenderId());
 
-    response.setHeader("Location", "/chats/" + message.getId());
+  // response.setHeader("Location", "/chats/" + message.getId());
 
-    return new MessageResponse(message);
-  }
+  // return new MessageResponse(message);
+  // }
 
   @Operation(summary = "Find the message.")
   @ApiResponses(value = {
