@@ -31,4 +31,18 @@ public class ChatService {
     return repo.save(chat);
   }
 
+  public Chat read(
+      @NonNull Long id) throws EntityNotFoundException {
+    return repo
+        .findById(id)
+        .orElseThrow(EntityNotFoundException::new);
+  }
+
+  public void delete(
+      @NonNull Long id) throws EntityNotFoundException {
+    if (!repo.existsById(id))
+      throw new EntityNotFoundException();
+
+    repo.deleteById(id);
+  }
 }
