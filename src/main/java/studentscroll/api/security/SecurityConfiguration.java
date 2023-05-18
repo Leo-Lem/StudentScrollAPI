@@ -32,9 +32,6 @@ public class SecurityConfiguration {
   @Autowired
   private isFollowerAuthz isFollowerAuthz;
 
-  @Autowired
-  private isSenderOrReceiverAuthz isSenderOrReceiverAuthz;
-
   @Bean
   public JWTFilter jwtFilter() {
     return new JWTFilter();
@@ -77,7 +74,12 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.POST, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
             .requestMatchers(HttpMethod.DELETE, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
-            .requestMatchers("/chats/{chatId}").access(isSenderOrReceiverAuthz)
+            .requestMatchers(
+                "/chats",
+                "/chats/{chatId}",
+                "chats/{chatId}/messages",
+                "/chats/{chatId}/messages/{messageId}")
+            .authenticated() // TODO: adjust permissions
             .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())

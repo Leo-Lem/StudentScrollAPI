@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.*;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.val;
 import studentscroll.api.chats.data.*;
 import studentscroll.api.chats.services.ChatService;
 import studentscroll.api.students.data.*;
@@ -32,7 +33,7 @@ public class ChatServiceTests {
 
   @Test
   public void givenParticipantsExist_whenCreatingChat_thenReturnsChat() {
-    Set<Long> participants = Set.of(1L, 2L, 3L);
+    val participants = Set.of(1L, 2L, 3L);
 
     when(studentRepo.findById(anyLong()))
         .thenReturn(Optional.of(new Student()));
@@ -47,7 +48,7 @@ public class ChatServiceTests {
 
   @Test
   public void givenParticipantsDontExist_whenCreatingChat_thenThrowEntityNotFoundException() {
-    Set<Long> participants = Set.of(1L, 2L, 3L);
+    val participants = Set.of(1L, 2L, 3L);
 
     when(studentRepo.findById(anyLong()))
         .thenReturn(Optional.empty());

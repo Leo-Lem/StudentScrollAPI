@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
 import studentscroll.api.chats.services.ChatService;
 import studentscroll.api.chats.web.dto.ChatResponse;
+import studentscroll.api.chats.web.dto.CreateChatRequest;
 
 @Tag(name = "Chats", description = "Everything related to chats.")
 @RestController
@@ -35,9 +36,9 @@ public class ChatsRestController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public ChatResponse create(
-      @RequestBody Set<Long> participantIds,
+      @RequestBody CreateChatRequest request,
       HttpServletResponse response) throws EntityNotFoundException {
-    val chat = service.create(participantIds);
+    val chat = service.create(request.getParticipantIds());
 
     response.setHeader("Location", "/chats/" + chat.getId());
 
