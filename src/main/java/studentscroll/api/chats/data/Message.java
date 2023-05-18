@@ -7,12 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import studentscroll.api.students.data.Student;
 
 @Entity(name = "message")
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Message {
 
   @Id

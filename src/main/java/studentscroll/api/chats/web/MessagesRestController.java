@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,22 +24,22 @@ public class MessagesRestController {
 
   @Operation(summary = "Create a new message.")
   @ApiResponses(value = {
-  @ApiResponse(responseCode = "201", description = "Created the message."),
-  @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
+      @ApiResponse(responseCode = "201", description = "Created the message."),
+      @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public MessageResponse create(
-  @PathVariable Long chatId,
-  @RequestBody CreateMessageRequest request, 
-  HttpServletResponse response)
-  throws EntityNotFoundException {
+      @PathVariable Long chatId,
+      @RequestBody CreateMessageRequest request,
+      HttpServletResponse response)
+      throws EntityNotFoundException {
 
-  val message = service.create(request.getContent(), request.getSenderId(), chatId);
+    val message = service.create(request.getContent(), request.getSenderId(), chatId);
 
-  response.setHeader("Location", "/chats/" + chatId + "/messages/" + message.getId());
+    response.setHeader("Location", "/chats/" + chatId + "/messages/" + message.getId());
 
-  return new MessageResponse(message);
+    return new MessageResponse(message);
   }
 
   @Operation(summary = "Find the message.")
@@ -61,11 +60,7 @@ public class MessagesRestController {
   @PutMapping("/{messageId}")
   public MessageResponse update(
       @PathVariable Long messageId, @RequestBody String newContent) throws EntityNotFoundException {
-    var message = service.read(messageId);
-
-    message = service.update(messageId, newContent);
-
-    return new MessageResponse(message);
+    return new MessageResponse(service.update(messageId, newContent));
   }
 
   @Operation(summary = "Delete the message.")

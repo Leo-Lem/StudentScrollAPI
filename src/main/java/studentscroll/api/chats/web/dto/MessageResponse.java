@@ -12,6 +12,7 @@ public class MessageResponse {
     private final Long id;
     private final String content;
     private final Long senderId;
+    private final Long chatid;
     private final LocalDateTime timestamp;
 
     public MessageResponse(Message message) {
@@ -19,6 +20,7 @@ public class MessageResponse {
                 message.getId(),
                 message.getContent(),
                 message.getSender().getId(),
+                message.getChat().getId(),
                 message.getTimeStamp());
     }
 }

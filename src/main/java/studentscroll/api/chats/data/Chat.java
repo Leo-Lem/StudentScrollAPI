@@ -4,11 +4,13 @@ import java.util.*;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import studentscroll.api.students.data.Student;
 
 @Entity(name = "chat")
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Chat {
 
   @Id
