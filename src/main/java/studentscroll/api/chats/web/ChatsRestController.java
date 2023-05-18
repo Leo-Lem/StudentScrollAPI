@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
 import studentscroll.api.chats.services.ChatService;
 import studentscroll.api.chats.web.dto.ChatResponse;
-import studentscroll.api.chats.web.dto.CreateChatRequest;
 
 @Tag(name = "Chats", description = "Everything related to chats.")
 @RestController
@@ -36,9 +34,9 @@ public class ChatsRestController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public ChatResponse create(
-      @RequestBody CreateChatRequest request,
+      @RequestBody Set<Long> participantIds,
       HttpServletResponse response) throws EntityNotFoundException {
-    val chat = service.create(request.getParticipantIds());
+    val chat = service.create(participantIds);
 
     response.setHeader("Location", "/chats/" + chat.getId());
 

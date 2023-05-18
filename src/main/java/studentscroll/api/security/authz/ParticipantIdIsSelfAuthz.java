@@ -12,14 +12,14 @@ import lombok.val;
 import studentscroll.api.students.data.Student;
 
 @Component
-public class IsFollowerAuthz implements AuthorizationManager<RequestAuthorizationContext> {
+public class ParticipantIdIsSelfAuthz implements AuthorizationManager<RequestAuthorizationContext> {
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
     val principalId = ((Student) supplier.get().getPrincipal()).getId();
-    val followerId = Long.parseLong(context.getVariables().get("followerId"));
+    val participantId = Long.parseLong(context.getVariables().get("participantId"));
 
-    return new AuthorizationDecision(principalId.equals(followerId));
+    return new AuthorizationDecision(participantId == principalId);
   }
 
 }

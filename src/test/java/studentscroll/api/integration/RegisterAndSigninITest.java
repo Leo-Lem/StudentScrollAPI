@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,30 +28,34 @@ public class RegisterAndSigninITest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  private String email = "jwayne@xyz.com", password = "1234";
+
   @Test
   public void registerAndSignin() throws Exception {
-    String email = "jwayne@xyz.com", password = "1234";
-    val registerRequest = new CreateStudentRequest("John Wayne", email, password);
 
-    mockMVC.perform(
+    createStudent().andExpect(status().isCreated());
+
+    createStudent().andExpect(status().isConflict());
+
+    signIn().andExpect(status().isOk());
+
+  }
+
+  private ResultActions createStudent() throws Exception {
+    val request = new CreateStudentRequest("John Wayne", email, password);
+    return mockMVC.perform(
         post("/students")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(registerRequest)))
-        .andExpect(status().isCreated());
+            .content(objectMapper.writeValueAsString(request)));
+  }
 
-    mockMVC.perform(
-        post("/students")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(registerRequest)))
-        .andExpect(status().isConflict());
+  private ResultActions signIn() throws Exception {
+    val request = new SigninRequest(email, password);
 
-    val signinRequest = new SigninRequest(email, password);
-
-    mockMVC.perform(
+    return mockMVC.perform(
         post("/signin")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(signinRequest)))
-        .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(request)));
   }
 
 }

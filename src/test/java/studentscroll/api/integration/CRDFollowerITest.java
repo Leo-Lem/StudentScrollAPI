@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,81 +29,55 @@ public class CRDFollowerITest {
 
   @Test
   public void crdFollowerIntegrationTest() throws Exception {
-    mockMVC.perform(
-        get("/students/1/followers"))
-        .andExpect(status().isNotFound());
+    Long firstStudentId = 1L, secondStudentId = 2L;
 
-    mockMVC.perform(
-        get("/students/1/follows"))
-        .andExpect(status().isNotFound());
+    getFollowers(firstStudentId).andExpect(status().isNotFound());
+    getFollows(firstStudentId).andExpect(status().isNotFound());
+    follow(firstStudentId, secondStudentId).andExpect(status().isNotFound());
+    unfollow(firstStudentId, secondStudentId).andExpect(status().isNotFound());
 
-    mockMVC.perform(
-        post("/students/1/followers/2"))
-        .andExpect(status().isNotFound());
+    createStudent("abc@xyz.com").andExpect(jsonPath("$.id").value(firstStudentId));
+    createStudent("xyz@abc.com").andExpect(jsonPath("$.id").value(secondStudentId));
 
-    mockMVC.perform(
-        delete("/students/1/followers/2"))
-        .andExpect(status().isNotFound());
+    getFollowers(firstStudentId).andExpect(content().json("[]"));
+    getFollows(firstStudentId).andExpect(content().json("[]"));
 
-    create2Students();
+    follow(firstStudentId, secondStudentId).andExpect(status().isCreated());
+    getFollowers(secondStudentId).andExpect(content().json("[1]"));
 
-    mockMVC.perform(
-        get("/students/1/follows"))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[]"));
+    follow(secondStudentId, firstStudentId).andExpect(status().isCreated());
+    getFollows(firstStudentId).andExpect(content().json("[2]"));
 
-    mockMVC.perform(
-        get("/students/2/followers"))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[]"));
+    unfollow(secondStudentId, firstStudentId).andExpect(status().isNoContent());
+    getFollows(secondStudentId).andExpect(content().json("[]"));
 
-    mockMVC.perform(
-        post("/students/1/followers/2"))
-        .andExpect(status().isCreated());
-
-    mockMVC.perform(
-        get("/students/1/followers"))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[2]"));
-
-    mockMVC.perform(
-        post("/students/2/followers/1"))
-        .andExpect(status().isCreated());
-
-    mockMVC.perform(
-        get("/students/1/follows"))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[2]"));
-
-    mockMVC.perform(
-        delete("/students/2/followers/1"))
-        .andExpect(status().isNoContent());
-
-    mockMVC.perform(
-        get("/students/2/followers"))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[]"));
-
-    mockMVC.perform(
-        get("/students/1/follows"))
-        .andExpect(status().isOk())
-        .andExpect(content().json("[]"));
+    unfollow(firstStudentId, secondStudentId).andExpect(status().isNoContent());
+    getFollowers(secondStudentId).andExpect(content().json("[]"));
   }
 
-  private void create2Students() throws Exception {
-    val registerRequest = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
+  private ResultActions getFollowers(Long id) throws Exception {
+    return mockMVC.perform(get("/students/" + id + "/followers"));
+  }
 
-    mockMVC.perform(
+  private ResultActions getFollows(Long id) throws Exception {
+    return mockMVC.perform(get("/students/" + id + "/follows"));
+  }
+
+  private ResultActions follow(Long followerId, Long followsId) throws Exception {
+    return mockMVC.perform(post("/students/" + followsId + "/followers/" + followerId));
+  }
+
+  private ResultActions unfollow(Long followerId, Long followsId) throws Exception {
+    return mockMVC.perform(delete("/students/" + followsId + "/followers/" + followerId));
+  }
+
+  private ResultActions createStudent(String email) throws Exception {
+    val request = new CreateStudentRequest("John Silver", email, "1234");
+
+    return mockMVC.perform(
         post("/students")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(registerRequest)));
-
-    val registerRequest2 = new CreateStudentRequest("James Flint", "xyz@abc.com", "1234");
-
-    mockMVC.perform(
-        post("/students")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(registerRequest2)));
+            .content(objectMapper.writeValueAsString(request)));
   }
 
 }

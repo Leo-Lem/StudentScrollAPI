@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,44 +30,54 @@ public class RUDStudentITest {
 
   @Test
   public void rudStudentIntegrationTest() throws Exception {
-    mockMVC.perform(get("/students/1"))
-        .andExpect(status().isNotFound());
+    val id = 1L;
 
-    createStudent();
+    getStudent(id).andExpect(status().isNotFound());
 
-    val request = new UpdateStudentRequest("1234", "xyz@abc.com", null);
+    updateStudent(id).andExpect(status().isNotFound());
 
-    mockMVC.perform(
-        get("/students/1"))
-        .andExpect(status().isOk());
+    deleteStudent(id).andExpect(status().isNotFound());
 
-    mockMVC.perform(
-        put("/students/1")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isOk());
+    createStudent().andExpect(jsonPath("$.id").value(id));
 
-    mockMVC.perform(
-        delete("/students/1"))
-        .andExpect(status().isNoContent());
+    getStudent(id).andExpect(status().isOk());
 
-    mockMVC.perform(get("/students/1"))
-        .andExpect(status().isNotFound());
+    updateStudent(id).andExpect(status().isOk());
 
-    mockMVC.perform(
-        put("/students/1")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isNotFound());
+    deleteStudent(id).andExpect(status().isNoContent());
+
+    getStudent(1L).andExpect(status().isNotFound());
+
+    updateStudent(id).andExpect(status().isNotFound());
+
+    deleteStudent(id).andExpect(status().isNotFound());
   }
 
-  private void createStudent() throws Exception {
-    val registerRequest = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
+  private ResultActions createStudent() throws Exception {
+    val request = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
 
-    mockMVC.perform(
+    return mockMVC.perform(
         post("/students")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(registerRequest)));
+            .content(objectMapper.writeValueAsString(request)));
+  }
+
+  private ResultActions getStudent(Long id) throws Exception {
+    return mockMVC.perform(
+        get("/students/" + id));
+  }
+
+  private ResultActions updateStudent(Long id) throws Exception {
+    val request = new UpdateStudentRequest("1234", "xyz@abc.com", null);
+    return mockMVC.perform(
+        put("/students/" + id)
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(request)));
+  }
+
+  private ResultActions deleteStudent(Long id) throws Exception {
+    return mockMVC.perform(
+        delete("/students/" + id));
   }
 
 }

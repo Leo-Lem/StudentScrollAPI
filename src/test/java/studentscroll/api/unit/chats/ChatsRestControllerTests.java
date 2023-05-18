@@ -15,7 +15,6 @@ import lombok.val;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.services.ChatService;
 import studentscroll.api.chats.web.ChatsRestController;
-import studentscroll.api.chats.web.dto.CreateChatRequest;
 
 public class ChatsRestControllerTests {
 
@@ -36,8 +35,7 @@ public class ChatsRestControllerTests {
 
     when(service.create(participantIds)).thenReturn(new Chat());
 
-    val request = new CreateChatRequest(participantIds);
-    val response = controller.create(request, mock(HttpServletResponse.class));
+    val response = controller.create(participantIds, mock(HttpServletResponse.class));
 
     assertNotNull(response);
   }

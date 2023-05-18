@@ -30,7 +30,16 @@ public class SecurityConfiguration {
   private IsPosterAuthz isPosterAuthz;
 
   @Autowired
-  private isFollowerAuthz isFollowerAuthz;
+  private IsFollowerAuthz isFollowerAuthz;
+
+  @Autowired
+  private IsParticipantAuthz isParticipantAuthz;
+
+  @Autowired
+  private IsSenderAuthz isSenderAuthz;
+
+  @Autowired
+  ParticipantIdIsSelfAuthz participantIdIsSelfAuthz;
 
   @Bean
   public JWTFilter jwtFilter() {
@@ -73,14 +82,16 @@ public class SecurityConfiguration {
             .authenticated())
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.POST, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
-            .requestMatchers(HttpMethod.DELETE, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz)
-            .requestMatchers(
-                "/chats",
-                "/chats/{chatId}",
-                "chats/{chatId}/messages",
-                "/chats/{chatId}/messages/{messageId}")
-            .authenticated() // TODO: adjust permissions
-            .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz)
+            .requestMatchers(HttpMethod.DELETE, "/students/{studentId}/followers/{followerId}").access(isFollowerAuthz))
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.GET, "chats").access(participantIdIsSelfAuthz)
+            .requestMatchers("/chats/{chatId}").access(isParticipantAuthz)
+            .requestMatchers(HttpMethod.POST, "/chats/{chatId}/messages").access(isParticipantAuthz)
+            .requestMatchers(HttpMethod.GET, "/chats/{chatId}/messages/{messageId}").access(isParticipantAuthz)
+            .requestMatchers("/chats/{chatId}/messages/{messageId}").access(isSenderAuthz))
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz))
+        .authorizeHttpRequests(authz -> authz
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())
