@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -19,6 +20,7 @@ import studentscroll.api.students.web.dto.CreateStudentRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+@DirtiesContext
 public class CRDChatITest {
 
   @Autowired
@@ -39,7 +41,10 @@ public class CRDChatITest {
             .andReturn().getResponse().getContentAsString())
         .get("id").asLong();
 
-    getChat(chatId).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(chatId));
+    getChat(chatId)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(chatId));
+
     getChat(0L).andExpect(status().isNotFound());
 
     getChats(1L).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value(chatId));
