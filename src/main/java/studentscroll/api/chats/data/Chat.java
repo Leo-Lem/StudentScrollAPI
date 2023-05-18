@@ -1,6 +1,6 @@
 package studentscroll.api.chats.data;
 
-import java.util.List;
+import java.util.*;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,8 +16,34 @@ public class Chat {
   private Long id;
 
   @ManyToMany(mappedBy = "chats")
-  private List<Student> participants;
+  @NonNull
+  private List<Student> participants = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Message> messages;
+  @NonNull
+  private List<Message> messages = new ArrayList<>();
+
+  public Chat addParticipant(Student student) {
+    participants.add(student);
+    student.getChats().add(this);
+    return this;
+  }
+
+  public Chat removeParticipant(Student student) {
+    participants.remove(student);
+    student.getChats().remove(this);
+    return this;
+  }
+
+  public Chat addMessage(Message message) {
+    messages.add(message);
+    message.setChat(this);
+    return this;
+  }
+
+  public Chat removeMessage(Message message) {
+    messages.remove(message);
+    message.setChat(null);
+    return this;
+  }
 }

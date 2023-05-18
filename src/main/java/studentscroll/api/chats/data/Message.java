@@ -30,10 +30,6 @@ public class Message {
   @ManyToOne(fetch = FetchType.EAGER)
   private Student sender;
 
-  @JoinColumn(name = "receiver_id")
-  @ManyToOne(fetch = FetchType.EAGER)
-  private Student receiver;
-
   @JoinColumn(name = "chat_id")
   @ManyToOne(fetch = FetchType.EAGER)
   private Chat chat;

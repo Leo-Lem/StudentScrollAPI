@@ -77,13 +77,15 @@ public class ChatsRestController {
     service.delete(id);
   }
 
-  @Operation(summary = "Find the chats.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the chats."),
-      @ApiResponse(responseCode = "404", description = "Chats doesn't exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @GetMapping("/{chatId}")
-  public MessageResponse getChats(@PathVariable Long id) throws EntityNotFoundException {
-    return new ChatResponse(service.read(id));
-  }
+  // @Operation(summary = "Find the chats.")
+  // @ApiResponses(value = {
+  // @ApiResponse(responseCode = "200", description = "Found the chats."),
+  // @ApiResponse(responseCode = "404", description = "Chats doesn't exist.",
+  // content = @Content) })
+  // @SecurityRequirement(name = "token")
+  // @GetMapping("/{chatId}")
+  // public MessageResponse getChats(@PathVariable Long id) throws
+  // EntityNotFoundException {
+  // return new ChatResponse(service.read(id));
+  // }
 }

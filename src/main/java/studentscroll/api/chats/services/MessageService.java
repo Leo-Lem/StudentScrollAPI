@@ -28,10 +28,6 @@ public class MessageService {
                 .findById(senderId)
                 .orElseThrow(() -> new EntityNotFoundException("Sender does not exist.")));
 
-        message.setReceiver(studentRepo
-                .findById(receiverId)
-                .orElseThrow(() -> new EntityNotFoundException("Receiver does not exist.")));
-
         return repo.save(message);
     }
 

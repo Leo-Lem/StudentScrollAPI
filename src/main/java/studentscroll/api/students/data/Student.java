@@ -45,8 +45,10 @@ public class Student implements UserDetails {
   @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Post> posts;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  private Set<Chat> chats;
+  @ManyToMany
+  @JoinTable(name = "student_chat", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "chat_id"))
+  @NonNull
+  private List<Chat> chats = new ArrayList<>();
 
   public Student addPost(Post post) {
     posts.add(post);
