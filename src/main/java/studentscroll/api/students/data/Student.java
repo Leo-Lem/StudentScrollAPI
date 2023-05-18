@@ -45,9 +45,7 @@ public class Student implements UserDetails {
   @OneToMany(mappedBy = "poster", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Post> posts;
 
-  @ManyToMany
-  @JoinTable(name = "student_chat", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "chat_id"))
-  @NonNull
+  @ManyToMany(mappedBy = "participants")
   private List<Chat> chats = new ArrayList<>();
 
   public Student addPost(Post post) {

@@ -17,8 +17,8 @@ public class Chat {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @ManyToMany(mappedBy = "chats")
-  @NonNull
+  @ManyToMany(cascade = CascadeType.REMOVE)
+  @JoinTable(name = "student_chat", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
   private List<Student> participants = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
