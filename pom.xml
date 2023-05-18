@@ -42,7 +42,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -76,15 +76,13 @@
         </dependency>
 
         <!--TESTING-->
-         <!--com.h2database 2 fatal vulnerabilities-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.1.214</version>
         </dependency>
 
-        <!--CODE
-        QUALITY-->
+        <!--CODEQUALITY-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -108,15 +106,13 @@
 
     <build>
         <plugins>
-            <!--SPRING
-            BOOT-->
+            <!--SPRINGBOOT-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!--STYLE
-            AND ERROR FINDING-->
+            <!--STYLEAND ERROR FINDING-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
