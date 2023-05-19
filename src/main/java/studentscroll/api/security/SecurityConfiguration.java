@@ -70,6 +70,7 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll())
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.GET,
+                "/students",
                 "/students/{studentId}/profile",
                 "/posts", "/posts/{postId}",
                 "/students/{studentId}/followers",
