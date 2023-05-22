@@ -3,6 +3,7 @@ package studentscroll.api.students.data;
 import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 import studentscroll.api.shared.StudentLocation;
 
 @Embeddable
@@ -10,6 +11,7 @@ import studentscroll.api.shared.StudentLocation;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Profile {
 
   @Column(name = "name")

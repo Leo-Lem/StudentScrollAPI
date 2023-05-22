@@ -12,12 +12,12 @@ import studentscroll.api.students.data.StudentRepository;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
-  StudentRepository studentRepository;
+  StudentRepository repo;
 
   @Override
   @Transactional
   public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
-    return studentRepository.findByEmail(email)
+    return repo.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException(email));
   }
 

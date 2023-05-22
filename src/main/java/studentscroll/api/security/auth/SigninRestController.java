@@ -23,16 +23,16 @@ public class SigninRestController {
   private AuthenticationManager authManager;
 
   @Autowired
-  private UserDetailsService detailsService;
+  private UserDetailsService service;
 
-  @Operation(summary = "Sign in to receive JWT.")
+  @Operation(summary = "Sign in to StudentScroll.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT."),
       @ApiResponse(responseCode = "401", description = "Credentials not accepted.", content = @Content) })
   @PostMapping
   public StudentResponse signin(@RequestBody SigninRequest request) throws BadCredentialsException {
     if (authenticate(request.getEmail(), request.getPassword())) {
-      val student = (Student) detailsService.loadUserByUsername(request.getEmail());
+      val student = (Student) service.loadUserByUsername(request.getEmail());
       return new StudentResponse(student, JSONWebToken.generateFrom(student));
     } else
       throw new BadCredentialsException("");
