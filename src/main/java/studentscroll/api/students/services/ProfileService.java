@@ -32,7 +32,6 @@ public class ProfileService {
       @NonNull Optional<String> newIcon,
       @NonNull Optional<Set<String>> newInterests,
       @NonNull Optional<StudentLocation> newLocation) {
-
     Profile profile = student.getProfile();
     newName.ifPresent(unwrapped -> profile.setName(unwrapped));
     newBio.ifPresent(unwrapped -> profile.setBio(unwrapped));

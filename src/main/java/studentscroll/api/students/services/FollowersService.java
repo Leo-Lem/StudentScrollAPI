@@ -19,14 +19,14 @@ public class FollowersService {
   @Autowired
   private StudentRepository repo;
 
-  public Set<Long> readAllFollowers(
+  public Set<Long> readFollowers(
       @NonNull Long studentID) throws EntityNotFoundException {
     val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
 
     return student.getProfile().getFollowers().stream().map(Student::getId).collect(Collectors.toSet());
   }
 
-  public Set<Long> readAllFollows(
+  public Set<Long> readFollows(
       @NonNull Long studentID) throws EntityNotFoundException {
     val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
     return student.getProfile().getFollows().stream().map(Student::getId).collect(Collectors.toSet());

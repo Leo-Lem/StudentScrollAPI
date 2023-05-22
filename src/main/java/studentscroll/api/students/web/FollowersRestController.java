@@ -43,7 +43,7 @@ public class FollowersRestController {
   @ResponseStatus(HttpStatus.OK)
   public Set<Long> readAllFollowers(
       @PathVariable Long studentId) throws EntityNotFoundException {
-    return service.readAllFollowers(studentId);
+    return service.readFollowers(studentId);
   }
 
   @Operation(summary = "Find student's follows.")
@@ -55,7 +55,7 @@ public class FollowersRestController {
   @ResponseStatus(HttpStatus.OK)
   public Set<Long> readAllFollows(
       @PathVariable Long studentId) throws EntityNotFoundException {
-    return service.readAllFollows(studentId);
+    return service.readFollows(studentId);
   }
 
   @Operation(summary = "Follow the student.")
