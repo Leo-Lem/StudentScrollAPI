@@ -11,7 +11,7 @@ import studentscroll.api.security.JSONWebToken;
 @Data
 @RequiredArgsConstructor
 @JsonInclude(Include.NON_NULL)
-public class AuthenticationResponse {
+public class AccountResponse {
 
   private final Long id;
   private final String name;
@@ -19,11 +19,11 @@ public class AuthenticationResponse {
   private final String token;
   private final String type;
 
-  public AuthenticationResponse(Student student) {
+  public AccountResponse(Student student) {
     this(student.getId(), student.getProfile().getName(), student.getEmail(), null, null);
   }
 
-  public AuthenticationResponse(Student student, JSONWebToken token) {
+  public AccountResponse(Student student, JSONWebToken token) {
     this(student.getId(), student.getProfile().getName(), student.getEmail(), token.toString(), "Bearer");
   }
 

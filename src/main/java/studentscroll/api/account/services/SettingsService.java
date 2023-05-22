@@ -3,11 +3,9 @@ package studentscroll.api.account.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
-import lombok.val;
 import studentscroll.api.account.data.Settings;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.account.data.StudentRepository;
@@ -18,30 +16,20 @@ public class SettingsService {
   @Autowired
   private StudentRepository repo;
 
-  public Settings read() throws IllegalStateException {
-    return readCurrentStudent().getSettings();
+  public Settings read(@NonNull Student student) throws IllegalStateException {
+    return student.getSettings();
   }
 
   public Settings update(
+      @NonNull Student student,
       @NonNull Optional<String> newTheme,
       @NonNull Optional<String> newLocale) throws IllegalStateException {
-    val student = readCurrentStudent();
-
     Settings settings = student.getSettings();
     newTheme.ifPresent(unwrapped -> settings.setTheme(unwrapped));
     newLocale.ifPresent(unwrapped -> settings.setLocale(unwrapped));
     student.setSettings(settings);
 
     return repo.save(student).getSettings();
-  }
-
-  private Student readCurrentStudent() throws IllegalStateException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (student == null)
-      throw new IllegalStateException("Not authenticated.");
-
-    return student;
   }
 
 }

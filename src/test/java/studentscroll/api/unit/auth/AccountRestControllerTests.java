@@ -30,7 +30,7 @@ import studentscroll.api.account.data.Student;
 import studentscroll.api.account.services.StudentService;
 import studentscroll.api.account.web.AccountRestController;
 import studentscroll.api.account.web.dto.AuthenticationRequest;
-import studentscroll.api.account.web.dto.AuthenticationResponse;
+import studentscroll.api.account.web.dto.AccountResponse;
 import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
 import studentscroll.api.security.StudentDetailsService;
 import studentscroll.api.students.data.Profile;
@@ -92,7 +92,7 @@ public class AccountRestControllerTests {
     when(service.create(name, email, password))
         .thenReturn(new Student(email, "abc123", new Profile(name)).setId(1L));
 
-    AuthenticationResponse response = controller.authenticate(request, mock(HttpServletResponse.class));
+    AccountResponse response = controller.authenticate(request, mock(HttpServletResponse.class));
 
     assertNotNull(response.getId());
     assertEquals(name, response.getName());

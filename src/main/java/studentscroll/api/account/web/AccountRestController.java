@@ -4,22 +4,34 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.account.services.StudentService;
-import studentscroll.api.account.web.dto.*;
+import studentscroll.api.account.web.dto.AuthenticationRequest;
+import studentscroll.api.account.web.dto.AccountResponse;
+import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
 import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.security.StudentDetailsService;
+import studentscroll.api.shared.NotAuthenticatedException;
 
 @Tag(name = "Account", description = "Everything related to your account and authentication.")
 @RestController
@@ -42,7 +54,7 @@ public class AccountRestController {
       @ApiResponse(responseCode = "401", description = "Credentials are invalid.", content = @Content),
       @ApiResponse(responseCode = "409", description = "Email is already in use.", content = @Content) })
   @PostMapping
-  public AuthenticationResponse authenticate(
+  public AccountResponse authenticate(
       @RequestBody AuthenticationRequest request,
       HttpServletResponse response) throws BadCredentialsException {
     Student student;
@@ -60,7 +72,7 @@ public class AccountRestController {
       response.setHeader("Location", "/students/" + student.getId());
     }
 
-    return new AuthenticationResponse(student, JSONWebToken.generateFrom(student));
+    return new AccountResponse(student, JSONWebToken.generateFrom(student));
   }
 
   @Operation(summary = "Update your credentials.")
@@ -69,8 +81,8 @@ public class AccountRestController {
       @ApiResponse(responseCode = "401", description = "Invalid email or password.", content = @Content) })
   @SecurityRequirement(name = "token")
   @PutMapping
-  public AuthenticationResponse update(
-      @RequestBody UpdateCredentialsRequest request) {
+  public AccountResponse update(
+      @RequestBody UpdateCredentialsRequest request) throws NotAuthenticatedException {
     authenticate(request.getCurrentEmail(), request.getCurrentPassword());
 
     val student = service.update(
@@ -78,7 +90,7 @@ public class AccountRestController {
         Optional.ofNullable(request.getNewEmail()),
         Optional.ofNullable(request.getNewPassword()));
 
-    return new AuthenticationResponse(student, JSONWebToken.generateFrom(student));
+    return new AccountResponse(student, JSONWebToken.generateFrom(student));
   }
 
   @Operation(summary = "Delete your account.")
@@ -86,7 +98,7 @@ public class AccountRestController {
   @SecurityRequirement(name = "token")
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete() {
+  public void delete() throws NotAuthenticatedException {
     service.delete(getCurrentStudent().getId());
   }
 
@@ -97,11 +109,11 @@ public class AccountRestController {
       throw new BadCredentialsException("Invalid email or password.");
   }
 
-  private Student getCurrentStudent() throws IllegalStateException {
+  private Student getCurrentStudent() throws NotAuthenticatedException {
     val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
-      throw new IllegalStateException("Not authenticated.");
+      throw new NotAuthenticatedException("You are not logged in.");
 
     return student;
   }

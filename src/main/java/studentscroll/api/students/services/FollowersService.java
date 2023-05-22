@@ -33,12 +33,11 @@ public class FollowersService {
   }
 
   public Long follow(
-      @NonNull Long studentID,
+      @NonNull Student student,
       @NonNull Long followerID) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
-    if (studentID.equals(followerID))
+    if (student.getId().equals(followerID))
       throw new IllegalArgumentException("Student cannot follow themselves");
 
-    val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
     val follower = repo.findById(followerID).orElseThrow(EntityNotFoundException::new);
 
     if (student.getProfile().getFollowers().contains(follower))
@@ -50,9 +49,8 @@ public class FollowersService {
   }
 
   public void unfollow(
-      @NonNull Long studentID,
+      @NonNull Student student,
       @NonNull Long followerID) throws EntityNotFoundException {
-    val student = repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
     val follower = repo.findById(followerID).orElseThrow(EntityNotFoundException::new);
 
     if (!student.getProfile().getFollowers().contains(follower))

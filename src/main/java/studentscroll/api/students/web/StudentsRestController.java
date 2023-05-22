@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.account.data.Student;
+import studentscroll.api.shared.NotAuthenticatedException;
 import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.services.ProfileService;
 import studentscroll.api.students.web.dto.ProfileResponse;
@@ -53,7 +54,7 @@ public class StudentsRestController {
   @GetMapping
   public List<Long> readAll(
       @RequestParam Double lat,
-      @RequestParam Double lng) throws EntityNotFoundException {
+      @RequestParam Double lng) {
     return service.readAllNearLocation(new StudentLocation(lat, lng)).stream().map(Student::getId).toList();
   }
 
@@ -62,9 +63,9 @@ public class StudentsRestController {
   @SecurityRequirement(name = "token")
   @PutMapping
   public ProfileResponse update(
-      @RequestBody UpdateProfileRequest request) throws EntityNotFoundException {
+      @RequestBody UpdateProfileRequest request) throws NotAuthenticatedException {
     return new ProfileResponse(service.update(
-        getCurrentStudent().getId(),
+        getCurrentStudent(),
         Optional.ofNullable(request.getNewName()),
         Optional.ofNullable(request.getNewBio()),
         Optional.ofNullable(request.getNewIcon()),
@@ -72,11 +73,11 @@ public class StudentsRestController {
         Optional.ofNullable(request.getNewLocation())));
   }
 
-  private Student getCurrentStudent() throws IllegalStateException {
+  private Student getCurrentStudent() throws NotAuthenticatedException {
     val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
-      throw new IllegalStateException("Not authenticated.");
+      throw new NotAuthenticatedException("You are not logged in.");
 
     return student;
   }

@@ -18,8 +18,11 @@ import lombok.val;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.dto.*;
+import studentscroll.api.shared.ForbiddenException;
+import studentscroll.api.shared.NotAuthenticatedException;
 
 @Tag(name = "Messages", description = "Everything related to chat messages.")
+@SecurityRequirement(name = "token")
 @RestController
 @RequestMapping("/chats/{chatId}/messages")
 public class MessagesRestController {
@@ -29,21 +32,15 @@ public class MessagesRestController {
   @Operation(summary = "Create a new message.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the message."),
-      @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
+      @ApiResponse(responseCode = "404", description = "Sender does not exist.", content = @Content) })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public MessageResponse create(
       @PathVariable Long chatId,
-      @RequestBody CreateMessageRequest request,
+      @RequestBody String content,
       HttpServletResponse response)
-      throws EntityNotFoundException {
-    val principal = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (!request.getSenderId().equals(principal.getId()))
-      throw new IllegalArgumentException("Sender id needs to match currently authenticated student's id.");
-
-    val message = service.create(request.getContent(), request.getSenderId(), chatId);
+      throws EntityNotFoundException, NotAuthenticatedException, ForbiddenException {
+    val message = service.create(getCurrentStudent(), content, chatId);
 
     response.setHeader("Location", "/chats/" + chatId + "/messages/" + message.getId());
 
@@ -55,10 +52,10 @@ public class MessagesRestController {
       @ApiResponse(responseCode = "200", description = "Found the message."),
       @ApiResponse(responseCode = "404", description = "Sender or receiver does not exist.", content = @Content) })
   @Parameter(in = ParameterIn.PATH, name = "chatId", required = true)
-  @SecurityRequirement(name = "token")
   @GetMapping("/{messageId}")
-  public MessageResponse read(@PathVariable Long messageId) throws EntityNotFoundException {
-    return new MessageResponse(service.read(messageId));
+  public MessageResponse read(@PathVariable Long messageId)
+      throws EntityNotFoundException, NotAuthenticatedException, ForbiddenException {
+    return new MessageResponse(service.read(getCurrentStudent().getId(), messageId));
   }
 
   @Operation(summary = "Update the message.")
@@ -66,11 +63,11 @@ public class MessagesRestController {
       @ApiResponse(responseCode = "200", description = "Updated the message."),
       @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
   @Parameter(in = ParameterIn.PATH, name = "chatId", required = true)
-  @SecurityRequirement(name = "token")
   @PutMapping("/{messageId}")
   public MessageResponse update(
-      @PathVariable Long messageId, @RequestBody String newContent) throws EntityNotFoundException {
-    return new MessageResponse(service.update(messageId, newContent));
+      @PathVariable Long messageId, @RequestBody String newContent)
+      throws EntityNotFoundException, NotAuthenticatedException, ForbiddenException {
+    return new MessageResponse(service.update(getCurrentStudent().getId(), messageId, newContent));
   }
 
   @Operation(summary = "Delete the message.")
@@ -78,11 +75,20 @@ public class MessagesRestController {
       @ApiResponse(responseCode = "204", description = "Deleted the message.", content = @Content),
       @ApiResponse(responseCode = "404", description = "Message does not exist.", content = @Content) })
   @Parameter(in = ParameterIn.PATH, name = "chatId", required = true)
-  @SecurityRequirement(name = "token")
   @DeleteMapping("/{messageId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
-      @PathVariable Long messageId) throws EntityNotFoundException {
-    service.delete(messageId);
+      @PathVariable Long messageId) throws EntityNotFoundException, NotAuthenticatedException, ForbiddenException {
+    service.delete(getCurrentStudent().getId(), messageId);
   }
+
+  private Student getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (student == null)
+      throw new NotAuthenticatedException("You are not logged in.");
+
+    return student;
+  }
+
 }

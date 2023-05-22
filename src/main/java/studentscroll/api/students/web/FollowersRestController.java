@@ -5,17 +5,25 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.account.data.Student;
+import studentscroll.api.shared.NotAuthenticatedException;
 import studentscroll.api.students.services.FollowersService;
 
 @Tag(name = "Followers", description = "Everything related to a student's followers.")
@@ -61,8 +69,9 @@ public class FollowersRestController {
   @PostMapping("/followers")
   @ResponseStatus(HttpStatus.CREATED)
   public Long follow(
-      @PathVariable Long studentId) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
-    return service.follow(studentId, getCurrentStudent().getId());
+      @PathVariable Long studentId)
+      throws EntityNotFoundException, EntityExistsException, IllegalArgumentException, NotAuthenticatedException {
+    return service.follow(getCurrentStudent(), studentId);
   }
 
   @Operation(summary = "Unfollow the student.")
@@ -73,15 +82,15 @@ public class FollowersRestController {
   @DeleteMapping("/followers")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void unfollow(
-      @PathVariable Long studentId) throws EntityNotFoundException {
-    service.unfollow(studentId, getCurrentStudent().getId());
+      @PathVariable Long studentId) throws EntityNotFoundException, NotAuthenticatedException {
+    service.unfollow(getCurrentStudent(), studentId);
   }
 
-  private Student getCurrentStudent() throws IllegalStateException {
+  private Student getCurrentStudent() throws NotAuthenticatedException {
     val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
-      throw new IllegalStateException("Not authenticated.");
+      throw new NotAuthenticatedException("You are not logged in.");
 
     return student;
   }

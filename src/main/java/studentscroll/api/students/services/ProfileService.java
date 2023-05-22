@@ -26,16 +26,12 @@ public class ProfileService {
   }
 
   public Profile update(
-      @NonNull Long studentID,
+      @NonNull Student student,
       @NonNull Optional<String> newName,
       @NonNull Optional<String> newBio,
       @NonNull Optional<String> newIcon,
       @NonNull Optional<Set<String>> newInterests,
-      @NonNull Optional<StudentLocation> newLocation) throws EntityNotFoundException {
-
-    Student student = repo
-        .findById(studentID)
-        .orElseThrow(EntityNotFoundException::new);
+      @NonNull Optional<StudentLocation> newLocation) {
 
     Profile profile = student.getProfile();
     newName.ifPresent(unwrapped -> profile.setName(unwrapped));
