@@ -1,18 +1,28 @@
 package studentscroll.api.unit.chats;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
-import java.util.*;
+import java.util.Optional;
 
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
-import studentscroll.api.chats.data.*;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.chats.data.Chat;
+import studentscroll.api.chats.data.ChatRepository;
+import studentscroll.api.chats.data.Message;
+import studentscroll.api.chats.data.MessageRepository;
 import studentscroll.api.chats.services.MessageService;
-import studentscroll.api.students.data.*;
 
 public class MessageServiceTests {
 
@@ -44,7 +54,7 @@ public class MessageServiceTests {
     when(repo.save(any(Message.class)))
         .thenAnswer((i) -> i.getArgument(0));
 
-    Message message = service.create("content", 1L, 1L);
+    Message message = service.create(new Student(), "content",  1L);
 
     assertNotNull(message);
   }
@@ -59,7 +69,7 @@ public class MessageServiceTests {
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create("content", 1L, 1L));
+        () -> service.create(new Student(), "content", 1L));
   }
 
   @Test
@@ -69,7 +79,7 @@ public class MessageServiceTests {
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create("content", 1L, 1L));
+        () -> service.create(new Student(), "content", 1L));
   }
 
   @Test

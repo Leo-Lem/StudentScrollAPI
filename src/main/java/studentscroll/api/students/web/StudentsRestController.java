@@ -1,25 +1,33 @@
 package studentscroll.api.students.web;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.media.*;
-import jakarta.persistence.*;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.*;
-import studentscroll.api.security.JSONWebToken;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.val;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.shared.NotAuthenticatedException;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.services.*;
-import studentscroll.api.students.web.dto.*;
+import studentscroll.api.students.services.ProfileService;
+import studentscroll.api.students.web.dto.ProfileResponse;
+import studentscroll.api.students.web.dto.UpdateProfileRequest;
 
 @Tag(name = "Students", description = "Everything related to students.")
 @RestController
@@ -27,80 +35,51 @@ import studentscroll.api.students.web.dto.*;
 public class StudentsRestController {
 
   @Autowired
-  private AuthenticationManager authManager;
+  private ProfileService service;
 
-  @Autowired
-  private StudentService studentService;
-
-  @Operation(summary = "Create a new student.")
+  @Operation(summary = "Find student.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Created the student."),
-      @ApiResponse(responseCode = "409", description = "Email is already in use.", content = @Content) })
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public StudentResponse create(
-      @RequestBody CreateStudentRequest request, HttpServletResponse response) throws EntityExistsException {
-    val student = studentService.create(
-        request.getName(),
-        request.getEmail(),
-        request.getPassword());
-    response.setHeader("Location", "/students/" + student.getId());
-    return new StudentResponse(student, JSONWebToken.generateFrom(student));
-  }
-
-  @Operation(summary = "Find the student.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the student."),
+      @ApiResponse(responseCode = "200", description = "Found the profile."),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
   @GetMapping("/{studentId}")
-  public StudentResponse read(
+  public ProfileResponse read(
       @PathVariable Long studentId) throws EntityNotFoundException {
-    return new StudentResponse(studentService.read(studentId));
+    return new ProfileResponse(service.read(studentId));
   }
 
-  @Operation(summary = "Find the students.")
+  @Operation(summary = "Find students.")
   @ApiResponse(responseCode = "200", description = "Found the students.")
   @SecurityRequirement(name = "token")
   @GetMapping
   public List<Long> readAll(
       @RequestParam Double lat,
-      @RequestParam Double lng) throws EntityNotFoundException {
-    return studentService.readAllNearLocation(new StudentLocation(lat, lng)).stream().map(Student::getId).toList();
+      @RequestParam Double lng) {
+    return service.readAllNearLocation(new StudentLocation(lat, lng)).stream().map(Student::getId).toList();
   }
 
-  @Operation(summary = "Update the student.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the student."),
-      @ApiResponse(responseCode = "401", description = "Current password is wrong.", content = @Content),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
+  @Operation(summary = "Update your profile.")
+  @ApiResponse(responseCode = "200", description = "Updated the profile.")
   @SecurityRequirement(name = "token")
-  @PutMapping("/{studentId}")
-  public StudentResponse update(
-      @PathVariable Long studentId, @RequestBody UpdateStudentRequest request) throws EntityNotFoundException {
-    var student = studentService.read(studentId);
-
-    if (!authManager
-        .authenticate(new UsernamePasswordAuthenticationToken(student.getEmail(), request.getCurrentPassword()))
-        .isAuthenticated())
-      throw new BadCredentialsException("Invalid password.");
-
-    student = studentService.update(
-        studentId, Optional.ofNullable(request.getNewEmail()), Optional.ofNullable(request.getNewPassword()));
-
-    return new StudentResponse(student, JSONWebToken.generateFrom(student));
+  @PutMapping
+  public ProfileResponse update(
+      @RequestBody UpdateProfileRequest request) throws NotAuthenticatedException {
+    return new ProfileResponse(service.update(
+        getCurrentStudent(),
+        Optional.ofNullable(request.getNewName()),
+        Optional.ofNullable(request.getNewBio()),
+        Optional.ofNullable(request.getNewIcon()),
+        Optional.ofNullable(request.getNewInterests()).map(Set::of),
+        Optional.ofNullable(request.getNewLocation())));
   }
 
-  @Operation(summary = "Delete the student.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Deleted the student.", content = @Content),
-      @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
-  @SecurityRequirement(name = "token")
-  @DeleteMapping("/{studentId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(
-      @PathVariable Long studentId) throws EntityNotFoundException {
-    studentService.delete(studentId);
+  private Student getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (student == null)
+      throw new NotAuthenticatedException("You are not logged in.");
+
+    return student;
   }
 
 }

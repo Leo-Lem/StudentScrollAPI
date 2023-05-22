@@ -93,5 +93,5 @@ jobs:
           SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
       - name: Deploy to server
         run: |
-          scp /home/runner/work/StudentScrollAPI/StudentScrollAPI/api*.jar StudentScroll:/home/ubuntu/studentscroll/api/api.jar
+          scp /home/runner/work/StudentScrollAPI/StudentScrollAPI/api*.jar StudentScroll:/home/ubuntu/studentscroll/api/api-v2.jar
           ssh StudentScroll 'sudo systemctl restart studentscrollapi'

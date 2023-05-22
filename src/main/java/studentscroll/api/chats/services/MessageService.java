@@ -2,12 +2,14 @@ package studentscroll.api.chats.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.*;
-import studentscroll.api.chats.data.*;
-import studentscroll.api.students.data.StudentRepository;
+import lombok.NonNull;
+import lombok.val;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.chats.data.ChatRepository;
+import studentscroll.api.chats.data.Message;
+import studentscroll.api.chats.data.MessageRepository;
 
 @Service
 public class MessageService {
@@ -15,31 +17,24 @@ public class MessageService {
   private MessageRepository repo;
 
   @Autowired
-  private StudentRepository studentRepo;
-
-  @Autowired
   private ChatRepository chatRepo;
 
   public Message create(
+      @NonNull Student sender,
       @NonNull String content,
-      @NonNull Long senderId,
       @NonNull Long chatId) throws EntityNotFoundException {
+    val chat = chatRepo
+        .findById(chatId)
+        .orElseThrow(() -> new EntityNotFoundException("Chat does not exist."));
 
     val message = new Message(content);
-
-    message.setSender(studentRepo
-        .findById(senderId)
-        .orElseThrow(() -> new EntityNotFoundException("Sender does not exist.")));
-
-    message.setChat(chatRepo
-        .findById(chatId)
-        .orElseThrow(() -> new EntityNotFoundException("Chat does not exist.")));
+    message.setSender(sender);
+    message.setChat(chat);
 
     return repo.save(message);
   }
 
-  public Message read(
-      @NonNull Long id) throws EntityNotFoundException {
+  public Message read(@NonNull Long id) throws EntityNotFoundException {
     return repo
         .findById(id)
         .orElseThrow(() -> new EntityNotFoundException());
@@ -53,10 +48,9 @@ public class MessageService {
     return repo.save(message);
   }
 
-  @Transactional
-  public void delete(
-      @NonNull Long id) throws EntityNotFoundException {
-    val message = read(id);
+  public void delete(@NonNull Long id) throws EntityNotFoundException {
+    Message message = read(id);
     chatRepo.save(message.getChat().removeMessage(message));
   }
+
 }

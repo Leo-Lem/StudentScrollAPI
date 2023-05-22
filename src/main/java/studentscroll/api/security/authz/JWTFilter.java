@@ -15,16 +15,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import lombok.val;
-
 import studentscroll.api.security.JSONWebToken;
-import studentscroll.api.security.auth.UserDetailsServiceImpl;
+import studentscroll.api.security.StudentDetailsService;
 
 public class JWTFilter extends OncePerRequestFilter {
 
   @Autowired
-  private UserDetailsServiceImpl detailsService;
+  private StudentDetailsService service;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,7 +32,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
       if (token != null) {
         val email = token.getUsername();
-        val details = detailsService.loadUserByUsername(email);
+        val details = service.loadUserByUsername(email);
 
         if (token.validate(details)) {
           val authentication = new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities());

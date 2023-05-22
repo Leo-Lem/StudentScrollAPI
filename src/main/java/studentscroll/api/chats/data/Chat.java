@@ -5,7 +5,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
-import studentscroll.api.students.data.Student;
+import studentscroll.api.account.data.Student;
 
 @Entity(name = "chat")
 @Data

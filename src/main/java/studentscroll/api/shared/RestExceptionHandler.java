@@ -36,10 +36,22 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
   }
 
+  @ExceptionHandler(value = NotAuthenticatedException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  protected ResponseEntity<Object> handleNotAuthenticated(Exception e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+  }
+
   @ExceptionHandler(value = IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   protected ResponseEntity<Object> handleBadRequest(Exception e, WebRequest request) {
     return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
+
+  @ExceptionHandler(value = ForbiddenException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  protected ResponseEntity<Object> handleForbidden(Exception e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
   }
 
 }

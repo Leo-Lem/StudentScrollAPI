@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
 
 @Service
 public class PostService {
@@ -49,19 +49,32 @@ public class PostService {
 
   public Page<Post> readAll(@NonNull Pageable pageable) {
     val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
     val followIds = student.getProfile().getFollows().stream().map(f -> f.getId()).toList();
+    val posterIds = Stream.concat(followIds.stream(), Stream.of(student.getId())).toList();
 
-    if (followIds.isEmpty())
-      return repo.findAll(pageable);
-    else {
-      val posts = repo.findByPosterIdIn(
-          Stream.concat(followIds.stream(), Stream.of(student.getId())).toList(), pageable);
+    val followed = repo.findByPosterIdIn(posterIds, pageable);
 
-      if (posts.isEmpty())
-        return repo.findAll(pageable);
-      else
-        return posts;
+    if (pageable.isUnpaged()) {
+      val remaining = repo.findByPosterIdNotIn(posterIds, pageable);
+      return new PageImpl<>(Stream.concat(
+          followed.stream(),
+          remaining.stream()).toList());
     }
+
+    val remainingPageIndex = pageable.getPageNumber() - followed.getTotalPages();
+
+    if (remainingPageIndex >= 0) {
+      val remaining = repo.findByPosterIdNotIn(
+          posterIds, PageRequest.of(remainingPageIndex, pageable.getPageSize(), pageable.getSort()));
+
+      return new PageImpl<>(
+          Stream.concat(followed.stream(), remaining.stream()).toList(),
+          pageable,
+          followed.getTotalElements() + remaining.getTotalElements());
+    }
+
+    return followed;
   }
 
   public Page<Post> readAllByPosterIds(@NonNull List<Long> posterIds, @NonNull Pageable pageable) {

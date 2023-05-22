@@ -1,18 +1,26 @@
 package studentscroll.api.unit.students;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import java.util.*;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import jakarta.persistence.EntityExistsException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.students.data.*;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.students.services.FollowersService;
+import studentscroll.api.utils.TestUtils;
 
 public class FollowersServiceTests {
 
@@ -28,127 +36,73 @@ public class FollowersServiceTests {
   }
 
   @Test
-  public void givenStudentExists_whenReadingAllFollowers_thenReturnsCorrectFollowers() {
-    val student = exampleStudent();
-    val followers = List.of(exampleStudent(), exampleStudent());
+  public void givenStudentExists_whenReadingAllFollowers_thenReturnsSetOfFollowers() {
+    val followers = List.of(
+        TestUtils.getStudent(2L),
+        TestUtils.getStudent(3L));
+    val student = TestUtils.getStudent(1L);
     student.getProfile().setFollowers(followers);
 
-    when(repo.findById(student.getId()))
-        .thenReturn(Optional.of(student));
+    when(repo.findById(1L)).thenReturn(Optional.of(student));
 
-    val result = service.readAllFollowers(student.getId());
+    Set<Long> result = service.readFollowers(1L);
 
-    assertEquals(result.size(), followers.size());
-
-    for (val follower : followers)
-      assertTrue(result.contains(follower.getId()));
+    assertTrue(result.contains(2L));
+    assertTrue(result.contains(3L));
   }
 
   @Test
-  public void givenStudentExists_whenReadingAllFollows_thenReturnsCorrectFollows() {
-    val student = exampleStudent();
-    val follows = List.of(exampleStudent(), exampleStudent());
+  public void givenStudentExists_whenReadingAllFollows_thenReturnsSetOfFollows() {
+    val follows = List.of(
+        TestUtils.getStudent(2L),
+        TestUtils.getStudent(3L));
+    val student = TestUtils.getStudent(1L);
     student.getProfile().setFollows(follows);
 
-    when(repo.findById(student.getId()))
-        .thenReturn(Optional.of(student));
+    when(repo.findById(1L)).thenReturn(Optional.of(student));
 
-    val result = service.readAllFollows(student.getId());
+    Set<Long> result = service.readFollows(1L);
 
-    assertEquals(result.size(), follows.size());
-
-    for (val follow : follows)
-      assertTrue(result.contains(follow.getId()));
+    assertTrue(result.contains(2L));
+    assertTrue(result.contains(3L));
   }
 
   @Test
-  public void givenStudentExists_whenFollowing_thenFollowsCorrectly() {
-    val student = exampleStudent();
-    val follower = exampleStudent();
+  public void givenStudentExists_whenFollowing_thenAddsToStudentAndReturnsId() {
+    val student = TestUtils.getStudent(1L);
+    val follow = TestUtils.getStudent(2L);
 
-    when(repo.findById(student.getId()))
-        .thenReturn(Optional.of(student));
+    when(repo.findById(student.getId())).thenReturn(Optional.of(student));
+    when(repo.findById(follow.getId())).thenReturn(Optional.of(follow));
 
-    when(repo.findById(follower.getId()))
-        .thenReturn(Optional.of(follower));
+    val followId = service.follow(student, 2L);
 
-    when(repo.save(any(Student.class)))
-        .thenAnswer(i -> i.getArguments()[0]);
-
-    service.follow(student.getId(), follower.getId());
-
-    assertTrue(student.getProfile().getFollowers().contains(follower));
+    assertTrue(student.getProfile().getFollows().contains(follow));
+    assertTrue(followId.equals(follow.getId()));
   }
 
   @Test
-  public void givenStudentExists_whenUnfollowing_thenUnfollowsCorrectly() {
-    val student = exampleStudent();
-    val follower = exampleStudent();
-    student.getProfile().getFollowers().add(follower);
+  public void givenStudentExists_whenUnfollowing_thenRemovesFromStudent() {
+    val student = TestUtils.getStudent(1L);
+    val follow = TestUtils.getStudent(2L);
 
-    when(repo.findById(student.getId()))
-        .thenReturn(Optional.of(student));
+    student.getProfile().getFollows().add(follow);
 
-    when(repo.findById(follower.getId()))
-        .thenReturn(Optional.of(follower));
+    when(repo.findById(student.getId())).thenReturn(Optional.of(student));
+    when(repo.findById(follow.getId())).thenReturn(Optional.of(follow));
 
-    when(repo.save(any(Student.class)))
-        .thenAnswer(i -> i.getArguments()[0]);
+    service.unfollow(student, 2L);
 
-    service.unfollow(student.getId(), follower.getId());
-
-    assertFalse(student.getProfile().getFollowers().contains(follower));
+    assertFalse(student.getProfile().getFollows().contains(follow));
   }
 
   @Test
-  public void givenStudentDoesNotExist_whenReadingFollowersOrReadingFollowsOrFollowingOrUnfollowing_thenThrowsEntityNotFoundException() {
-    when(repo.findById(any(Long.class)))
-        .thenReturn(Optional.empty());
+  public void givenStudentDoesNotExist_whenFollowing_thenThrowsEntityNotFoundException() {
+    val student = TestUtils.getStudent(1L);
 
-    assertThrows(EntityNotFoundException.class, () -> service.readAllFollowers(1L));
-    assertThrows(EntityNotFoundException.class, () -> service.readAllFollows(1L));
-    assertThrows(EntityNotFoundException.class, () -> service.follow(1L, 2L));
-    assertThrows(EntityNotFoundException.class, () -> service.unfollow(1L, 2L));
-  }
+    when(repo.findById(anyLong())).thenReturn(Optional.empty());
 
-  @Test
-  public void givenStudentIsAlreadyFollowing_whenFollowing_thenThrowsIllegalStateException() {
-    val student = exampleStudent();
-    val follower = exampleStudent();
-    student.getProfile().getFollowers().add(follower);
-
-    when(repo.findById(student.getId()))
-        .thenReturn(Optional.of(student));
-
-    when(repo.findById(follower.getId()))
-        .thenReturn(Optional.of(follower));
-
-    assertThrows(EntityExistsException.class, () -> service.follow(student.getId(), follower.getId()));
-  }
-
-  @Test
-  public void givenStudentIsNotFollowing_whenUnfollowing_thenThrowsEntityNotFoundException() {
-    val student = exampleStudent();
-    val follower = exampleStudent();
-
-    when(repo.findById(student.getId()))
-        .thenReturn(Optional.of(student));
-
-    when(repo.findById(follower.getId()))
-        .thenReturn(Optional.of(follower));
-
-    assertThrows(EntityNotFoundException.class, () -> service.unfollow(student.getId(), follower.getId()));
-  }
-
-  @Test
-  public void givenStudentIdIsFollowerId_whenFollowing_thenThrowsIllegalArgumentException() {
-    val student = exampleStudent();
-
-    assertThrows(IllegalArgumentException.class, () -> service.follow(student.getId(), student.getId()));
-  }
-
-  private Student exampleStudent() {
-    return new Student("raoul@duke.legend", "1234", new Profile("Raoul Duke")).setId(new Random().nextLong());
+    assertThrows(EntityNotFoundException.class, () -> service.follow(student, 2L));
   }
 
 }

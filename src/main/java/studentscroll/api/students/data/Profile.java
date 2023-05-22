@@ -1,8 +1,25 @@
 package studentscroll.api.students.data;
 
-import java.util.*;
-import jakarta.persistence.*;
-import lombok.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.shared.StudentLocation;
 
 @Embeddable
@@ -10,6 +27,7 @@ import studentscroll.api.shared.StudentLocation;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Profile {
 
   @Column(name = "name")

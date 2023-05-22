@@ -1,19 +1,29 @@
 package studentscroll.api.unit.chats;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
 
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.chats.data.*;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.chats.data.Chat;
+import studentscroll.api.chats.data.ChatRepository;
 import studentscroll.api.chats.services.ChatService;
-import studentscroll.api.students.data.*;
 
 public class ChatServiceTests {
 
@@ -33,7 +43,7 @@ public class ChatServiceTests {
 
   @Test
   public void givenParticipantsExist_whenCreatingChat_thenReturnsChat() {
-    val participants = Set.of(1L, 2L, 3L);
+    val participants = Set.of(2L, 3L);
 
     when(studentRepo.findById(anyLong()))
         .thenReturn(Optional.of(new Student()));
@@ -41,21 +51,21 @@ public class ChatServiceTests {
     when(repo.save(any(Chat.class)))
         .thenAnswer((i) -> i.getArgument(0));
 
-    Chat chat = service.create(participants);
+    Chat chat = service.create(1L, participants);
 
     assertNotNull(chat);
   }
 
   @Test
   public void givenParticipantsDontExist_whenCreatingChat_thenThrowEntityNotFoundException() {
-    val participants = Set.of(1L, 2L, 3L);
+    val participants = Set.of(2L, 3L);
 
     when(studentRepo.findById(anyLong()))
         .thenReturn(Optional.empty());
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create(participants));
+        () -> service.create(1L, participants));
   }
 
   @Test
@@ -71,61 +81,25 @@ public class ChatServiceTests {
   }
 
   @Test
-  public void givenChatDoesntExist_whenReadingChat_thenThrowEntityNotFoundException() {
-    when(repo.findById(anyLong()))
-        .thenReturn(Optional.empty());
-
-    assertThrows(
-        EntityNotFoundException.class,
-        () -> service.read(1L));
-  }
-
-  @Test
   public void givenChatExists_whenDeletingChat_thenChatIsDeleted() {
-
-    when(repo.existsById(anyLong()))
-        .thenReturn(true);
-
-    doNothing()
-        .when(repo)
-        .deleteById(anyLong());
+    when(repo.findById(anyLong()))
+        .thenReturn(Optional.of(new Chat()));
 
     assertDoesNotThrow(() -> service.delete(1L));
   }
 
   @Test
-  public void givenChatDoesntExist_whenDeletingChat_thenThrowEntityNotFoundException() {
-    when(repo.existsById(anyLong()))
-    .thenReturn(false);
+  public void givenChatDoesNotExist_whenReadingOrDeletingChat_thenThrowEntityNotFoundException() {
+    when(repo.findById(anyLong()))
+        .thenReturn(Optional.empty());
+
+        assertThrows(
+        EntityNotFoundException.class,
+        () -> service.read(1L));
 
     assertThrows(
         EntityNotFoundException.class,
         () -> service.delete(1L));
-  }
-
-  @Test
-  public void givenChatAndParticipantExist_whenReadingByParticipantId_thenReturnsChat() {
-    Chat chat = new Chat();
-
-    when(studentRepo.existsById(anyLong()))
-        .thenReturn(true);
-
-    when(repo.findByParticipantsId(anyLong()))
-        .thenReturn(List.of(chat));
-
-    List<Chat> chats = service.readByParticipantId(1L);
-
-    assertEquals(chat, chats.get(0));
-  }
-
-  @Test
-  public void givenStudentDoesntExist_whenReadingByParticipantId_thenThrowEntityNotFoundException() {
-    when(studentRepo.existsById(anyLong()))
-        .thenReturn(false);
-
-    assertThrows(
-        EntityNotFoundException.class,
-        () -> service.readByParticipantId(1L));
   }
 
 }

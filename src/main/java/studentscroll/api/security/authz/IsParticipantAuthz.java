@@ -10,8 +10,8 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 
 import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.chats.data.ChatRepository;
-import studentscroll.api.students.data.Student;
 
 @Component
 public class IsParticipantAuthz implements AuthorizationManager<RequestAuthorizationContext> {
