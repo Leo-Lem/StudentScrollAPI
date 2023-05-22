@@ -27,7 +27,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
 import studentscroll.api.auth.AuthenticationRestController;
-import studentscroll.api.auth.AuthenticationService;
+import studentscroll.api.auth.StudentService;
 import studentscroll.api.auth.dto.AuthenticationRequest;
 import studentscroll.api.auth.dto.AuthenticationResponse;
 import studentscroll.api.auth.dto.UpdateCredentialsRequest;
@@ -42,7 +42,7 @@ public class AuthenticationRestControllerTests {
   private AuthenticationManager authManager;
 
   @Mock
-  private AuthenticationService service;
+  private StudentService service;
 
   @Mock
   private StudentDetailsService detailsService;
@@ -112,21 +112,22 @@ public class AuthenticationRestControllerTests {
 
   @Test
   public void givenIsAuthenticated_whenUpdating_thenReturnsUpdated() {
-    String currentPassword = "1234", newEmail = "new@e.mail";
+    String currentEmail = "123@456.com", currentPassword = "1234", newEmail = "new@e.mail";
 
-    val student = new Student().setPassword(currentPassword).setId(1L).setProfile(new Profile(""));
+    val student = new Student()
+        .setEmail(currentEmail)
+        .setPassword(currentPassword)
+        .setId(1L)
+        .setProfile(new Profile(""));
     TestUtils.authenticate(student);
 
-    val request = new UpdateCredentialsRequest(currentPassword, newEmail, null);
-
-    when(service.readCurrent())
-        .thenReturn(student);
+    val request = new UpdateCredentialsRequest(currentEmail, currentPassword, newEmail, null);
 
     when(authManager.authenticate(any()))
         .thenReturn(new UsernamePasswordAuthenticationToken(
             newEmail, currentPassword, Set.of(new SimpleGrantedAuthority("User"))));
 
-    when(service.update(any(), any()))
+    when(service.update(any(Student.class), any(), any()))
         .thenReturn(student.setEmail(newEmail));
 
     assertNotNull(controller.update(request));

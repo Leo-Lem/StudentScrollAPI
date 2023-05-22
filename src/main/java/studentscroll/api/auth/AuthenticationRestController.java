@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class AuthenticationRestController {
   private StudentDetailsService detailsService;
 
   @Autowired
-  private AuthenticationService service;
+  private StudentService service;
 
   @Operation(summary = "Authenticate for StudentScroll.", description = "If the payload includes a name, tries to create new account. Otherwise, tries to authenticate.")
   @ApiResponses(value = {
@@ -69,9 +70,10 @@ public class AuthenticationRestController {
   @PutMapping
   public AuthenticationResponse update(
       @RequestBody UpdateCredentialsRequest request) {
-    authenticate(service.readCurrent().getEmail(), request.getCurrentPassword());
+    authenticate(request.getCurrentEmail(), request.getCurrentPassword());
 
     val student = service.update(
+        getCurrentStudent(),
         Optional.ofNullable(request.getNewEmail()),
         Optional.ofNullable(request.getNewPassword()));
 
@@ -84,7 +86,7 @@ public class AuthenticationRestController {
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete() {
-    service.delete();
+    service.delete(getCurrentStudent().getId());
   }
 
   private void authenticate(String email, String password) {
@@ -92,6 +94,15 @@ public class AuthenticationRestController {
         .authenticate(new UsernamePasswordAuthenticationToken(email, password))
         .isAuthenticated())
       throw new BadCredentialsException("Invalid email or password.");
+  }
+
+  private Student getCurrentStudent() throws IllegalStateException {
+    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (student == null)
+      throw new IllegalStateException("Not authenticated.");
+
+    return student;
   }
 
 }

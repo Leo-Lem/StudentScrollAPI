@@ -1,6 +1,5 @@
 package studentscroll.api.unit.auth;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,12 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.val;
-import studentscroll.api.auth.AuthenticationService;
+import studentscroll.api.auth.StudentService;
 import studentscroll.api.students.data.Student;
 import studentscroll.api.students.data.StudentRepository;
 import studentscroll.api.utils.TestUtils;
 
-public class AuthenticationServiceTests {
+public class StudentServiceTests {
 
   @Mock
   private PasswordEncoder passwordEncoder;
@@ -32,7 +31,7 @@ public class AuthenticationServiceTests {
   private StudentRepository repo;
 
   @InjectMocks
-  private AuthenticationService service;
+  private StudentService service;
 
   @BeforeEach
   public void setUp() {
@@ -74,8 +73,6 @@ public class AuthenticationServiceTests {
   public void givenIsAuthenticated_whenUpdating_thenNewDetailsMatch() {
     val student = new Student().setId(1L);
 
-    TestUtils.authenticate(student);
-
     String newEmail = "johnny@gmx.com", newPassword = "my-pony";
 
     when(repo.findById(student.getId()))
@@ -87,26 +84,11 @@ public class AuthenticationServiceTests {
     when(repo.save(any(Student.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    Student newStudent = service.update(Optional.of(newEmail), Optional.of(newPassword));
+    Student newStudent = service.update(student, Optional.of(newEmail), Optional.of(newPassword));
 
     assertEquals(student.getId(), newStudent.getId());
     assertEquals(newEmail, newStudent.getEmail());
     assertNotEquals(newPassword, newStudent.getPassword());
-  }
-
-  @Test
-  public void givenIsAuthenticated_whenDeleting_thenDoesNotThrow() {
-    val student = new Student().setId(1L);
-
-    TestUtils.authenticate(student);
-
-    assertDoesNotThrow(() -> service.delete());
-  }
-
-  @Test
-  public void givenIsNotAuthenticated_whenReadingCurrent_thenThrowsIllegalStateException() {
-    TestUtils.authenticate(null);
-    assertThrows(IllegalStateException.class, () -> service.readCurrent());
   }
 
 }

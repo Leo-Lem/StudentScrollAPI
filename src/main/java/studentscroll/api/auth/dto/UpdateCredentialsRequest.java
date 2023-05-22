@@ -6,6 +6,9 @@ import lombok.*;
 public class UpdateCredentialsRequest {
 
   @NonNull
+  private final String currentEmail;
+
+  @NonNull
   private final String currentPassword;
 
   private final String newEmail;

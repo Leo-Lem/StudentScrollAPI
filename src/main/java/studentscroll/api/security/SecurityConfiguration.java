@@ -74,9 +74,9 @@ public class SecurityConfiguration {
         .cors().and().csrf().disable()
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.GET, "/docs*/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/authentication").permitAll())
+            .requestMatchers(HttpMethod.POST, "/authentication").permitAll()
+            .requestMatchers(HttpMethod.PUT, "/authentication").permitAll())
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers(HttpMethod.PUT, "/authentication").authenticated()
             .requestMatchers(HttpMethod.DELETE, "/authentication").authenticated()
             .requestMatchers("/settings").authenticated())
         .authorizeHttpRequests(authz -> authz

@@ -1,7 +1,9 @@
 package studentscroll.api.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import studentscroll.api.auth.dto.AuthenticationRequest;
 import studentscroll.api.auth.dto.UpdateCredentialsRequest;
+import studentscroll.api.students.data.Profile;
+import studentscroll.api.students.data.Student;
+import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -37,6 +42,8 @@ public class AuthenticationITest {
     signUp().andExpect(status().isConflict());
 
     signIn().andExpect(status().isOk());
+
+    TestUtils.authenticate(new Student().setProfile(new Profile()));
 
     updateStudent().andExpect(status().isOk());
 
@@ -61,7 +68,7 @@ public class AuthenticationITest {
   }
 
   private ResultActions updateStudent() throws Exception {
-    val request = new UpdateCredentialsRequest("1234", "xyz@abc.com", null);
+    val request = new UpdateCredentialsRequest(email, password, "xyz@abc.com", null);
     return mockMVC.perform(
         put("/authentication")
             .contentType("application/json")

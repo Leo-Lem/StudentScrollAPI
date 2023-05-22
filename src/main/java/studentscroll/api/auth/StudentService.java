@@ -3,19 +3,17 @@ package studentscroll.api.auth;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.NonNull;
-import lombok.val;
 import studentscroll.api.students.data.Profile;
 import studentscroll.api.students.data.Student;
 import studentscroll.api.students.data.StudentRepository;
 
 @Service
-public class AuthenticationService {
+public class StudentService {
 
   @Autowired
   private StudentRepository repo;
@@ -33,28 +31,18 @@ public class AuthenticationService {
     return repo.save(new Student(email, passwordEncoder.encode(password), new Profile(name)));
   }
 
-  public Student readCurrent() throws IllegalStateException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (student == null)
-      throw new IllegalStateException("Not authenticated.");
-    return student;
-  }
-
   public Student update(
+      @NonNull Student student,
       @NonNull Optional<String> newEmail,
-      @NonNull Optional<String> newPassword) throws IllegalStateException {
-    Student student = readCurrent();
-
+      @NonNull Optional<String> newPassword) {
     newEmail.ifPresent(unwrapped -> student.setEmail(unwrapped));
     newPassword.ifPresent(unwrapped -> student.setPassword(passwordEncoder.encode(unwrapped)));
 
     return repo.save(student);
   }
 
-  public void delete() throws IllegalStateException {
-    val studentId = readCurrent().getId();
-    repo.deleteById(studentId);
+  public void delete(@NonNull Long id) {
+    repo.deleteById(id);
   }
 
 }
