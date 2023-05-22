@@ -42,4 +42,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
+  @ExceptionHandler(value = IllegalStateException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  protected ResponseEntity<Object> handleNotAuthenticated(Exception e, WebRequest request) {
+    return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+  }
+
 }

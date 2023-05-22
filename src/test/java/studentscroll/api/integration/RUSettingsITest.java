@@ -1,9 +1,10 @@
 package studentscroll.api.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +15,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.students.web.dto.*;
+import studentscroll.api.students.data.Settings;
+import studentscroll.api.students.data.Student;
+import studentscroll.api.students.web.dto.UpdateSettingsRequest;
+import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -29,37 +33,24 @@ public class RUSettingsITest {
 
   @Test
   public void test() throws Exception {
-    val id = 1L;
+    val student = new Student().setId(1L).setSettings(new Settings());
 
-    getSettings(id).andExpect(status().isNotFound());
+    TestUtils.authenticate(student);
 
-    updateSettings(id).andExpect(status().isNotFound());
+    getSettings().andExpect(status().isOk());
 
-    createStudent().andExpect(jsonPath("$.id").value(id));
-
-    getSettings(id).andExpect(status().isOk());
-
-    updateSettings(id).andExpect(status().isOk());
+    updateSettings().andExpect(status().isOk());
   }
 
-  private ResultActions getSettings(Long id) throws Exception {
-    return mockMVC.perform(get("/students/" + id + "/settings"));
+  private ResultActions getSettings() throws Exception {
+    return mockMVC.perform(get("/settings"));
   }
 
-  private ResultActions updateSettings(Long id) throws Exception {
+  private ResultActions updateSettings() throws Exception {
     val request = new UpdateSettingsRequest("DARK", "DE");
 
     return mockMVC.perform(
-        put("/students/" + id + "/settings")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(request)));
-  }
-
-  private ResultActions createStudent() throws Exception {
-    val request = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
-
-    return mockMVC.perform(
-        post("/students")
+        put("/settings")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }

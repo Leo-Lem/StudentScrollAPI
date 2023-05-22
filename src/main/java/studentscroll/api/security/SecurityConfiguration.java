@@ -1,7 +1,8 @@
 package studentscroll.api.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,17 +12,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import io.swagger.v3.oas.annotations.enums.*;
+
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import studentscroll.api.security.auth.*;
-import studentscroll.api.security.authz.*;
+import studentscroll.api.security.authz.IsFollowerAuthz;
+import studentscroll.api.security.authz.IsParticipantAuthz;
+import studentscroll.api.security.authz.IsPosterAuthz;
+import studentscroll.api.security.authz.IsSenderAuthz;
+import studentscroll.api.security.authz.IsStudentAuthz;
+import studentscroll.api.security.authz.JWTFilter;
 
 @SecurityScheme(name = "token", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @Configuration
 public class SecurityConfiguration {
 
   @Autowired
-  private UserDetailsServiceImpl userDetailsService;
+  private StudentDetailsService userDetailsService;
 
   @Autowired
   private IsStudentAuthz isStudentAuthz;
@@ -67,7 +74,10 @@ public class SecurityConfiguration {
         .cors().and().csrf().disable()
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.GET, "/docs*/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/students", "/signin").permitAll())
+            .requestMatchers(HttpMethod.POST, "/authentication").permitAll())
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers(HttpMethod.PUT, "/authentication").access(isStudentAuthz)
+            .requestMatchers(HttpMethod.DELETE, "/authentication").access(isStudentAuthz))
         .authorizeHttpRequests(authz -> authz
             .requestMatchers(HttpMethod.GET,
                 "/students",
@@ -87,8 +97,6 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.POST, "/chats/{chatId}/messages").access(isParticipantAuthz)
             .requestMatchers(HttpMethod.GET, "/chats/{chatId}/messages/{messageId}").access(isParticipantAuthz)
             .requestMatchers("/chats/{chatId}/messages/{messageId}").access(isSenderAuthz))
-        .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/students/{studentId}", "/students/{studentId}/**").access(isStudentAuthz))
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/posts/{postId}").access(isPosterAuthz))
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())

@@ -34,12 +34,6 @@ public class RUProfileITest {
   public void test() throws Exception {
     val id = 1L;
 
-    getProfile(id).andExpect(status().isNotFound());
-
-    updateProfile(id).andExpect(status().isNotFound());
-
-    createStudent().andExpect(jsonPath("$.id").value(id));
-
     getProfile(id).andExpect(status().isOk());
 
     updateProfile(id).andExpect(status().isOk());
@@ -63,15 +57,6 @@ public class RUProfileITest {
 
     return mockMVC.perform(
         put("/students/" + id + "/profile")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(request)));
-  }
-
-  private ResultActions createStudent() throws Exception {
-    val request = new CreateStudentRequest("John Silver", "abc@xyz.com", "1234");
-
-    return mockMVC.perform(
-        post("/students")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }

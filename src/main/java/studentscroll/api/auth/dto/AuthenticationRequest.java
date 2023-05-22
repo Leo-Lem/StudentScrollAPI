@@ -1,11 +1,11 @@
-package studentscroll.api.students.web.dto;
+package studentscroll.api.auth.dto;
 
 import lombok.*;
 
 @Data
-public class CreateStudentRequest {
+@RequiredArgsConstructor
+public class AuthenticationRequest {
 
-  @NonNull
   private final String name;
 
   @NonNull

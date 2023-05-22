@@ -1,9 +1,9 @@
-package studentscroll.api.students.web.dto;
+package studentscroll.api.auth.dto;
 
 import lombok.*;
 
 @Data
-public class UpdateStudentRequest {
+public class UpdateCredentialsRequest {
 
   @NonNull
   private final String currentPassword;

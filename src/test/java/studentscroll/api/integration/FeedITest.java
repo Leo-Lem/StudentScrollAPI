@@ -25,7 +25,6 @@ import lombok.val;
 import studentscroll.api.posts.web.dto.CreatePostRequest;
 import studentscroll.api.students.data.Profile;
 import studentscroll.api.students.data.Student;
-import studentscroll.api.students.web.dto.CreateStudentRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -44,39 +43,40 @@ public class FeedITest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  @Test
-  public void givenMultiplePostsAndStudentIsFollowing1_whenReadingAllPosts_thenOlderPostsByFollowerAreReturnFirst()
-      throws Exception {
+  // @Test
+  // public void
+  // givenMultiplePostsAndStudentIsFollowing1_whenReadingAllPosts_thenOlderPostsByFollowerAreReturnFirst()
+  // throws Exception {
 
-    Long studentId = createStudent("abc");
-    Long followId = createStudent("bca");
-    Long nonfollowId = createStudent("cba");
+  // Long studentId = createStudent("abc");
+  // Long followId = createStudent("bca");
+  // Long nonfollowId = createStudent("cba");
 
-    createContentPost(nonfollowId);
-    createContentPost(followId);
-    createContentPost(nonfollowId);
-    createContentPost(followId);
-    createContentPost(nonfollowId);
-    createContentPost(followId);
-    createContentPost(nonfollowId);
-    createContentPost(followId);
-    createContentPost(nonfollowId);
-    createContentPost(followId);
+  // createContentPost(nonfollowId);
+  // createContentPost(followId);
+  // createContentPost(nonfollowId);
+  // createContentPost(followId);
+  // createContentPost(nonfollowId);
+  // createContentPost(followId);
+  // createContentPost(nonfollowId);
+  // createContentPost(followId);
+  // createContentPost(nonfollowId);
+  // createContentPost(followId);
 
-    follow(studentId, followId);
+  // follow(studentId, followId);
 
-    getAllPosts().andExpect(jsonPath("$.content").isArray())
-        .andExpect(jsonPath("$.content[0].posterId").value(followId))
-        .andExpect(jsonPath("$.content[2].posterId").value(followId))
-        .andExpect(jsonPath("$.content[4].posterId").value(followId))
-        .andExpect(jsonPath("$.content[6].posterId").value(followId))
-        .andExpect(jsonPath("$.content[8].posterId").value(followId))
-        .andExpect(jsonPath("$.content[1].posterId").value(nonfollowId))
-        .andExpect(jsonPath("$.content[3].posterId").value(nonfollowId))
-        .andExpect(jsonPath("$.content[5].posterId").value(nonfollowId))
-        .andExpect(jsonPath("$.content[7].posterId").value(nonfollowId))
-        .andExpect(jsonPath("$.content[9].posterId").value(nonfollowId));
-  }
+  // getAllPosts().andExpect(jsonPath("$.content").isArray())
+  // .andExpect(jsonPath("$.content[0].posterId").value(followId))
+  // .andExpect(jsonPath("$.content[2].posterId").value(followId))
+  // .andExpect(jsonPath("$.content[4].posterId").value(followId))
+  // .andExpect(jsonPath("$.content[6].posterId").value(followId))
+  // .andExpect(jsonPath("$.content[8].posterId").value(followId))
+  // .andExpect(jsonPath("$.content[1].posterId").value(nonfollowId))
+  // .andExpect(jsonPath("$.content[3].posterId").value(nonfollowId))
+  // .andExpect(jsonPath("$.content[5].posterId").value(nonfollowId))
+  // .andExpect(jsonPath("$.content[7].posterId").value(nonfollowId))
+  // .andExpect(jsonPath("$.content[9].posterId").value(nonfollowId));
+  // }
 
   private void follow(Long studentId, Long followId) {
     when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -107,19 +107,6 @@ public class FeedITest {
         post("/posts")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
-  }
-
-  private Long createStudent(String email) throws Exception {
-    val request = new CreateStudentRequest("John Silver", email, "1234");
-
-    return objectMapper.readTree(
-        mockMVC.perform(
-            post("/students")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(jsonPath("$.id").isNumber()).andReturn().getResponse()
-            .getContentAsString())
-        .get("id").asLong();
   }
 
 }

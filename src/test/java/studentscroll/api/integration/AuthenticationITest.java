@@ -14,13 +14,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.security.auth.SigninRequest;
-import studentscroll.api.students.web.dto.CreateStudentRequest;
+import studentscroll.api.auth.dto.AuthenticationRequest;
+import studentscroll.api.auth.dto.UpdateCredentialsRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class RegisterAndSigninITest {
+public class AuthenticationITest {
 
   @Autowired
   private MockMvc mockMVC;
@@ -32,28 +32,45 @@ public class RegisterAndSigninITest {
 
   @Test
   public void test() throws Exception {
-    createStudent().andExpect(status().isCreated());
+    signUp().andExpect(status().isCreated());
 
-    createStudent().andExpect(status().isConflict());
+    signUp().andExpect(status().isConflict());
 
     signIn().andExpect(status().isOk());
+
+    updateStudent().andExpect(status().isOk());
+
+    deleteStudent().andExpect(status().isNoContent());
   }
 
-  private ResultActions createStudent() throws Exception {
-    val request = new CreateStudentRequest("John Wayne", email, password);
+  private ResultActions signUp() throws Exception {
+    val request = new AuthenticationRequest("John Wayne", email, password);
     return mockMVC.perform(
-        post("/students")
+        post("/authentication")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }
 
   private ResultActions signIn() throws Exception {
-    val request = new SigninRequest(email, password);
+    val request = new AuthenticationRequest(null, email, password);
 
     return mockMVC.perform(
-        post("/signin")
+        post("/authentication")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
+  }
+
+  private ResultActions updateStudent() throws Exception {
+    val request = new UpdateCredentialsRequest("1234", "xyz@abc.com", null);
+    return mockMVC.perform(
+        put("/authentication")
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(request)));
+  }
+
+  private ResultActions deleteStudent() throws Exception {
+    return mockMVC.perform(
+        delete("/authentication"));
   }
 
 }

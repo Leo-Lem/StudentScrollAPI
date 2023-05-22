@@ -46,4 +46,18 @@ public class ProfileService {
     return repo.save(student).getProfile();
   }
 
+  public Set<Student> readAllNearLocation(StudentLocation location) {
+    double radiusInKm = 10.0; // Fixed radius of 10km
+
+    double latitudeRange = radiusInKm * 0.009; // Roughly 1km in latitude
+    double longitudeRange = radiusInKm * 0.014; // Roughly 1km in longitude
+
+    double minLatitude = location.getLatitude() - latitudeRange;
+    double maxLatitude = location.getLatitude() + latitudeRange;
+    double minLongitude = location.getLongitude() - longitudeRange;
+    double maxLongitude = location.getLongitude() + longitudeRange;
+
+    return repo.findStudentsNearLocation(minLatitude, maxLatitude, minLongitude, maxLongitude);
+  }
+
 }

@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import studentscroll.api.shared.StudentLocation;
+import studentscroll.api.students.data.Student;
 import studentscroll.api.students.services.ProfileService;
 import studentscroll.api.students.web.dto.*;
 
@@ -19,7 +21,7 @@ import studentscroll.api.students.web.dto.*;
 public class ProfilesRestController {
 
   @Autowired
-  private ProfileService profileService;
+  private ProfileService service;
 
   @Operation(summary = "Find profile of the student.")
   @ApiResponses(value = {
@@ -29,7 +31,7 @@ public class ProfilesRestController {
   @GetMapping
   public ProfileResponse readProfile(
       @PathVariable Long studentId) throws EntityNotFoundException {
-    return new ProfileResponse(profileService.read(studentId));
+    return new ProfileResponse(service.read(studentId));
   }
 
   @Operation(summary = "Update profile of the student.")
@@ -40,7 +42,7 @@ public class ProfilesRestController {
   @PutMapping
   public ProfileResponse updateProfile(
       @PathVariable Long studentId, @RequestBody UpdateProfileRequest request) throws EntityNotFoundException {
-    return new ProfileResponse(profileService.update(
+    return new ProfileResponse(service.update(
         studentId,
         Optional.ofNullable(request.getNewName()),
         Optional.ofNullable(request.getNewBio()),
@@ -48,4 +50,16 @@ public class ProfilesRestController {
         Optional.ofNullable(request.getNewInterests()).map(Set::of),
         Optional.ofNullable(request.getNewLocation())));
   }
+
+  // @Operation(summary = "Find the students.")
+  // @ApiResponse(responseCode = "200", description = "Found the students.")
+  // @SecurityRequirement(name = "token")
+  // @GetMapping
+  // public List<Long> readAll(
+  // @RequestParam Double lat,
+  // @RequestParam Double lng) throws EntityNotFoundException {
+  // return service.readAllNearLocation(new StudentLocation(lat,
+  // lng)).stream().map(Student::getId).toList();
+  // }
+
 }
