@@ -25,6 +25,7 @@ import lombok.val;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.shared.NotAuthenticatedException;
 import studentscroll.api.shared.StudentLocation;
+import studentscroll.api.students.data.Profile;
 import studentscroll.api.students.services.ProfileService;
 import studentscroll.api.students.web.dto.ProfileResponse;
 import studentscroll.api.students.web.dto.UpdateProfileRequest;
@@ -52,10 +53,22 @@ public class StudentsRestController {
   @ApiResponse(responseCode = "200", description = "Found the students.")
   @SecurityRequirement(name = "token")
   @GetMapping
-  public List<Long> readAll(
-      @RequestParam Double lat,
-      @RequestParam Double lng) {
-    return service.readAllNearLocation(new StudentLocation(lat, lng)).stream().map(Student::getId).toList();
+  public List<ProfileResponse> readAll(
+      @RequestParam Optional<String> name,
+      @RequestParam Optional<Set<String>> interests,
+      @RequestParam Optional<Double> lat,
+      @RequestParam Optional<Double> lng) {
+      List<Profile> students; 
+      if (name.isPresent())
+        students = service.readByName(name.get());
+      else if (interests.isPresent())
+        return service.readByInterests(interests.get());
+      else if (lat.isPresent() && lng.isPresent())
+        students = service.readAllNearLocation(new StudentLocation(lat.get(), lng.get()));
+      else
+        students = service.readAll();
+
+
   }
 
   @Operation(summary = "Update your profile.")

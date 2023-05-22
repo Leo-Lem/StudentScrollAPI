@@ -81,6 +81,10 @@ public class PostService {
     return repo.findByPosterIdIn(posterIds, pageable);
   }
 
+  public Page<Post> readAllByTitle(@NonNull String title, @NonNull Pageable pageable) {
+    return repo.findByTitle(title, pageable);
+  }
+
   public Page<Post> readAllByTag(@NonNull String tag, @NonNull Pageable pageable) {
     return repo.findByTags(tag, pageable);
   }

@@ -12,7 +12,10 @@ public interface StudentRepository extends CrudRepository<Student, Long> {
 
   Boolean existsByEmail(String email);
 
-  // Set<Student> findByProfileName(String name);
+  Set<Student> findByProfileName(String name);
+
+  // TODO: verify this works
+  Set<Student> findByProfileInterestsIn(Set<String> interests);
 
   @Query("SELECT s FROM student s WHERE s.profile.location.latitude BETWEEN :minLatitude AND :maxLatitude AND s.profile.location.longitude BETWEEN :minLongitude AND :maxLongitude")
   Set<Student> findStudentsNearLocation(
