@@ -1,6 +1,8 @@
 package studentscroll.api.account.web.dto;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor

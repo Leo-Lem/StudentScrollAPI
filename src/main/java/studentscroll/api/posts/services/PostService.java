@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.StudentLocation;
 
@@ -23,7 +23,7 @@ public class PostService {
   protected PostRepository repo;
 
   @Autowired
-  private StudentRepository studentRepo;
+  private AccountRepository studentRepo;
 
   public EventPost create(
       @NonNull Long posterId,
@@ -48,7 +48,7 @@ public class PostService {
   }
 
   public Page<Post> readAll(@NonNull Pageable pageable) {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     val followIds = student.getProfile().getFollows().stream().map(f -> f.getId()).toList();
     val posterIds = Stream.concat(followIds.stream(), Stream.of(student.getId())).toList();

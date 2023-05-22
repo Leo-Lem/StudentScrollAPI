@@ -1,4 +1,4 @@
-package studentscroll.api.students.web;
+package studentscroll.api.profiles.web;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +22,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.profiles.data.Profile;
+import studentscroll.api.profiles.services.ProfileService;
+import studentscroll.api.profiles.web.dto.ProfileResponse;
+import studentscroll.api.profiles.web.dto.UpdateProfileRequest;
 import studentscroll.api.shared.NotAuthenticatedException;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.services.ProfileService;
-import studentscroll.api.students.web.dto.ProfileResponse;
-import studentscroll.api.students.web.dto.UpdateProfileRequest;
 
 @Tag(name = "Students", description = "Everything related to students.")
 @RestController
@@ -87,8 +87,8 @@ public class StudentsRestController {
         Optional.ofNullable(request.getNewLocation())));
   }
 
-  private Student getCurrentStudent() throws NotAuthenticatedException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
       throw new NotAuthenticatedException("You are not logged in.");

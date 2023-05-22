@@ -1,4 +1,4 @@
-package studentscroll.api.students.web;
+package studentscroll.api.profiles.web;
 
 import java.util.Set;
 
@@ -22,9 +22,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.profiles.services.FollowersService;
 import studentscroll.api.shared.NotAuthenticatedException;
-import studentscroll.api.students.services.FollowersService;
 
 @Tag(name = "Followers", description = "Everything related to a student's followers.")
 @RestController
@@ -82,8 +82,8 @@ public class FollowersRestController {
     service.unfollow(getCurrentStudent(), studentId);
   }
 
-  private Student getCurrentStudent() throws NotAuthenticatedException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
       throw new NotAuthenticatedException("You are not logged in.");

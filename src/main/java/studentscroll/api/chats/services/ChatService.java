@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.ChatRepository;
 
@@ -21,7 +21,7 @@ public class ChatService {
   private ChatRepository repo;
 
   @Autowired
-  private StudentRepository studentRepo;
+  private AccountRepository studentRepo;
 
   public Chat create(
       @NonNull Long studentId,

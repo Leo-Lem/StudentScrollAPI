@@ -16,8 +16,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.ChatRepository;
 import studentscroll.api.chats.data.Message;
@@ -30,7 +30,7 @@ public class MessageServiceTests {
   private MessageRepository repo;
 
   @Mock
-  private StudentRepository studentRepo;
+  private AccountRepository studentRepo;
 
   @Mock
   private ChatRepository chatRepo;
@@ -46,7 +46,7 @@ public class MessageServiceTests {
   @Test
   public void givenChatAndSenderExist_whenCreatingMessage_thenReturnsMessage() {
     when(studentRepo.findById(anyLong()))
-        .thenReturn(Optional.of(new Student()));
+        .thenReturn(Optional.of(new Account()));
 
     when(chatRepo.findById(anyLong()))
         .thenReturn(Optional.of(new Chat()));
@@ -54,7 +54,7 @@ public class MessageServiceTests {
     when(repo.save(any(Message.class)))
         .thenAnswer((i) -> i.getArgument(0));
 
-    Message message = service.create(new Student(), "content",  1L);
+    Message message = service.create(new Account(), "content",  1L);
 
     assertNotNull(message);
   }
@@ -62,14 +62,14 @@ public class MessageServiceTests {
   @Test
   public void givenChatDoesntExist_whenCreatingMessage_thenThrowEntityNotFoundException() {
     when(studentRepo.findById(anyLong()))
-        .thenReturn(Optional.of(new Student()));
+        .thenReturn(Optional.of(new Account()));
 
     when(chatRepo.findById(anyLong()))
         .thenReturn(Optional.empty());
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create(new Student(), "content", 1L));
+        () -> service.create(new Account(), "content", 1L));
   }
 
   @Test
@@ -79,7 +79,7 @@ public class MessageServiceTests {
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create(new Student(), "content", 1L));
+        () -> service.create(new Account(), "content", 1L));
   }
 
   @Test

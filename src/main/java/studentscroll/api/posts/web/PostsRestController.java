@@ -18,7 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
@@ -146,8 +146,8 @@ public class PostsRestController {
     service.delete(postId);
   }
 
-  private Student getCurrentStudent() throws NotAuthenticatedException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
       throw new NotAuthenticatedException("You are not logged in.");

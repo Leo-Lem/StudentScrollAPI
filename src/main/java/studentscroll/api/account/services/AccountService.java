@@ -8,31 +8,33 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.NonNull;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
-import studentscroll.api.students.data.Profile;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
+import studentscroll.api.profiles.data.Profile;
 
 @Service
-public class StudentService {
+public class AccountService {
 
   @Autowired
-  private StudentRepository repo;
+  private AccountRepository repo;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  public Student create(
+  public Account create(
       @NonNull String name,
       @NonNull String email,
       @NonNull String password) throws EntityExistsException {
     if (repo.existsByEmail(email))
       throw new EntityExistsException("Email is already in use.");
 
-    return repo.save(new Student(email, passwordEncoder.encode(password), new Profile(name)));
+    Account student = new Account(email, passwordEncoder.encode(password)).setProfile(new Profile(name));
+
+    return repo.save(student);
   }
 
-  public Student update(
-      @NonNull Student student,
+  public Account update(
+      @NonNull Account student,
       @NonNull Optional<String> newEmail,
       @NonNull Optional<String> newPassword) {
     newEmail.ifPresent(unwrapped -> student.setEmail(unwrapped));

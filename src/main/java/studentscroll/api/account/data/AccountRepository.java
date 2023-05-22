@@ -4,9 +4,10 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface StudentRepository extends CrudRepository<Student, Long> {
+public interface AccountRepository extends CrudRepository<Account, Long> {
 
-  Optional<Student> findByEmail(String email);
+  Optional<Account> findByEmail(String email);
 
   Boolean existsByEmail(String email);
+
 }

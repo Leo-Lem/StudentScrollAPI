@@ -1,5 +1,6 @@
-package studentscroll.api.students.data;
+package studentscroll.api.profiles.data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -21,9 +23,10 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.shared.StudentLocation;
 
+@Entity(name = "student_profile")
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -32,8 +35,8 @@ import studentscroll.api.shared.StudentLocation;
 public class Profile {
 
   @Id
-  @Column(name = "student_id")
-  private Long studentId;
+  @Column(name = "account_id")
+  private Long accountId;
 
   @Column(name = "name")
   @NonNull
@@ -48,18 +51,21 @@ public class Profile {
   @Column(name = "interests")
   private Set<String> interests = new HashSet<>();
 
+  @Column(name = "registeredOn")
+  private final LocalDateTime registeredOn = LocalDateTime.now();
+
   @MapsId
-  @OneToOne(mappedBy = "profile", fetch = FetchType.EAGER)
-  @JoinColumn(name = "student_id")
-  private Student student;
+  @OneToOne
+  @JoinColumn(name = "account_id")
+  private Account account;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
-  private List<Student> followers = new ArrayList<>();
+  private List<Account> followers = new ArrayList<>();
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-  private List<Student> follows = new ArrayList<>();
+  private List<Account> follows = new ArrayList<>();
 
   @Embedded
   private StudentLocation location;
@@ -73,7 +79,7 @@ public class Profile {
     return this;
   }
 
-  public Profile addFollower(Student follower) {
+  public Profile addFollower(Account follower) {
     followers.add(follower);
     return this;
   }

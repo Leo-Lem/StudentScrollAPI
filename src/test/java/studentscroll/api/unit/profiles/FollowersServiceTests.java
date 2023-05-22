@@ -1,4 +1,4 @@
-package studentscroll.api.unit.students;
+package studentscroll.api.unit.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,14 +18,14 @@ import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.account.data.StudentRepository;
-import studentscroll.api.students.services.FollowersService;
+import studentscroll.api.account.data.AccountRepository;
+import studentscroll.api.profiles.services.FollowersService;
 import studentscroll.api.utils.TestUtils;
 
 public class FollowersServiceTests {
 
   @Mock
-  private StudentRepository repo;
+  private AccountRepository repo;
 
   @InjectMocks
   private FollowersService service;

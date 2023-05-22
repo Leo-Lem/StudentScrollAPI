@@ -5,17 +5,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 
 @Service
 public class StudentDetailsService implements UserDetailsService {
 
   @Autowired
-  private StudentRepository repo;
+  private AccountRepository repo;
 
   @Override
-  public Student loadUserByUsername(String email) throws BadCredentialsException {
+  public Account loadUserByUsername(String email) throws BadCredentialsException {
     return repo.findByEmail(email)
         .orElseThrow(() -> new BadCredentialsException(""));
   }

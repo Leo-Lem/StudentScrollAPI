@@ -16,10 +16,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.account.web.dto.AuthenticationRequest;
 import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
-import studentscroll.api.students.data.Profile;
+import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
@@ -43,7 +43,7 @@ public class AccountITest {
 
     signIn().andExpect(status().isOk());
 
-    TestUtils.authenticate(new Student().setProfile(new Profile()));
+    TestUtils.authenticate(new Account().setProfile(new Profile("")));
 
     updateStudent().andExpect(status().isOk());
 

@@ -1,4 +1,4 @@
-package studentscroll.api.students;
+package studentscroll.api.profiles;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

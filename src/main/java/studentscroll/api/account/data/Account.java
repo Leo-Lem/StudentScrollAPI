@@ -1,6 +1,5 @@
 package studentscroll.api.account.data;
 
-import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -12,14 +11,14 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.posts.data.Post;
-import studentscroll.api.students.data.Profile;
+import studentscroll.api.profiles.data.Profile;
 
-@Entity(name = "student")
+@Entity(name = "account")
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Accessors(chain = true)
-public class Student implements UserDetails {
+public class Account implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,12 +32,8 @@ public class Student implements UserDetails {
   @NonNull
   private String password;
 
-  @Column(name = "registeredOn")
-  private LocalDate registeredOn = LocalDate.now();
-
-  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
   @PrimaryKeyJoinColumn
-  @NonNull
   private Profile profile;
 
   @Embedded
@@ -50,13 +45,19 @@ public class Student implements UserDetails {
   @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
   private List<Chat> chats = new ArrayList<>();
 
-  public Student addPost(Post post) {
+  public Account addPost(Post post) {
     posts.add(post);
     return this;
   }
 
-  public Student removePost(Post post) {
+  public Account removePost(Post post) {
     posts.remove(post);
+    return this;
+  }
+
+  public Account setProfile(Profile profile) {
+    this.profile = profile;
+    profile.setAccount(this);
     return this;
   }
 

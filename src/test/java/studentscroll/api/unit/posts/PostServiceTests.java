@@ -11,8 +11,8 @@ import org.mockito.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.posts.data.ContentPost;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.PostService;
 import studentscroll.api.shared.StudentLocation;
@@ -23,7 +23,7 @@ public class PostServiceTests {
   private PostRepository repo;
 
   @Mock
-  private StudentRepository studentRepo;
+  private AccountRepository studentRepo;
 
   @InjectMocks
   private PostService service;
@@ -86,7 +86,7 @@ public class PostServiceTests {
         .thenReturn(post);
 
     when(studentRepo.findById(anyLong()))
-        .thenAnswer(i -> Optional.of(new Student().setId((Long) i.getArguments()[0])));
+        .thenAnswer(i -> Optional.of(new Account().setId((Long) i.getArguments()[0])));
 
     EventPost createdPost = service.create(
         post.getPoster().getId(), post.getTitle(), post.getTags(), post.getDescription(), post.getDate(),
@@ -139,7 +139,7 @@ public class PostServiceTests {
         .thenReturn(post);
 
     when(studentRepo.findById(anyLong()))
-        .thenAnswer(i -> Optional.of(new Student().setId((Long) i.getArguments()[0])));
+        .thenAnswer(i -> Optional.of(new Account().setId((Long) i.getArguments()[0])));
 
     ContentPost createdPost = service.create(
         post.getPoster().getId(), post.getTitle(), post.getTags(), post.getContent());
@@ -155,7 +155,7 @@ public class PostServiceTests {
         "Jimmy's Dog",
         Set.of("JIMMY", "DOG"),
         "Jimmy's dog is really cute. I would love to pet it again.")
-        .setPoster(new Student().setId(1L))
+        .setPoster(new Account().setId(1L))
         .setId(1L);
   }
 
@@ -165,7 +165,7 @@ public class PostServiceTests {
         "Going to Jimmy's house to pet his dog.",
         LocalDateTime.now(),
         new StudentLocation("Jimmy's House", 1.0, 1.0))
-        .setPoster(new Student().setId(1L))
+        .setPoster(new Account().setId(1L))
         .setId(1L);
   }
 

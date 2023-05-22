@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.security.JSONWebToken;
 
 @Data
@@ -19,11 +19,11 @@ public class AccountResponse {
   private final String token;
   private final String type;
 
-  public AccountResponse(Student student) {
+  public AccountResponse(Account student) {
     this(student.getId(), student.getProfile().getName(), student.getEmail(), null, null);
   }
 
-  public AccountResponse(Student student, JSONWebToken token) {
+  public AccountResponse(Account student, JSONWebToken token) {
     this(student.getId(), student.getProfile().getName(), student.getEmail(), token.toString(), "Bearer");
   }
 }

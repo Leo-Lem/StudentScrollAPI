@@ -10,7 +10,7 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.chats.data.ChatRepository;
 
 @Component
@@ -23,7 +23,7 @@ public class IsParticipantAuthz implements AuthorizationManager<RequestAuthoriza
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
     val principal = supplier.get().getPrincipal();
 
-    if (!(principal instanceof Student))
+    if (!(principal instanceof Account))
       return new AuthorizationDecision(false);
 
     val requestChatId = Long.parseLong(context.getVariables().get("chatId"));
@@ -33,7 +33,7 @@ public class IsParticipantAuthz implements AuthorizationManager<RequestAuthoriza
     return new AuthorizationDecision(
         chat.isPresent()
             && chat.get().getParticipants().stream()
-                .anyMatch(participant -> participant.getId().equals(((Student) principal).getId())));
+                .anyMatch(participant -> participant.getId().equals(((Account) principal).getId())));
   }
 
 }

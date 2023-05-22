@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 
 @Entity(name = "message")
 @Data
@@ -27,7 +27,7 @@ public class Message {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "sender_id")
-  private Student sender;
+  private Account sender;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "chat_id")

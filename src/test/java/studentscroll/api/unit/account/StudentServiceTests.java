@@ -17,9 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.val;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
-import studentscroll.api.account.services.StudentService;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
+import studentscroll.api.account.services.AccountService;
 import studentscroll.api.utils.TestUtils;
 
 public class StudentServiceTests {
@@ -28,10 +28,10 @@ public class StudentServiceTests {
   private PasswordEncoder passwordEncoder;
 
   @Mock
-  private StudentRepository repo;
+  private AccountRepository repo;
 
   @InjectMocks
-  private StudentService service;
+  private AccountService service;
 
   @BeforeEach
   public void setUp() {
@@ -49,7 +49,7 @@ public class StudentServiceTests {
     when(repo.existsByEmail(email))
         .thenReturn(false);
 
-    when(repo.save(any(Student.class)))
+    when(repo.save(any(Account.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
     val student = service.create(name, email, password);
@@ -71,7 +71,7 @@ public class StudentServiceTests {
 
   @Test
   public void givenIsAuthenticated_whenUpdating_thenNewDetailsMatch() {
-    val student = new Student().setId(1L);
+    val student = new Account().setId(1L);
 
     String newEmail = "johnny@gmx.com", newPassword = "my-pony";
 
@@ -81,10 +81,10 @@ public class StudentServiceTests {
     when(passwordEncoder.encode(newPassword))
         .thenReturn("xyz123");
 
-    when(repo.save(any(Student.class)))
+    when(repo.save(any(Account.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
-    Student newStudent = service.update(student, Optional.of(newEmail), Optional.of(newPassword));
+    Account newStudent = service.update(student, Optional.of(newEmail), Optional.of(newPassword));
 
     assertEquals(student.getId(), newStudent.getId());
     assertEquals(newEmail, newStudent.getEmail());

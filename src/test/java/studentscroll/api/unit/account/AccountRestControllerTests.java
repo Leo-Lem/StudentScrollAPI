@@ -26,14 +26,14 @@ import org.springframework.util.StringUtils;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.services.StudentService;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.services.AccountService;
 import studentscroll.api.account.web.AccountRestController;
 import studentscroll.api.account.web.dto.AccountResponse;
 import studentscroll.api.account.web.dto.AuthenticationRequest;
 import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
+import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.security.StudentDetailsService;
-import studentscroll.api.students.data.Profile;
 import studentscroll.api.utils.TestUtils;
 
 public class AccountRestControllerTests {
@@ -42,7 +42,7 @@ public class AccountRestControllerTests {
   private AuthenticationManager authManager;
 
   @Mock
-  private StudentService service;
+  private AccountService service;
 
   @Mock
   private StudentDetailsService detailsService;
@@ -58,7 +58,7 @@ public class AccountRestControllerTests {
   @Test
   public void givenCrendentialsAreValid_whenRequestIsReceived_thenReturns200AndSomeJWT() {
     String email = "abc@xyz.com", password = "1234";
-    val details = new Student(email, password, new Profile(""));
+    val details = new Account(email, password).setProfile(new Profile(""));
     val request = new AuthenticationRequest(null, email, password);
 
     when(authManager.authenticate(any(Authentication.class)))
@@ -90,7 +90,7 @@ public class AccountRestControllerTests {
     val request = new AuthenticationRequest(name, email, password);
 
     when(service.create(name, email, password))
-        .thenReturn(new Student(email, "abc123", new Profile(name)).setId(1L));
+        .thenReturn(new Account(email, "abc123").setProfile(new Profile(name)).setId(1L));
 
     AccountResponse response = controller.authenticate(request, mock(HttpServletResponse.class));
 
@@ -114,7 +114,7 @@ public class AccountRestControllerTests {
   public void givenIsAuthenticated_whenUpdating_thenReturnsUpdated() throws Exception {
     String currentEmail = "123@456.com", currentPassword = "1234", newEmail = "new@e.mail";
 
-    val student = new Student()
+    val student = new Account()
         .setEmail(currentEmail)
         .setPassword(currentPassword)
         .setId(1L)
@@ -127,7 +127,7 @@ public class AccountRestControllerTests {
         .thenReturn(new UsernamePasswordAuthenticationToken(
             newEmail, currentPassword, Set.of(new SimpleGrantedAuthority("User"))));
 
-    when(service.update(any(Student.class), any(), any()))
+    when(service.update(any(Account.class), any(), any()))
         .thenReturn(student.setEmail(newEmail));
 
     assertNotNull(controller.update(request));
@@ -135,7 +135,7 @@ public class AccountRestControllerTests {
 
   @Test
   public void givenIsAuthenticated_whenDeleting_thenDoesNotThrow() {
-    TestUtils.authenticate(new Student().setId(1L));
+    TestUtils.authenticate(new Account().setId(1L));
     assertDoesNotThrow(() -> controller.delete());
   }
 

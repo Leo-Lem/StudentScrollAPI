@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
+import studentscroll.api.profiles.web.dto.UpdateProfileRequest;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.web.dto.UpdateProfileRequest;
 import studentscroll.api.utils.ITestUtils;
 import studentscroll.api.utils.TestUtils;
 

@@ -6,7 +6,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 
 @Entity(name = "post")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -34,6 +34,6 @@ public class Post {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "student_id")
-  private Student poster;
+  private Account poster;
 
 }

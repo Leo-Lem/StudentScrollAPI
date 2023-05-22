@@ -12,15 +12,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.val;
 import studentscroll.api.account.data.Settings;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.posts.data.ContentPost;
 import studentscroll.api.posts.data.Post;
+import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Profile;
 
 public class TestUtils {
 
-  public static void authenticate(Student student) {
+  public static void authenticate(Account student) {
     val context = mock(SecurityContext.class);
     val authentication = mock(Authentication.class);
 
@@ -37,16 +37,17 @@ public class TestUtils {
     SecurityContextHolder.getContext().setAuthentication(null);
   }
 
-  public static Student getStudent(Long id) {
-    return new Student()
+  public static Account getStudent(Long id) {
+    return new Account()
         .setId(id)
         .setEmail("raoul@duke.legend")
         .setPassword("1234")
-        .setProfile(new Profile("Raoul Duke"));
+        .setProfile(new Profile("Raoul Duke").setAccountId(1L));
   }
 
-  public static Profile getProfile() {
+  public static Profile getProfile(Long id) {
     return new Profile()
+        .setAccountId(id)
         .setName("Cletus Spuckler")
         .setBio("""
             Cletus Delroy Montfort Bigglesworth Spuckler, also known as Cletus the Slack-Jawed Yokel,
@@ -69,7 +70,7 @@ public class TestUtils {
         .setContent("Jimmy's dog is really cute. I would love to pet it again.")
         .setTitle("Jimmy's Dog")
         .setTags(Set.of("JIMMY", "DOG"))
-        .setPoster(new Student().setId(1L))
+        .setPoster(new Account().setId(1L))
         .setId(1L);
   }
 }

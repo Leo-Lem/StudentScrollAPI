@@ -24,8 +24,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.services.StudentService;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.services.AccountService;
 import studentscroll.api.account.web.dto.AuthenticationRequest;
 import studentscroll.api.account.web.dto.AccountResponse;
 import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
@@ -45,7 +45,7 @@ public class AccountRestController {
   private StudentDetailsService detailsService;
 
   @Autowired
-  private StudentService service;
+  private AccountService service;
 
   @Operation(summary = "Authenticate to StudentScroll.", description = "If the payload includes a name, tries to create new account. Otherwise, tries to authenticate.")
   @ApiResponses(value = {
@@ -57,7 +57,7 @@ public class AccountRestController {
   public AccountResponse authenticate(
       @RequestBody AuthenticationRequest request,
       HttpServletResponse response) throws BadCredentialsException {
-    Student student;
+    Account student;
 
     if (request.getName() == null) {
       authenticate(request.getEmail(), request.getPassword());
@@ -109,8 +109,8 @@ public class AccountRestController {
       throw new BadCredentialsException("Invalid email or password.");
   }
 
-  private Student getCurrentStudent() throws NotAuthenticatedException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
       throw new NotAuthenticatedException("You are not logged in.");

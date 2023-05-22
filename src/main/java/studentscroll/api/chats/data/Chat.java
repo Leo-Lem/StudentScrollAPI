@@ -5,7 +5,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 
 @Entity(name = "chat")
 @Data
@@ -19,19 +19,19 @@ public class Chat {
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "student_chat", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-  private List<Student> participants = new ArrayList<>();
+  private List<Account> participants = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   @NonNull
   private List<Message> messages = new ArrayList<>();
 
-  public Chat addParticipant(Student student) {
+  public Chat addParticipant(Account student) {
     participants.add(student);
     student.getChats().add(this);
     return this;
   }
 
-  public Chat removeParticipant(Student student) {
+  public Chat removeParticipant(Account student) {
     participants.remove(student);
     student.getChats().remove(this);
     return this;

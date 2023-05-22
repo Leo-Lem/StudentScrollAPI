@@ -1,15 +1,16 @@
 package studentscroll.api.unit.security;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.security.JSONWebToken;
-import studentscroll.api.students.data.Profile;
 
 @SuppressWarnings("JavaUtilDate")
 public class JSONWebTokenTests {
@@ -17,7 +18,7 @@ public class JSONWebTokenTests {
   @Test
   public void givenUserDetailsAreValid_whenGeneratingJWT_thenReturnsJWTWithCorrectEmail() {
     val email = "abc@xyz.com";
-    val details = new Student(email, "", new Profile(""));
+    val details = new Account(email, "");
     val token = JSONWebToken.generateFrom(details);
 
     assertEquals(email, token.getUsername());
@@ -25,7 +26,7 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsCreated_whenGettingExpirationDate_thenDateReflectsExpirationInterval() {
-    val details = new Student("xxx", "", new Profile(""));
+    val details = new Account("xxx", "");
     val token = JSONWebToken.generateFrom(details);
 
     val expirationInterval = JSONWebToken.EXPIRES_AFTER_SECONDS;
@@ -37,7 +38,7 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsValid_whenValidatingJWT_thenReturnsTrue() {
-    val details = new Student("xxx", "", new Profile(""));
+    val details = new Account("xxx", "");
     val token = JSONWebToken.generateFrom(details);
 
     assertTrue(token.validate(details));
@@ -45,8 +46,8 @@ public class JSONWebTokenTests {
 
   @Test
   public void givenJWTIsInvalid_whenValidatingJWT_thenReturnsFalse() {
-    val details = new Student("xxx", "", new Profile(""));
-    val otherDetails = new Student("yyy", "", new Profile(""));
+    val details = new Account("xxx", "");
+    val otherDetails = new Account("yyy", "");
     val token = JSONWebToken.generateFrom(details);
 
     assertFalse(token.validate(otherDetails));

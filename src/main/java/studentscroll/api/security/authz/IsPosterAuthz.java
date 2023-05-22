@@ -10,7 +10,7 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.posts.data.Post;
 import studentscroll.api.posts.data.PostRepository;
 
@@ -24,13 +24,13 @@ public class IsPosterAuthz implements AuthorizationManager<RequestAuthorizationC
   public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
     val principal = supplier.get().getPrincipal();
 
-    if (!(principal instanceof Student))
+    if (!(principal instanceof Account))
       return new AuthorizationDecision(false);
 
     val requestPostId = Long.parseLong(context.getVariables().get("postId"));
-    val posterId = repo.findById(requestPostId).map(Post::getPoster).map(Student::getId);
+    val posterId = repo.findById(requestPostId).map(Post::getPoster).map(Account::getId);
 
-    return new AuthorizationDecision(posterId.map(id -> id.equals(((Student) principal).getId())).orElse(false));
+    return new AuthorizationDecision(posterId.map(id -> id.equals(((Account) principal).getId())).orElse(false));
   }
 
 }

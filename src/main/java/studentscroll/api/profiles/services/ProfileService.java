@@ -1,15 +1,18 @@
-package studentscroll.api.students.services;
+package studentscroll.api.profiles.services;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.profiles.data.Profile;
+import studentscroll.api.profiles.data.ProfileRepository;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.*;
 
 @Service
 public class ProfileService {
@@ -17,33 +20,26 @@ public class ProfileService {
   @Autowired
   private ProfileRepository repo;
 
-  @Autowired
-  private StudentRepository studentRepo;
-
-  public Profile read(
-      @NonNull Long studentID) throws EntityNotFoundException {
-    return studentRepo
-        .findById(studentID)
-        .orElseThrow(EntityNotFoundException::new)
-        .getProfile();
+  public Profile read(@NonNull Long studentID) throws EntityNotFoundException {
+    return repo.findById(studentID).orElseThrow(EntityNotFoundException::new);
   }
 
   public Profile update(
-      @NonNull Student student,
+      @NonNull Account account,
       @NonNull Optional<String> newName,
       @NonNull Optional<String> newBio,
       @NonNull Optional<String> newIcon,
       @NonNull Optional<Set<String>> newInterests,
       @NonNull Optional<StudentLocation> newLocation) {
-    Profile profile = student.getProfile();
+    Profile profile = account.getProfile();
     newName.ifPresent(unwrapped -> profile.setName(unwrapped));
     newBio.ifPresent(unwrapped -> profile.setBio(unwrapped));
     newIcon.ifPresent(unwrapped -> profile.setIcon(unwrapped));
     newInterests.ifPresent(unwrapped -> profile.setInterests(unwrapped));
     newLocation.ifPresent(unwrapped -> profile.setLocation(Optional.of(unwrapped)));
-    student.setProfile(profile);
+    account.setProfile(profile);
 
-    return studentRepo.save(student).getProfile();
+    return repo.save(profile);
   }
 
   public List<Profile> readAllNearLocation(StudentLocation location) {
