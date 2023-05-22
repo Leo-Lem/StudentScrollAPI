@@ -5,6 +5,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,6 +21,7 @@ import lombok.val;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
+import studentscroll.api.students.data.Student;
 
 @Tag(name = "Posts", description = "Everything related to posts.")
 @SecurityRequirement(name = "token")
@@ -39,6 +41,11 @@ public class PostsRestController {
   @ResponseStatus(HttpStatus.CREATED)
   public PostResponse create(
       @RequestBody CreatePostRequest request, HttpServletResponse response) {
+    val principal = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (!request.getPosterId().equals(principal.getId()))
+      throw new IllegalArgumentException("Poster id needs to match currently authenticated student's id.");
+
     val type = request.getType();
 
     if (type == null)
