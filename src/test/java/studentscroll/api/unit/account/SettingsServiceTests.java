@@ -1,4 +1,4 @@
-package studentscroll.api.unit.settings;
+package studentscroll.api.unit.account;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -18,7 +18,6 @@ import studentscroll.api.account.data.Settings;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.account.services.SettingsService;
-import studentscroll.api.students.data.Profile;
 import studentscroll.api.utils.TestUtils;
 
 public class SettingsServiceTests {
@@ -36,16 +35,16 @@ public class SettingsServiceTests {
 
   @Test
   public void givenIsAuthenticated_whenReadingSettings_thenReturnsCorrectSettings() {
-    Student student = exampleStudent().setSettings(exampleSettings());
+    val settings = TestUtils.getSettings();
+    val student = TestUtils.getStudent(1L).setSettings(settings);
 
-    Settings Settings = service.read(student);
-
-    assertEquals(student.getSettings(), Settings);
+    assertEquals(settings, service.read(student));
   }
 
   @Test
   public void givenIsAuthenticated_whenUpdatingSettings_thenReturnsCorrectSettings() {
-    val student = exampleStudent().setSettings(exampleSettings());
+    val settings = TestUtils.getSettings();
+    val student = TestUtils.getStudent(1L).setSettings(settings);
 
     TestUtils.authenticate(student);
 
@@ -59,14 +58,6 @@ public class SettingsServiceTests {
 
     assertNotEquals("LIGHT", newSettings.getTheme());
     assertEquals("DE", newSettings.getLocale());
-  }
-
-  private Student exampleStudent() {
-    return new Student("", "", new Profile("James")).setId(1L);
-  }
-
-  private Settings exampleSettings() {
-    return new Settings("LIGHT", "DE");
   }
 
 }

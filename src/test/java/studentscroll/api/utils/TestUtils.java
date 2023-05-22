@@ -11,7 +11,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.val;
+import studentscroll.api.account.data.Settings;
 import studentscroll.api.account.data.Student;
+import studentscroll.api.posts.data.ContentPost;
+import studentscroll.api.posts.data.Post;
 import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.Profile;
 
@@ -53,5 +56,20 @@ public class TestUtils {
         .setIcon("PIGS")
         .setInterests(Set.of("farming", "construction", "redneck"))
         .setLocation(Optional.of(new StudentLocation("Rural Route 9, Springfield", 44.046111, -123.021944)));
+  }
+
+  public static Settings getSettings() {
+    return new Settings()
+        .setTheme("LIGHT")
+        .setLocale("DE");
+  }
+
+  public static Post getPost() {
+    return new ContentPost()
+        .setContent("Jimmy's dog is really cute. I would love to pet it again.")
+        .setTitle("Jimmy's Dog")
+        .setTags(Set.of("JIMMY", "DOG"))
+        .setPoster(new Student().setId(1L))
+        .setId(1L);
   }
 }

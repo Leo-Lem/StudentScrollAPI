@@ -1,7 +1,9 @@
 package studentscroll.api.unit.students;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.students.services.FollowersService;
@@ -91,6 +94,15 @@ public class FollowersServiceTests {
     service.unfollow(student, 2L);
 
     assertFalse(student.getProfile().getFollows().contains(follow));
+  }
+
+  @Test
+  public void givenStudentDoesNotExist_whenFollowing_thenThrowsEntityNotFoundException() {
+    val student = TestUtils.getStudent(1L);
+
+    when(repo.findById(anyLong())).thenReturn(Optional.empty());
+
+    assertThrows(EntityNotFoundException.class, () -> service.follow(student, 2L));
   }
 
 }

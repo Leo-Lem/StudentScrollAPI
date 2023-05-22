@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
 import studentscroll.api.account.data.Settings;
-import studentscroll.api.account.data.Student;
 import studentscroll.api.account.web.dto.UpdateSettingsRequest;
 import studentscroll.api.utils.TestUtils;
 
@@ -33,7 +32,7 @@ public class SettingsITest {
 
   @Test
   public void test() throws Exception {
-    val student = new Student().setId(1L).setSettings(new Settings());
+    val student = TestUtils.getStudent(1L).setSettings(new Settings());
 
     TestUtils.authenticate(student);
 
@@ -43,14 +42,14 @@ public class SettingsITest {
   }
 
   private ResultActions getSettings() throws Exception {
-    return mockMVC.perform(get("/settings"));
+    return mockMVC.perform(get("/account/settings"));
   }
 
   private ResultActions updateSettings() throws Exception {
     val request = new UpdateSettingsRequest("DARK", "DE");
 
     return mockMVC.perform(
-        put("/settings")
+        put("/account/settings")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }

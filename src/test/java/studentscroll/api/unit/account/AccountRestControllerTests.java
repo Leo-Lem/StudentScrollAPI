@@ -1,4 +1,4 @@
-package studentscroll.api.unit.auth;
+package studentscroll.api.unit.account;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -5,19 +5,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import studentscroll.api.account.web.dto.AuthenticationRequest;
 
-@RequiredArgsConstructor
+@Component
 public class ITestUtils {
 
-  public final MockMvc mockMVC;
-  public final ObjectMapper objectMapper;
+  @Autowired
+  private MockMvc mockMVC;
+
+  @Autowired
+  private ObjectMapper objectMapper;
 
   public Set<Long> createStudents() throws Exception {
     return Set.of(
@@ -35,7 +39,7 @@ public class ITestUtils {
 
     return objectMapper.readTree(
         mockMVC.perform(
-            post("/students")
+            post("/account")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(jsonPath("$.id").isNumber()).andReturn().getResponse()
