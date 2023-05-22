@@ -2,6 +2,7 @@ package studentscroll.api.chats.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
 import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.dto.*;
+import studentscroll.api.students.data.Student;
 
 @Tag(name = "Messages", description = "Everything related to chat messages.")
 @RestController
@@ -36,6 +38,10 @@ public class MessagesRestController {
       @RequestBody CreateMessageRequest request,
       HttpServletResponse response)
       throws EntityNotFoundException {
+    val principal = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (!request.getSenderId().equals(principal.getId()))
+      throw new IllegalArgumentException("Sender id needs to match currently authenticated student's id.");
 
     val message = service.create(request.getContent(), request.getSenderId(), chatId);
 
