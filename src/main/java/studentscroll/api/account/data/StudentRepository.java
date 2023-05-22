@@ -1,4 +1,4 @@
-package studentscroll.api.students.data;
+package studentscroll.api.account.data;
 
 import java.util.*;
 

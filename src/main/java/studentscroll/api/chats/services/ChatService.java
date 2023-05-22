@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.*;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.chats.data.*;
-import studentscroll.api.students.data.StudentRepository;
 
 @Service
 public class ChatService {

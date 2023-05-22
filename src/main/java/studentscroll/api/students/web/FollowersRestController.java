@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.*;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.students.services.FollowersService;
 
 @Tag(name = "Followers", description = "Everything related to a student's followers.")
@@ -23,7 +26,7 @@ public class FollowersRestController {
   @Autowired
   private FollowersService service;
 
-  @Operation(summary = "Find all followers.")
+  @Operation(summary = "Find student's followers.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Returning followers."),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
@@ -35,7 +38,7 @@ public class FollowersRestController {
     return service.readAllFollowers(studentId);
   }
 
-  @Operation(summary = "Find all follows.")
+  @Operation(summary = "Find student's follows.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Returning follows."),
       @ApiResponse(responseCode = "404", description = "Student does not exist.", content = @Content) })
@@ -55,12 +58,11 @@ public class FollowersRestController {
       @ApiResponse(responseCode = "409", description = "Student is already followed.", content = @Content)
   })
   @SecurityRequirement(name = "token")
-  @PostMapping("/followers/{followerId}")
+  @PostMapping("/followers")
   @ResponseStatus(HttpStatus.CREATED)
   public Long follow(
-      @PathVariable Long studentId,
-      @PathVariable Long followerId) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
-    return service.follow(studentId, followerId);
+      @PathVariable Long studentId) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
+    return service.follow(studentId, getCurrentStudent().getId());
   }
 
   @Operation(summary = "Unfollow the student.")
@@ -68,12 +70,20 @@ public class FollowersRestController {
       @ApiResponse(responseCode = "204", description = "Unfollowed the student."),
       @ApiResponse(responseCode = "404", description = "Unfollower is not following or student does not exist.", content = @Content) })
   @SecurityRequirement(name = "token")
-  @DeleteMapping("/followers/{followerId}")
+  @DeleteMapping("/followers")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void unfollow(
-      @PathVariable Long studentId,
-      @PathVariable Long followerId) throws EntityNotFoundException {
-    service.unfollow(studentId, followerId);
+      @PathVariable Long studentId) throws EntityNotFoundException {
+    service.unfollow(studentId, getCurrentStudent().getId());
+  }
+
+  private Student getCurrentStudent() throws IllegalStateException {
+    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (student == null)
+      throw new IllegalStateException("Not authenticated.");
+
+    return student;
   }
 
 }

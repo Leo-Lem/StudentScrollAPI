@@ -14,11 +14,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import lombok.val;
-import studentscroll.api.settings.Settings;
-import studentscroll.api.settings.SettingsService;
+import studentscroll.api.account.data.Settings;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.services.SettingsService;
 import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
 import studentscroll.api.utils.TestUtils;
 
 public class SettingsServiceTests {

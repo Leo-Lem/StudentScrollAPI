@@ -8,6 +8,8 @@ import java.util.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import jakarta.persistence.EntityNotFoundException;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.ProfileService;

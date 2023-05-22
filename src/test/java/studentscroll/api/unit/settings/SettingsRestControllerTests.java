@@ -12,11 +12,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import lombok.val;
-import studentscroll.api.settings.Settings;
-import studentscroll.api.settings.SettingsResponse;
-import studentscroll.api.settings.SettingsRestController;
-import studentscroll.api.settings.SettingsService;
-import studentscroll.api.settings.UpdateSettingsRequest;
+import studentscroll.api.account.data.Settings;
+import studentscroll.api.account.services.SettingsService;
+import studentscroll.api.account.web.SettingsRestController;
+import studentscroll.api.account.web.dto.SettingsResponse;
+import studentscroll.api.account.web.dto.UpdateSettingsRequest;
 
 public class SettingsRestControllerTests {
 

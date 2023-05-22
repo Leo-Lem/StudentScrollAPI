@@ -10,8 +10,9 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 
 import lombok.val;
-import studentscroll.api.posts.data.*;
-import studentscroll.api.students.data.*;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.posts.data.Post;
+import studentscroll.api.posts.data.PostRepository;
 
 @Component
 public class IsPosterAuthz implements AuthorizationManager<RequestAuthorizationContext> {

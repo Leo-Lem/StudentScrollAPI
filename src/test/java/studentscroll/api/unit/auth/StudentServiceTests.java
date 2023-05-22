@@ -17,9 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.val;
-import studentscroll.api.auth.StudentService;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.services.StudentService;
 import studentscroll.api.utils.TestUtils;
 
 public class StudentServiceTests {

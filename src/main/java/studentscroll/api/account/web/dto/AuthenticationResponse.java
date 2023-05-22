@@ -1,12 +1,12 @@
-package studentscroll.api.auth.dto;
+package studentscroll.api.account.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.security.JSONWebToken;
-import studentscroll.api.students.data.Student;
 
 @Data
 @RequiredArgsConstructor

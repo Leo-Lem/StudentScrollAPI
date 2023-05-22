@@ -1,4 +1,4 @@
-package studentscroll.api.settings;
+package studentscroll.api.account.services;
 
 import java.util.Optional;
 
@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
 import lombok.val;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
+import studentscroll.api.account.data.Settings;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 
 @Service
 public class SettingsService {

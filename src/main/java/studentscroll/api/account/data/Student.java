@@ -1,4 +1,4 @@
-package studentscroll.api.students.data;
+package studentscroll.api.account.data;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -12,7 +12,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.posts.data.Post;
-import studentscroll.api.settings.Settings;
+import studentscroll.api.students.data.Profile;
 
 @Entity(name = "student")
 @Data

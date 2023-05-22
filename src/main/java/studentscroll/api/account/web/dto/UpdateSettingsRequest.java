@@ -1,4 +1,4 @@
-package studentscroll.api.settings;
+package studentscroll.api.account.web.dto;
 
 import lombok.Data;
 

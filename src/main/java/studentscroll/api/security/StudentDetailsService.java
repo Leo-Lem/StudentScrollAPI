@@ -5,8 +5,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 
 @Service
 public class StudentDetailsService implements UserDetailsService {

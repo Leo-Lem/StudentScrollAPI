@@ -1,4 +1,4 @@
-package studentscroll.api.auth;
+package studentscroll.api.account.web;
 
 import java.util.Optional;
 
@@ -15,15 +15,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.services.StudentService;
+import studentscroll.api.account.web.dto.*;
 import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.security.StudentDetailsService;
-import studentscroll.api.auth.dto.*;
-import studentscroll.api.students.data.Student;
 
-@Tag(name = "Authentication", description = "Everything related to authentication.")
+@Tag(name = "Account", description = "Everything related to your account and authentication.")
 @RestController
-@RequestMapping("/authentication")
-public class AuthenticationRestController {
+@RequestMapping("/account")
+public class AccountRestController {
 
   @Autowired
   private AuthenticationManager authManager;
@@ -34,7 +35,7 @@ public class AuthenticationRestController {
   @Autowired
   private StudentService service;
 
-  @Operation(summary = "Authenticate for StudentScroll.", description = "If the payload includes a name, tries to create new account. Otherwise, tries to authenticate.")
+  @Operation(summary = "Authenticate to StudentScroll.", description = "If the payload includes a name, tries to create new account. Otherwise, tries to authenticate.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Credentials are fine, returning JWT."),
       @ApiResponse(responseCode = "201", description = "Created a new student, returning JWT."),
@@ -65,7 +66,7 @@ public class AuthenticationRestController {
   @Operation(summary = "Update your credentials.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Updated your credentials."),
-      @ApiResponse(responseCode = "401", description = "Invalid current password.", content = @Content) })
+      @ApiResponse(responseCode = "401", description = "Invalid email or password.", content = @Content) })
   @SecurityRequirement(name = "token")
   @PutMapping
   public AuthenticationResponse update(

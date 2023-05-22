@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
 
 @Service
 public class PostService {

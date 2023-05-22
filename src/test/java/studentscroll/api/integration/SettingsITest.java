@@ -15,9 +15,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.settings.Settings;
-import studentscroll.api.settings.UpdateSettingsRequest;
-import studentscroll.api.students.data.Student;
+import studentscroll.api.account.data.Settings;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.web.dto.UpdateSettingsRequest;
 import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest

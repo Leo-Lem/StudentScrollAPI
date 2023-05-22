@@ -26,17 +26,17 @@ import org.springframework.util.StringUtils;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
-import studentscroll.api.auth.AuthenticationRestController;
-import studentscroll.api.auth.StudentService;
-import studentscroll.api.auth.dto.AuthenticationRequest;
-import studentscroll.api.auth.dto.AuthenticationResponse;
-import studentscroll.api.auth.dto.UpdateCredentialsRequest;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.services.StudentService;
+import studentscroll.api.account.web.AccountRestController;
+import studentscroll.api.account.web.dto.AuthenticationRequest;
+import studentscroll.api.account.web.dto.AuthenticationResponse;
+import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
 import studentscroll.api.security.StudentDetailsService;
 import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.data.Student;
 import studentscroll.api.utils.TestUtils;
 
-public class AuthenticationRestControllerTests {
+public class AccountRestControllerTests {
 
   @Mock
   private AuthenticationManager authManager;
@@ -48,7 +48,7 @@ public class AuthenticationRestControllerTests {
   private StudentDetailsService detailsService;
 
   @InjectMocks
-  private AuthenticationRestController controller;
+  private AccountRestController controller;
 
   @BeforeEach
   public void setUp() {

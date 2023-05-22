@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.micrometer.common.lang.NonNull;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.NonNull;
 import lombok.val;
-import studentscroll.api.students.data.*;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 
 @Service
 public class FollowersService {

@@ -1,4 +1,4 @@
-package studentscroll.api.auth;
+package studentscroll.api.account.services;
 
 import java.util.Optional;
 
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.NonNull;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.data.Student;
-import studentscroll.api.students.data.StudentRepository;
 
 @Service
 public class StudentService {

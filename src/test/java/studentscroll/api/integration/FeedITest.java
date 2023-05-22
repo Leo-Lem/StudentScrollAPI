@@ -22,9 +22,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.posts.web.dto.CreatePostRequest;
 import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.data.Student;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)

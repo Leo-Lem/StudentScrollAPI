@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.PostsRestController;
 import studentscroll.api.posts.web.dto.*;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Student;
 
 public class PostsRestControllerTests {
 

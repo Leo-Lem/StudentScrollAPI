@@ -1,13 +1,18 @@
 package studentscroll.api.unit.students;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,7 +41,7 @@ public class FollowersRestControllerTests {
     when(service.follow(studentId, followerId))
         .thenReturn(followerId);
 
-    val response = controller.follow(studentId, followerId);
+    val response = controller.follow(studentId);
 
     assertEquals(followerId, response);
   }
@@ -70,9 +75,8 @@ public class FollowersRestControllerTests {
   @Test
   public void givenStudentExists_whenUnfollowing_thenDoesNotThrow() {
     val studentId = 1L;
-    val followerId = 2L;
 
-    assertDoesNotThrow(() -> controller.unfollow(studentId, followerId));
+    assertDoesNotThrow(() -> controller.unfollow(studentId));
   }
 
   @Test
@@ -83,7 +87,7 @@ public class FollowersRestControllerTests {
     when(service.follow(studentId, followerId))
         .thenThrow(new EntityNotFoundException());
 
-    assertThrows(EntityNotFoundException.class, () -> controller.follow(studentId, followerId));
+    assertThrows(EntityNotFoundException.class, () -> controller.follow(studentId));
 
     when(service.readAllFollowers(studentId))
         .thenThrow(new EntityNotFoundException());
@@ -95,7 +99,7 @@ public class FollowersRestControllerTests {
 
     assertThrows(EntityNotFoundException.class, () -> controller.readAllFollows(studentId));
 
-    assertDoesNotThrow(() -> controller.unfollow(studentId, followerId));
+    assertDoesNotThrow(() -> controller.unfollow(studentId));
   }
 
   @Test
@@ -106,7 +110,7 @@ public class FollowersRestControllerTests {
     when(service.follow(studentId, followerId))
         .thenThrow(new IllegalArgumentException());
 
-    assertThrows(IllegalArgumentException.class, () -> controller.follow(studentId, followerId));
+    assertThrows(IllegalArgumentException.class, () -> controller.follow(studentId));
   }
 
   @Test
@@ -117,7 +121,7 @@ public class FollowersRestControllerTests {
     when(service.follow(studentId, followerId))
         .thenThrow(new EntityExistsException());
 
-    assertThrows(EntityExistsException.class, () -> controller.follow(studentId, followerId));
+    assertThrows(EntityExistsException.class, () -> controller.follow(studentId));
   }
 
   @Test
@@ -128,7 +132,7 @@ public class FollowersRestControllerTests {
     doThrow(new EntityNotFoundException())
         .when(service).unfollow(studentId, followerId);
 
-    assertThrows(EntityNotFoundException.class, () -> controller.unfollow(studentId, followerId));
+    assertThrows(EntityNotFoundException.class, () -> controller.unfollow(studentId));
   }
 
 }

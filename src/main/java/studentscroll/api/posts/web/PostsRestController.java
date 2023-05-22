@@ -18,10 +18,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
-import studentscroll.api.students.data.Student;
 
 @Tag(name = "Posts", description = "Everything related to posts.")
 @SecurityRequirement(name = "token")

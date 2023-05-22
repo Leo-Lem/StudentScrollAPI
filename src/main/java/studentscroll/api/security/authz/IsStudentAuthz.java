@@ -9,7 +9,7 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.stereotype.Component;
 
 import lombok.val;
-import studentscroll.api.students.data.*;
+import studentscroll.api.account.data.Student;
 
 @Component
 public class IsStudentAuthz implements AuthorizationManager<RequestAuthorizationContext> {

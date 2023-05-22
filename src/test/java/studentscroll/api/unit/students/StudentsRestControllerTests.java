@@ -13,16 +13,16 @@ import lombok.val;
 import studentscroll.api.shared.StudentLocation;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.*;
-import studentscroll.api.students.web.ProfilesRestController;
+import studentscroll.api.students.web.StudentsRestController;
 import studentscroll.api.students.web.dto.*;
 
-public class ProfilesRestControllerTests {
+public class StudentsRestControllerTests {
 
   @Mock
   private ProfileService service;
 
   @InjectMocks
-  private ProfilesRestController controller;
+  private StudentsRestController controller;
 
   @BeforeEach
   public void setUp() {
@@ -37,7 +37,7 @@ public class ProfilesRestControllerTests {
     when(service.read(studentID))
         .thenReturn(profile);
 
-    assertNotNull(controller.readProfile(studentID));
+    assertNotNull(controller.read(studentID));
   }
 
   @Test
@@ -50,9 +50,9 @@ public class ProfilesRestControllerTests {
     when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenThrow(new EntityNotFoundException());
 
-    assertThrows(EntityNotFoundException.class, () -> controller.readProfile(studentID));
-    assertThrows(EntityNotFoundException.class, () -> controller.updateProfile(
-        studentID, new UpdateProfileRequest(null, null, null, null, null)));
+    assertThrows(EntityNotFoundException.class, () -> controller.read(studentID));
+    assertThrows(EntityNotFoundException.class,
+        () -> controller.update(new UpdateProfileRequest(null, null, null, null, null)));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class ProfilesRestControllerTests {
     when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(profile);
 
-    ProfileResponse response = controller.updateProfile(1L, request);
+    ProfileResponse response = controller.update(request);
     assertEquals(profile.getName(), response.getName());
     assertEquals(profile.getBio(), response.getBio());
     assertEquals(profile.getIcon(), response.getIcon());
@@ -94,7 +94,7 @@ public class ProfilesRestControllerTests {
     when(service.update(anyLong(), any(), any(), any(), any(), any()))
         .thenReturn(updatedProfile);
 
-    ProfileResponse response = controller.updateProfile(1L, request);
+    ProfileResponse response = controller.update(request);
     assertEquals(name, response.getName());
     assertEquals(icon, response.getIcon());
     assertEquals(profile.getBio(), response.getBio());

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import studentscroll.api.auth.dto.AuthenticationRequest;
+import studentscroll.api.account.web.dto.AuthenticationRequest;
 
 @RequiredArgsConstructor
 public class ITestUtils {

@@ -4,9 +4,9 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.Message;
-import studentscroll.api.students.data.Student;
 
 @Data
 @RequiredArgsConstructor

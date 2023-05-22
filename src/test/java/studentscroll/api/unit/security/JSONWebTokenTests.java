@@ -7,9 +7,9 @@ import java.util.Date;
 import org.junit.jupiter.api.Test;
 
 import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.security.JSONWebToken;
 import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.data.Student;
 
 @SuppressWarnings("JavaUtilDate")
 public class JSONWebTokenTests {

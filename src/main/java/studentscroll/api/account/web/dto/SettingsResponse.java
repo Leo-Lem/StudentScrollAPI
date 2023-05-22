@@ -1,7 +1,8 @@
-package studentscroll.api.settings;
+package studentscroll.api.account.web.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import studentscroll.api.account.data.Settings;
 
 @Data
 @RequiredArgsConstructor

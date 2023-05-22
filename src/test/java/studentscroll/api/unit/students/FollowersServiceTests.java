@@ -11,6 +11,8 @@ import org.mockito.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.StudentRepository;
 import studentscroll.api.students.data.*;
 import studentscroll.api.students.services.FollowersService;
 

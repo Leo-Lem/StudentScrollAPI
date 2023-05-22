@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.val;
-import studentscroll.api.students.data.Student;
+import studentscroll.api.account.data.Student;
 
 public class TestUtils {
 

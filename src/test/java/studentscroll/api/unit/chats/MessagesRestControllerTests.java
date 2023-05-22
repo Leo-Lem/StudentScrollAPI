@@ -9,12 +9,12 @@ import org.mockito.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
+import studentscroll.api.account.data.Student;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.Message;
 import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.MessagesRestController;
 import studentscroll.api.chats.web.dto.CreateMessageRequest;
-import studentscroll.api.students.data.Student;
 
 public class MessagesRestControllerTests {
 

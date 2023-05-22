@@ -1,4 +1,4 @@
-package studentscroll.api.settings;
+package studentscroll.api.account.web;
 
 import java.util.*;
 
@@ -9,10 +9,13 @@ import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import studentscroll.api.account.services.SettingsService;
+import studentscroll.api.account.web.dto.SettingsResponse;
+import studentscroll.api.account.web.dto.UpdateSettingsRequest;
 
 @Tag(name = "Settings", description = "Everything related to your settings.")
 @RestController
-@RequestMapping("/settings")
+@RequestMapping("/account/settings")
 public class SettingsRestController {
 
   @Autowired

@@ -16,10 +16,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.auth.dto.AuthenticationRequest;
-import studentscroll.api.auth.dto.UpdateCredentialsRequest;
+import studentscroll.api.account.data.Student;
+import studentscroll.api.account.web.dto.AuthenticationRequest;
+import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
 import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.data.Student;
 import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
