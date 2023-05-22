@@ -34,29 +34,29 @@ public class FollowersService {
 
   public Long follow(
       @NonNull Student student,
-      @NonNull Long followerID) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
-    if (student.getId().equals(followerID))
+      @NonNull Long followId) throws EntityNotFoundException, EntityExistsException, IllegalArgumentException {
+    if (student.getId().equals(followId))
       throw new IllegalArgumentException("Student cannot follow themselves");
 
-    val follower = repo.findById(followerID).orElseThrow(EntityNotFoundException::new);
+    val follow = repo.findById(followId).orElseThrow(EntityNotFoundException::new);
 
-    if (student.getProfile().getFollowers().contains(follower))
+    if (student.getProfile().getFollows().contains(follow))
       throw new EntityExistsException();
 
-    student.getProfile().getFollowers().add(follower);
+    student.getProfile().getFollows().add(follow);
     repo.save(student);
-    return followerID;
+    return followId;
   }
 
   public void unfollow(
       @NonNull Student student,
-      @NonNull Long followerID) throws EntityNotFoundException {
-    val follower = repo.findById(followerID).orElseThrow(EntityNotFoundException::new);
+      @NonNull Long followId) throws EntityNotFoundException {
+    val follow = repo.findById(followId).orElseThrow(EntityNotFoundException::new);
 
-    if (!student.getProfile().getFollowers().contains(follower))
+    if (!student.getProfile().getFollows().contains(follow))
       throw new EntityNotFoundException();
 
-    student.getProfile().getFollowers().remove(follower);
+    student.getProfile().getFollows().remove(follow);
     repo.save(student);
   }
 

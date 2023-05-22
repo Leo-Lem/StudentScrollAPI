@@ -29,8 +29,8 @@ import lombok.val;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.account.services.StudentService;
 import studentscroll.api.account.web.AccountRestController;
-import studentscroll.api.account.web.dto.AuthenticationRequest;
 import studentscroll.api.account.web.dto.AccountResponse;
+import studentscroll.api.account.web.dto.AuthenticationRequest;
 import studentscroll.api.account.web.dto.UpdateCredentialsRequest;
 import studentscroll.api.security.StudentDetailsService;
 import studentscroll.api.students.data.Profile;
@@ -111,7 +111,7 @@ public class AccountRestControllerTests {
   }
 
   @Test
-  public void givenIsAuthenticated_whenUpdating_thenReturnsUpdated() {
+  public void givenIsAuthenticated_whenUpdating_thenReturnsUpdated() throws Exception {
     String currentEmail = "123@456.com", currentPassword = "1234", newEmail = "new@e.mail";
 
     val student = new Student()

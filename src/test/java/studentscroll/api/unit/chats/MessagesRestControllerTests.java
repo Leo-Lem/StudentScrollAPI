@@ -14,7 +14,6 @@ import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.Message;
 import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.MessagesRestController;
-import studentscroll.api.chats.web.dto.CreateMessageRequest;
 
 public class MessagesRestControllerTests {
 
@@ -30,19 +29,20 @@ public class MessagesRestControllerTests {
   }
 
   @Test
-  public void givenChatAndSenderExists_whenCreatingMessage_thenReturnsMessageResponse() {
+  public void givenChatAndSenderExists_whenCreatingMessage_thenReturnsMessageResponse() throws Exception {
     val chatId = 1L;
-    val request = new CreateMessageRequest("Hello, world!", 1L);
+    val student = new Student();
+    val content = "Hello, world!";
 
-    when(service.create(request.getContent(), request.getSenderId(), chatId))
+    when(service.create(student, content, chatId))
         .thenReturn(
-            new Message(request.getContent())
+            new Message(content)
                 .setSender(new Student().setId(1L))
                 .setChat(new Chat().setId(1L)));
 
-    val response = controller.create(chatId, request, mock(HttpServletResponse.class));
+    val response = controller.create(chatId, content, mock(HttpServletResponse.class));
 
-    assertEquals(response.getContent(), request.getContent());
+    assertEquals(response.getContent(), content);
   }
 
   @Test

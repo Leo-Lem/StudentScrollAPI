@@ -38,9 +38,7 @@ public class SettingsServiceTests {
   public void givenIsAuthenticated_whenReadingSettings_thenReturnsCorrectSettings() {
     Student student = exampleStudent().setSettings(exampleSettings());
 
-    TestUtils.authenticate(student);
-
-    Settings Settings = service.read();
+    Settings Settings = service.read(student);
 
     assertEquals(student.getSettings(), Settings);
   }
@@ -55,6 +53,7 @@ public class SettingsServiceTests {
         .thenAnswer(i -> i.getArguments()[0]);
 
     Settings newSettings = service.update(
+        student,
         Optional.of("DARK"),
         Optional.empty());
 

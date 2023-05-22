@@ -28,7 +28,6 @@ import lombok.val;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.chats.services.ChatService;
 import studentscroll.api.chats.web.dto.ChatResponse;
-import studentscroll.api.shared.ForbiddenException;
 import studentscroll.api.shared.NotAuthenticatedException;
 
 @Tag(name = "Chats", description = "Everything related to chats.")
@@ -39,7 +38,7 @@ public class ChatsRestController {
   @Autowired
   private ChatService service;
 
-  @Operation(summary = "Create a new chat.")
+  @Operation(summary = "Create a new chat.", description = "The current student is automatically added to the chat.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Created the chat."),
       @ApiResponse(responseCode = "404", description = "A participant does not exist.", content = @Content) })
@@ -61,8 +60,8 @@ public class ChatsRestController {
       @ApiResponse(responseCode = "404", description = "Chat does not exist.", content = @Content) })
   @GetMapping("/{chatId}")
   public ChatResponse read(@PathVariable Long chatId)
-      throws EntityNotFoundException, ForbiddenException, NotAuthenticatedException {
-    return new ChatResponse(service.read(getCurrentStudent().getId(), chatId));
+      throws EntityNotFoundException {
+    return new ChatResponse(service.read(chatId));
   }
 
   @Operation(summary = "Find your chats.")
@@ -80,8 +79,8 @@ public class ChatsRestController {
   @DeleteMapping("/{chatId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(
-      @PathVariable Long chatId) throws EntityNotFoundException, ForbiddenException, NotAuthenticatedException {
-    service.delete(getCurrentStudent().getId(), chatId);
+      @PathVariable Long chatId) throws EntityNotFoundException {
+    service.delete(chatId);
   }
 
   private Student getCurrentStudent() throws NotAuthenticatedException {

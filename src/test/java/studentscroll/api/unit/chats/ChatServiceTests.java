@@ -45,7 +45,7 @@ public class ChatServiceTests {
 
   @Test
   public void givenParticipantsExist_whenCreatingChat_thenReturnsChat() {
-    val participants = Set.of(1L, 2L, 3L);
+    val participants = Set.of(2L, 3L);
 
     when(studentRepo.findById(anyLong()))
         .thenReturn(Optional.of(new Student()));
@@ -53,21 +53,21 @@ public class ChatServiceTests {
     when(repo.save(any(Chat.class)))
         .thenAnswer((i) -> i.getArgument(0));
 
-    Chat chat = service.create(participants);
+    Chat chat = service.create(1L, participants);
 
     assertNotNull(chat);
   }
 
   @Test
   public void givenParticipantsDontExist_whenCreatingChat_thenThrowEntityNotFoundException() {
-    val participants = Set.of(1L, 2L, 3L);
+    val participants = Set.of(2L, 3L);
 
     when(studentRepo.findById(anyLong()))
         .thenReturn(Optional.empty());
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create(participants));
+        () -> service.create(1L, participants));
   }
 
   @Test
@@ -125,7 +125,7 @@ public class ChatServiceTests {
     when(repo.findByParticipantsId(anyLong()))
         .thenReturn(List.of(chat));
 
-    List<Chat> chats = service.readByParticipantId(1L);
+    List<Chat> chats = service.readByStudentId(1L);
 
     assertEquals(chat, chats.get(0));
   }
@@ -137,7 +137,7 @@ public class ChatServiceTests {
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.readByParticipantId(1L));
+        () -> service.readByStudentId(1L));
   }
 
 }

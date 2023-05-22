@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.chats.web.dto.CreateMessageRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -58,7 +57,7 @@ public class CRUDMessageITest {
     return mockMVC.perform(
         post("/chats/" + chatId + "/messages")
             .contentType("application/json")
-            .content(objectMapper.writeValueAsString(new CreateMessageRequest("some message", senderId))));
+            .content(objectMapper.writeValueAsString("some message")));
   }
 
   private ResultActions getMessage(Long chatId, Long messageId) throws Exception {

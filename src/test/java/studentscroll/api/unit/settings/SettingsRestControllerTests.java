@@ -1,7 +1,6 @@
 package studentscroll.api.unit.settings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -32,23 +31,13 @@ public class SettingsRestControllerTests {
   }
 
   @Test
-  public void givenIsAuthenticated_whenGettingSettings_thenReturnsSettings() {
-    val settings = exampleSettings();
-
-    when(service.read())
-        .thenReturn(settings);
-
-    assertNotNull(controller.read());
-  }
-
-  @Test
-  public void givenIsAuthenticated_whenUpdatingSettings_thenReturnsUpdatedSettings() {
+  public void givenIsAuthenticated_whenUpdatingSettings_thenReturnsUpdatedSettings() throws Exception {
     val settings = exampleSettings();
     val request = new UpdateSettingsRequest(
         settings.getTheme(),
         settings.getLocale());
 
-    when(service.update(any(), any()))
+    when(service.update(any(), any(), any()))
         .thenReturn(settings);
 
     SettingsResponse response = controller.update(request);

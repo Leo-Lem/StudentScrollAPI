@@ -39,14 +39,10 @@ public class ChatService {
     return repo.save(chat);
   }
 
-  public Chat read(
-      @NonNull Long studentId,
-      @NonNull Long id) throws EntityNotFoundException {
-    val chat = repo
+  public Chat read(@NonNull Long id) throws EntityNotFoundException {
+    return repo
         .findById(id)
         .orElseThrow(EntityNotFoundException::new);
-
-    return chat;
   }
 
   public List<Chat> readByStudentId(
@@ -54,10 +50,8 @@ public class ChatService {
     return repo.findByParticipantsId(studentId);
   }
 
-  public void delete(
-      @NonNull Long studentId,
-      @NonNull Long id) throws EntityNotFoundException {
-    read(studentId, id);
+  public void delete(@NonNull Long id) throws EntityNotFoundException {
+    read(id);
 
     repo.deleteById(id);
   }

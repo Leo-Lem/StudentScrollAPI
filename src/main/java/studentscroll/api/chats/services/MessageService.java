@@ -34,27 +34,22 @@ public class MessageService {
     return repo.save(message);
   }
 
-  public Message read(
-      @NonNull Long studentId,
-      @NonNull Long id) throws EntityNotFoundException {
+  public Message read(@NonNull Long id) throws EntityNotFoundException {
     return repo
         .findById(id)
         .orElseThrow(() -> new EntityNotFoundException());
   }
 
   public Message update(
-      @NonNull Long studentId,
       @NonNull Long id,
       @NonNull String newContent) throws EntityNotFoundException {
-    Message message = read(studentId, id);
+    Message message = read(id);
     message.setContent(newContent);
     return repo.save(message);
   }
 
-  public void delete(
-      @NonNull Long studentId,
-      @NonNull Long id) throws EntityNotFoundException {
-    Message message = read(studentId, id);
+  public void delete(@NonNull Long id) throws EntityNotFoundException {
+    Message message = read(id);
     chatRepo.save(message.getChat().removeMessage(message));
   }
 

@@ -15,6 +15,7 @@ import lombok.val;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.services.ChatService;
 import studentscroll.api.chats.web.ChatsRestController;
+import studentscroll.api.shared.NotAuthenticatedException;
 
 public class ChatsRestControllerTests {
 
@@ -30,10 +31,10 @@ public class ChatsRestControllerTests {
   }
 
   @Test
-  public void givenParticipantsExist_whenCreatingChat_thenReturnsChatResponse() {
-    val participantIds = Set.of(1L, 2L, 3L);
+  public void givenParticipantsExist_whenCreatingChat_thenReturnsChatResponse() throws NotAuthenticatedException {
+    val participantIds = Set.of(2L, 3L);
 
-    when(service.create(participantIds)).thenReturn(new Chat());
+    when(service.create(1L, participantIds)).thenReturn(new Chat());
 
     val response = controller.create(participantIds, mock(HttpServletResponse.class));
 
@@ -52,13 +53,14 @@ public class ChatsRestControllerTests {
   }
 
   @Test
-  public void givenParticipantExists_whenReadingByParticipantId_thenReturnsChatResponses() {
+  public void givenParticipantExists_whenReadingByParticipantId_thenReturnsChatResponses()
+      throws NotAuthenticatedException {
     val participantId = 1L;
     val chats = List.of(new Chat(), new Chat());
 
-    when(service.readByParticipantId(participantId)).thenReturn(chats);
+    when(service.readByStudentId(participantId)).thenReturn(chats);
 
-    val response = controller.readByParticipantId(participantId);
+    val response = controller.readAll();
 
     assertEquals(2, response.size());
   }

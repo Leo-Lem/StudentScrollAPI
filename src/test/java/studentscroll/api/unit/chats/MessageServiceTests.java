@@ -54,7 +54,7 @@ public class MessageServiceTests {
     when(repo.save(any(Message.class)))
         .thenAnswer((i) -> i.getArgument(0));
 
-    Message message = service.create("content", 1L, 1L);
+    Message message = service.create(new Student(), "content",  1L);
 
     assertNotNull(message);
   }
@@ -69,7 +69,7 @@ public class MessageServiceTests {
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create("content", 1L, 1L));
+        () -> service.create(new Student(), "content", 1L));
   }
 
   @Test
@@ -79,7 +79,7 @@ public class MessageServiceTests {
 
     assertThrows(
         EntityNotFoundException.class,
-        () -> service.create("content", 1L, 1L));
+        () -> service.create(new Student(), "content", 1L));
   }
 
   @Test
