@@ -25,7 +25,7 @@ import studentscroll.api.utils.TestUtils;
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class AuthenticationITest {
+public class AccountITest {
 
   @Autowired
   private MockMvc mockMVC;
@@ -53,7 +53,7 @@ public class AuthenticationITest {
   private ResultActions signUp() throws Exception {
     val request = new AuthenticationRequest("John Wayne", email, password);
     return mockMVC.perform(
-        post("/authentication")
+        post("/account")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }
@@ -62,7 +62,7 @@ public class AuthenticationITest {
     val request = new AuthenticationRequest(null, email, password);
 
     return mockMVC.perform(
-        post("/authentication")
+        post("/account")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }
@@ -70,14 +70,14 @@ public class AuthenticationITest {
   private ResultActions updateStudent() throws Exception {
     val request = new UpdateCredentialsRequest(email, password, "xyz@abc.com", null);
     return mockMVC.perform(
-        put("/authentication")
+        put("/account")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(request)));
   }
 
   private ResultActions deleteStudent() throws Exception {
     return mockMVC.perform(
-        delete("/authentication"));
+        delete("/account"));
   }
 
 }

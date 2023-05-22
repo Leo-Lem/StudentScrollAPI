@@ -1,7 +1,11 @@
 package studentscroll.api.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Set;
 
@@ -16,11 +20,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
+import studentscroll.api.utils.ITestUtils;
+import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class CRUDMessageITest {
+public class MessageITest {
 
   @Autowired
   private MockMvc mockMVC;
@@ -28,32 +34,34 @@ public class CRUDMessageITest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  // @Test
-  // public void test() throws Exception {
-  // val participantIds = createStudents();
-  // val chatId = createChat(participantIds);
+  @Autowired
+  private ITestUtils utils;
 
-  // sendMessage(chatId, 0L).andExpect(status().isNotFound());
-  // sendMessage(0L,
-  // participantIds.iterator().next()).andExpect(status().isNotFound());
+  @Test
+  public void test() throws Exception {
+    TestUtils.authenticate(TestUtils.getStudent(1L));
 
-  // val senderId = participantIds.iterator().next();
-  // val messageId = objectMapper.readTree(
-  // sendMessage(chatId, senderId)
-  // .andExpect(status().isCreated())
-  // .andReturn().getResponse().getContentAsString())
-  // .get("id").asLong();
+    val participantIds = utils.createStudents(3);
+    val chatId = createChat(participantIds);
 
-  // getMessage(chatId,
-  // messageId).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(messageId));
+    sendMessage(0L).andExpect(status().isNotFound());
 
-  // updateMessage(chatId, messageId).andExpect(status().isOk());
+    val messageId = objectMapper.readTree(
+        sendMessage(chatId)
+            .andExpect(status().isCreated())
+            .andReturn().getResponse().getContentAsString())
+        .get("id").asLong();
 
-  // deleteMessage(chatId, messageId).andExpect(status().isNoContent());
-  // deleteMessage(chatId, messageId).andExpect(status().isNotFound());
-  // }
+    getMessage(chatId,
+        messageId).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(messageId));
 
-  private ResultActions sendMessage(Long chatId, Long senderId) throws Exception {
+    updateMessage(chatId, messageId).andExpect(status().isOk());
+
+    deleteMessage(chatId, messageId).andExpect(status().isNoContent());
+    deleteMessage(chatId, messageId).andExpect(status().isNotFound());
+  }
+
+  private ResultActions sendMessage(Long chatId) throws Exception {
     return mockMVC.perform(
         post("/chats/" + chatId + "/messages")
             .contentType("application/json")

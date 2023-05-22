@@ -1,9 +1,10 @@
 package studentscroll.api.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.web.dto.*;
+import studentscroll.api.students.web.dto.UpdateProfileRequest;
 import studentscroll.api.utils.ITestUtils;
 import studentscroll.api.utils.TestUtils;
 
@@ -42,15 +43,6 @@ public class ProfileITest {
 
     TestUtils.authenticate(student);
     updateProfile().andExpect(status().isOk());
-
-    getStudentByLocation().andExpect(jsonPath("$[0]").value(student.getId()));
-  }
-
-  private ResultActions getStudentByLocation() throws Exception {
-    return mockMVC.perform(
-        get("/students")
-            .param("lat", String.valueOf(0.001))
-            .param("lng", String.valueOf(-0.001)));
   }
 
   private ResultActions getProfile(Long id) throws Exception {

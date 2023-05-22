@@ -23,11 +23,13 @@ import lombok.val;
 import studentscroll.api.posts.web.dto.CreatePostRequest;
 import studentscroll.api.posts.web.dto.UpdatePostRequest;
 import studentscroll.api.shared.StudentLocation;
+import studentscroll.api.utils.ITestUtils;
+import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class CRUDPostITest {
+public class PostITest {
 
   @Autowired
   private MockMvc mockMVC;
@@ -35,39 +37,43 @@ public class CRUDPostITest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  // @Test
-  // public void test() throws Exception {
-  // Long studentId = createStudent("abc");
+  @Autowired
+  private ITestUtils utils;
 
-  // Long contentPostId = 1L, eventPostId = 2L;
+  @Test
+  public void test() throws Exception {
+    Long studentId = utils.createStudent();
+    TestUtils.authenticate(TestUtils.getStudent(studentId));
 
-  // getPost(contentPostId).andExpect(status().isNotFound());
-  // updateContentPost(contentPostId).andExpect(status().isNotFound());
-  // deletePost(contentPostId).andExpect(status().isNotFound());
+    Long contentPostId = 1L, eventPostId = 2L;
 
-  // createContentPost(studentId)
-  // .andExpect(status().isCreated())
-  // .andExpect(jsonPath("$.id").value(contentPostId));
+    getPost(contentPostId).andExpect(status().isNotFound());
+    updateContentPost(contentPostId).andExpect(status().isNotFound());
+    deletePost(contentPostId).andExpect(status().isNotFound());
 
-  // createEventPost(studentId)
-  // .andExpect(status().isCreated())
-  // .andExpect(jsonPath("$.id").value(eventPostId));
+    createContentPost(studentId)
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value(contentPostId));
 
-  // createInvalidPost(studentId)
-  // .andExpect(status().isBadRequest());
+    createEventPost(studentId)
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value(eventPostId));
 
-  // getPost(contentPostId).andExpect(status().isOk());
-  // updateContentPost(contentPostId).andExpect(status().isOk());
+    createInvalidPost(studentId)
+        .andExpect(status().isBadRequest());
 
-  // getPost(eventPostId).andExpect(status().isOk());
-  // updateEventPost(eventPostId).andExpect(status().isOk());
+    getPost(contentPostId).andExpect(status().isOk());
+    updateContentPost(contentPostId).andExpect(status().isOk());
 
-  // deletePost(contentPostId).andExpect(status().isNoContent());
-  // deletePost(contentPostId).andExpect(status().isNotFound());
+    getPost(eventPostId).andExpect(status().isOk());
+    updateEventPost(eventPostId).andExpect(status().isOk());
 
-  // deletePost(eventPostId).andExpect(status().isNoContent());
-  // deletePost(eventPostId).andExpect(status().isNotFound());
-  // }
+    deletePost(contentPostId).andExpect(status().isNoContent());
+    deletePost(contentPostId).andExpect(status().isNotFound());
+
+    deletePost(eventPostId).andExpect(status().isNoContent());
+    deletePost(eventPostId).andExpect(status().isNotFound());
+  }
 
   private ResultActions createContentPost(Long posterId) throws Exception {
     val request = new CreatePostRequest(

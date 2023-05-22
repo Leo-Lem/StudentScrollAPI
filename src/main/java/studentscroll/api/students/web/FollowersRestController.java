@@ -41,8 +41,7 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @GetMapping("/followers")
   @ResponseStatus(HttpStatus.OK)
-  public Set<Long> readAllFollowers(
-      @PathVariable Long studentId) throws EntityNotFoundException {
+  public Set<Long> readAllFollowers(@PathVariable Long studentId) throws EntityNotFoundException {
     return service.readFollowers(studentId);
   }
 
@@ -53,8 +52,7 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @GetMapping("/follows")
   @ResponseStatus(HttpStatus.OK)
-  public Set<Long> readAllFollows(
-      @PathVariable Long studentId) throws EntityNotFoundException {
+  public Set<Long> readAllFollows(@PathVariable Long studentId) throws EntityNotFoundException {
     return service.readFollows(studentId);
   }
 
@@ -68,8 +66,7 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @PostMapping("/followers")
   @ResponseStatus(HttpStatus.CREATED)
-  public Long follow(
-      @PathVariable Long studentId)
+  public Long follow(@PathVariable Long studentId)
       throws EntityNotFoundException, EntityExistsException, IllegalArgumentException, NotAuthenticatedException {
     return service.follow(getCurrentStudent(), studentId);
   }
@@ -81,8 +78,7 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @DeleteMapping("/followers")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void unfollow(
-      @PathVariable Long studentId) throws EntityNotFoundException, NotAuthenticatedException {
+  public void unfollow(@PathVariable Long studentId) throws EntityNotFoundException, NotAuthenticatedException {
     service.unfollow(getCurrentStudent(), studentId);
   }
 

@@ -16,11 +16,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
+import studentscroll.api.utils.ITestUtils;
+import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class CRDChatITest {
+public class ChatITest {
 
   @Autowired
   private MockMvc mockMVC;
@@ -28,29 +30,34 @@ public class CRDChatITest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  // @Test
-  // public void test() throws Exception {
-  // createChat(Set.of(0L)).andExpect(status().isNotFound());
+  @Autowired
+  private ITestUtils utils;
 
-  // val participantIds = createStudents();
+  @Test
+  public void test() throws Exception {
+    TestUtils.authenticate(TestUtils.getStudent(1L));
 
-  // val chatId = objectMapper.readTree(
-  // createChat(participantIds)
-  // .andExpect(status().isCreated())
-  // .andReturn().getResponse().getContentAsString())
-  // .get("id").asLong();
+    createChat(Set.of(0L)).andExpect(status().isNotFound());
 
-  // getChat(chatId)
-  // .andExpect(status().isOk())
-  // .andExpect(jsonPath("$.id").value(chatId));
+    val participantIds = utils.createStudents(3);
 
-  // getChat(0L).andExpect(status().isNotFound());
+    val chatId = objectMapper.readTree(
+        createChat(participantIds)
+            .andExpect(status().isCreated())
+            .andReturn().getResponse().getContentAsString())
+        .get("id").asLong();
 
-  // getChats(1L).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value(chatId));
+    getChat(chatId)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(chatId));
 
-  // deleteChat(chatId).andExpect(status().isNoContent());
-  // deleteChat(chatId).andExpect(status().isNotFound());
-  // }
+    getChat(0L).andExpect(status().isNotFound());
+
+    getChats(1L).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value(chatId));
+
+    deleteChat(chatId).andExpect(status().isNoContent());
+    deleteChat(chatId).andExpect(status().isNotFound());
+  }
 
   private ResultActions createChat(Set<Long> participantIds) throws Exception {
     return mockMVC.perform(
