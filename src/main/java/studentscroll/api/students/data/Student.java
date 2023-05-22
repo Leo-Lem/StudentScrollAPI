@@ -12,6 +12,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.posts.data.Post;
+import studentscroll.api.settings.Settings;
 
 @Entity(name = "student")
 @Data

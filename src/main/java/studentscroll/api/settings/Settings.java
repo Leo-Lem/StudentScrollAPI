@@ -1,4 +1,4 @@
-package studentscroll.api.students.data;
+package studentscroll.api.settings;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
-import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Student;
 import studentscroll.api.students.services.ProfileService;
 import studentscroll.api.students.web.dto.*;
 

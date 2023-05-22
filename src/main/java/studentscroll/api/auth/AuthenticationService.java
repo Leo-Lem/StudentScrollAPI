@@ -35,7 +35,7 @@ public class AuthenticationService {
 
   public Student readCurrent() throws IllegalStateException {
     val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    System.out.println(student);
+
     if (student == null)
       throw new IllegalStateException("Not authenticated.");
     return student;

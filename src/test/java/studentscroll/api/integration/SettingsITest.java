@@ -15,15 +15,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.val;
-import studentscroll.api.students.data.Settings;
+import studentscroll.api.settings.Settings;
+import studentscroll.api.settings.UpdateSettingsRequest;
 import studentscroll.api.students.data.Student;
-import studentscroll.api.students.web.dto.UpdateSettingsRequest;
 import studentscroll.api.utils.TestUtils;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @DirtiesContext
-public class RUSettingsITest {
+public class SettingsITest {
 
   @Autowired
   private MockMvc mockMVC;
