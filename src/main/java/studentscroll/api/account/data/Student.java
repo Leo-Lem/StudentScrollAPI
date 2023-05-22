@@ -36,7 +36,8 @@ public class Student implements UserDetails {
   @Column(name = "registeredOn")
   private LocalDate registeredOn = LocalDate.now();
 
-  @Embedded
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @PrimaryKeyJoinColumn
   @NonNull
   private Profile profile;
 

@@ -22,6 +22,7 @@ import studentscroll.api.account.data.Student;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
+import studentscroll.api.shared.NotAuthenticatedException;
 
 @Tag(name = "Posts", description = "Everything related to posts.")
 @SecurityRequirement(name = "token")
@@ -40,12 +41,8 @@ public class PostsRestController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public PostResponse create(
-      @RequestBody CreatePostRequest request, HttpServletResponse response) {
-    val principal = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (!request.getPosterId().equals(principal.getId()))
-      throw new IllegalArgumentException("Poster id needs to match currently authenticated student's id.");
-
+      @RequestBody CreatePostRequest request, HttpServletResponse response) throws NotAuthenticatedException {
+    val posterId = getCurrentStudent().getId();
     val type = request.getType();
 
     if (type == null)
@@ -55,7 +52,7 @@ public class PostsRestController {
 
     if (type.equals(EventPost.class))
       postResponse = new PostResponse(service.create(
-          request.getPosterId(),
+          posterId,
           request.getTitle(),
           Set.of(request.getTags()),
           request.getDescription(),
@@ -63,7 +60,7 @@ public class PostsRestController {
           request.getLocation()));
     else
       postResponse = new PostResponse(service.create(
-          request.getPosterId(),
+          posterId,
           request.getTitle(),
           Set.of(request.getTags()),
           request.getContent()));
@@ -147,6 +144,15 @@ public class PostsRestController {
   public void delete(
       @PathVariable Long postId) throws EntityNotFoundException {
     service.delete(postId);
+  }
+
+  private Student getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (student == null)
+      throw new NotAuthenticatedException("You are not logged in.");
+
+    return student;
   }
 
 }

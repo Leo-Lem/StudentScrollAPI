@@ -1,7 +1,5 @@
 package studentscroll.api.account.web.dto;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 

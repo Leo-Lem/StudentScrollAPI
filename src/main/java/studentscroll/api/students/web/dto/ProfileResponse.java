@@ -8,6 +8,7 @@ import studentscroll.api.students.data.Profile;
 @RequiredArgsConstructor
 public class ProfileResponse {
 
+  private final Long studentId;
   private final String name;
   private final String bio;
   private final String icon;
@@ -16,6 +17,7 @@ public class ProfileResponse {
 
   public ProfileResponse(Profile profile) {
     this(
+        profile.getStudent().getId(),
         profile.getName(),
         profile.getBio(),
         profile.getIcon(),

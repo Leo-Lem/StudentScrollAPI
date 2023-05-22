@@ -15,11 +15,14 @@ import studentscroll.api.students.data.*;
 public class ProfileService {
 
   @Autowired
-  private StudentRepository repo;
+  private ProfileRepository repo;
+
+  @Autowired
+  private StudentRepository studentRepo;
 
   public Profile read(
       @NonNull Long studentID) throws EntityNotFoundException {
-    return repo
+    return studentRepo
         .findById(studentID)
         .orElseThrow(EntityNotFoundException::new)
         .getProfile();
@@ -40,10 +43,10 @@ public class ProfileService {
     newLocation.ifPresent(unwrapped -> profile.setLocation(Optional.of(unwrapped)));
     student.setProfile(profile);
 
-    return repo.save(student).getProfile();
+    return studentRepo.save(student).getProfile();
   }
 
-  public Set<Profile> readAllNearLocation(StudentLocation location) {
+  public List<Profile> readAllNearLocation(StudentLocation location) {
     double radiusInKm = 10.0; // Fixed radius of 10km
 
     double latitudeRange = radiusInKm * 0.009; // Roughly 1km in latitude
@@ -54,15 +57,19 @@ public class ProfileService {
     double minLongitude = location.getLongitude() - longitudeRange;
     double maxLongitude = location.getLongitude() + longitudeRange;
 
-    return repo.findStudentsNearLocation(minLatitude, maxLatitude, minLongitude, maxLongitude);
+    return repo.findNearLocation(minLatitude, maxLatitude, minLongitude, maxLongitude);
   }
 
-  public Set<Profile> readByName(@NonNull String name) {
-    return repo.findByProfileName(name);
+  public List<Profile> readByName(@NonNull String name) {
+    return repo.findByName(name);
   }
 
-  public Set<Student> readByInterests(@NonNull Set<String> interests) {
-    return repo.findByProfileInterestsIn(interests);
+  public List<Profile> readByInterests(@NonNull Set<String> interests) {
+    return repo.findByInterestsIn(interests);
+  }
+
+  public List<Profile> readAll() {
+    return repo.findAll();
   }
 
 }

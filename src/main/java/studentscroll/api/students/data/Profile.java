@@ -7,12 +7,14 @@ import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,13 +24,16 @@ import lombok.experimental.Accessors;
 import studentscroll.api.account.data.Student;
 import studentscroll.api.shared.StudentLocation;
 
-@Embeddable
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Profile {
+
+  @Id
+  @Column(name = "student_id")
+  private Long studentId;
 
   @Column(name = "name")
   @NonNull
@@ -42,6 +47,11 @@ public class Profile {
 
   @Column(name = "interests")
   private Set<String> interests = new HashSet<>();
+
+  @MapsId
+  @OneToOne(mappedBy = "profile", fetch = FetchType.EAGER)
+  @JoinColumn(name = "student_id")
+  private Student student;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))

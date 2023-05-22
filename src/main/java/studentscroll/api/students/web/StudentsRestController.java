@@ -58,17 +58,18 @@ public class StudentsRestController {
       @RequestParam Optional<Set<String>> interests,
       @RequestParam Optional<Double> lat,
       @RequestParam Optional<Double> lng) {
-      List<Profile> students; 
-      if (name.isPresent())
-        students = service.readByName(name.get());
-      else if (interests.isPresent())
-        return service.readByInterests(interests.get());
-      else if (lat.isPresent() && lng.isPresent())
-        students = service.readAllNearLocation(new StudentLocation(lat.get(), lng.get()));
-      else
-        students = service.readAll();
+    List<Profile> profiles;
 
+    if (name.isPresent())
+      profiles = service.readByName(name.get());
+    else if (interests.isPresent())
+      profiles = service.readByInterests(interests.get());
+    else if (lat.isPresent() && lng.isPresent())
+      profiles = service.readAllNearLocation(new StudentLocation(lat.get(), lng.get()));
+    else
+      profiles = service.readAll();
 
+    return profiles.stream().map(ProfileResponse::new).toList();
   }
 
   @Operation(summary = "Update your profile.")
