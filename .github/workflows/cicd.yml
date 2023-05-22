@@ -94,4 +94,4 @@ jobs:
       - name: Deploy to server
         run: |
           scp /home/runner/work/StudentScrollAPI/StudentScrollAPI/api*.jar StudentScroll:/home/ubuntu/studentscroll/api/api-v2.jar
-          ssh StudentScroll 'sudo systemctl restart studentscrollapi'
+          ssh StudentScroll 'sudo systemctl restart studentscrollapi-v2'
