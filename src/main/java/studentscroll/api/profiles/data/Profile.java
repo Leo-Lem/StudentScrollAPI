@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,6 +48,7 @@ public class Profile {
   @Column(name = "icon")
   private String icon = "default";
 
+  @ElementCollection
   @Column(name = "interests")
   private List<String> interests = new ArrayList<>();
 

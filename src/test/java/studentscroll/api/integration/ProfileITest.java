@@ -41,6 +41,7 @@ public class ProfileITest {
   public void test() throws Exception {
     val studentId = utils.createStudent();
     val student = TestUtils.getStudent(studentId);
+    student.getProfile().setInterests(List.of("PIRATE"));
 
     getProfile(studentId).andExpect(status().isOk());
 
@@ -50,10 +51,6 @@ public class ProfileITest {
     getProfilesByName("Raoul")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].studentId").value(studentId));
-
-    val interests = List.of("PIRATE", "SWORD_FIGHTING");
-    student.getProfile().setInterests(interests);
-    TestUtils.authenticate(student);
 
     getProfilesByInterest("PIRATE")
         .andExpect(status().isOk())
