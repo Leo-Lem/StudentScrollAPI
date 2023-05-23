@@ -2,10 +2,8 @@ package studentscroll.api.profiles.data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -19,14 +17,16 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import studentscroll.api.account.data.Account;
 import studentscroll.api.shared.StudentLocation;
 
-@Entity(name = "student_profile")
+@Entity(name = "profile")
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -35,8 +35,7 @@ import studentscroll.api.shared.StudentLocation;
 public class Profile {
 
   @Id
-  @Column(name = "account_id")
-  private Long accountId;
+  private Long id;
 
   @Column(name = "name")
   @NonNull
@@ -49,23 +48,26 @@ public class Profile {
   private String icon = "default";
 
   @Column(name = "interests")
-  private Set<String> interests = new HashSet<>();
+  private List<String> interests = new ArrayList<>();
 
   @Column(name = "registeredOn")
   private final LocalDateTime registeredOn = LocalDateTime.now();
 
   @MapsId
-  @OneToOne
-  @JoinColumn(name = "account_id")
+  @OneToOne(fetch = FetchType.EAGER)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private Account account;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
-  private List<Account> followers = new ArrayList<>();
+  @JoinTable(name = "profile_follows", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "follow_id"))
+  @ToString.Exclude
+  private List<Profile> followers = new ArrayList<>();
 
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "student_followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-  private List<Account> follows = new ArrayList<>();
+  @JoinTable(name = "profile_follows", joinColumns = @JoinColumn(name = "follow_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+  @ToString.Exclude
+  private List<Profile> follows = new ArrayList<>();
 
   @Embedded
   private StudentLocation location;
@@ -79,8 +81,15 @@ public class Profile {
     return this;
   }
 
-  public Profile addFollower(Account follower) {
-    followers.add(follower);
+  public Profile addFollow(Profile follow) {
+    follows.add(follow);
+    follow.followers.add(follow);
+    return this;
+  }
+
+  public Profile removeFollow(Profile follow) {
+    follows.remove(follow);
+    follow.followers.remove(this);
     return this;
   }
 

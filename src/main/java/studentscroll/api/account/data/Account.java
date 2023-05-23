@@ -32,7 +32,7 @@ public class Account implements UserDetails {
   @NonNull
   private String password;
 
-  @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   @PrimaryKeyJoinColumn
   private Profile profile;
 

@@ -88,7 +88,7 @@ public class PostsRestController {
       @RequestParam Optional<Integer> page,
       @RequestParam Optional<Integer> size,
       @RequestParam Optional<List<String>> sort,
-      @RequestParam Optional<Boolean> sortAscending) {
+      @RequestParam Optional<Boolean> sortAscending) throws NotAuthenticatedException {
 
     val pageable = service.createPageable(page, size, sort, sortAscending);
 
@@ -97,7 +97,7 @@ public class PostsRestController {
     if (posterIds.isPresent())
       posts = service.readAllByPosterIds(posterIds.get(), pageable);
     else
-      posts = service.readAll(pageable);
+      posts = service.readAll(getCurrentStudent().getProfile(), pageable);
 
     response.setHeader("X-Total-Count", String.valueOf(posts.getTotalElements()));
 

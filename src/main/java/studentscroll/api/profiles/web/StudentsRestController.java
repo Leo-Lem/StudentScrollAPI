@@ -2,7 +2,6 @@ package studentscroll.api.profiles.web;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,13 +48,13 @@ public class StudentsRestController {
     return new ProfileResponse(service.read(studentId));
   }
 
-  @Operation(summary = "Find students.")
+  @Operation(summary = "Find students matching query.")
   @ApiResponse(responseCode = "200", description = "Found the students.")
   @SecurityRequirement(name = "token")
   @GetMapping
   public List<ProfileResponse> readAll(
       @RequestParam Optional<String> name,
-      @RequestParam Optional<Set<String>> interests,
+      @RequestParam Optional<List<String>> interests,
       @RequestParam Optional<Double> lat,
       @RequestParam Optional<Double> lng) {
     List<Profile> profiles;
@@ -79,11 +78,11 @@ public class StudentsRestController {
   public ProfileResponse update(
       @RequestBody UpdateProfileRequest request) throws NotAuthenticatedException {
     return new ProfileResponse(service.update(
-        getCurrentStudent(),
+        getCurrentStudent().getProfile(),
         Optional.ofNullable(request.getNewName()),
         Optional.ofNullable(request.getNewBio()),
         Optional.ofNullable(request.getNewIcon()),
-        Optional.ofNullable(request.getNewInterests()).map(Set::of),
+        Optional.ofNullable(request.getNewInterests()).map(List::of),
         Optional.ofNullable(request.getNewLocation())));
   }
 

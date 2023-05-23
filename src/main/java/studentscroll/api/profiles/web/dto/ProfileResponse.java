@@ -17,7 +17,7 @@ public class ProfileResponse {
 
   public ProfileResponse(Profile profile) {
     this(
-        profile.getAccountId(),
+        profile.getId(),
         profile.getName(),
         profile.getBio(),
         profile.getIcon(),

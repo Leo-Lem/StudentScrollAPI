@@ -39,7 +39,7 @@ public class ProfileServiceTests {
 
     when(repo.findById(any())).thenReturn(Optional.of(profile));
 
-    Profile result = service.read(profile.getAccountId());
+    Profile result = service.read(profile.getId());
 
     assertEquals(profile, result);
   }
@@ -60,7 +60,7 @@ public class ProfileServiceTests {
     when(repo.save(any())).thenReturn(profile);
 
     Profile result = service.update(
-        TestUtils.getStudent(1L).setProfile(profile),
+        profile,
         Optional.of(newName),
         Optional.empty(),
         Optional.empty(),

@@ -1,19 +1,28 @@
 package studentscroll.api.posts.services;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
-import studentscroll.api.account.data.Account;
 import studentscroll.api.account.data.AccountRepository;
-import studentscroll.api.posts.data.*;
+import studentscroll.api.posts.data.ContentPost;
+import studentscroll.api.posts.data.EventPost;
+import studentscroll.api.posts.data.Post;
+import studentscroll.api.posts.data.PostRepository;
+import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.shared.StudentLocation;
 
 @Service
@@ -47,11 +56,11 @@ public class PostService {
     return repo.findById(postID).orElseThrow(() -> new EntityNotFoundException());
   }
 
-  public Page<Post> readAll(@NonNull Pageable pageable) {
-    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    val followIds = student.getProfile().getFollows().stream().map(f -> f.getId()).toList();
-    val posterIds = Stream.concat(followIds.stream(), Stream.of(student.getId())).toList();
+  public Page<Post> readAll(
+      @NonNull Profile profile,
+      @NonNull Pageable pageable) {
+    val followIds = profile.getFollows().stream().map(f -> f.getId()).toList();
+    val posterIds = Stream.concat(followIds.stream(), Stream.of(profile.getId())).toList();
 
     val followed = repo.findByPosterIdIn(posterIds, pageable);
 

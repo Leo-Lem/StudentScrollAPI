@@ -2,7 +2,10 @@ package studentscroll.api.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +42,30 @@ public class ProfileITest {
     val studentId = utils.createStudent();
     val student = TestUtils.getStudent(studentId);
 
-    getProfile(student.getId()).andExpect(status().isOk());
+    getProfile(studentId).andExpect(status().isOk());
 
     TestUtils.authenticate(student);
     updateProfile().andExpect(status().isOk());
+
+    getProfilesByName("Raoul")
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].studentId").value(studentId));
+
+    val interests = List.of("PIRATE", "SWORD_FIGHTING");
+    student.getProfile().setInterests(interests);
+    TestUtils.authenticate(student);
+
+    getProfilesByInterest("PIRATE")
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].studentId").value(studentId));
+  }
+
+  private ResultActions getProfilesByName(String name) throws Exception {
+    return mockMVC.perform(get("/students?name=" + name));
+  }
+
+  private ResultActions getProfilesByInterest(String interest) throws Exception {
+    return mockMVC.perform(get("/students?interests=PIRATE"));
   }
 
   private ResultActions getProfile(Long id) throws Exception {
