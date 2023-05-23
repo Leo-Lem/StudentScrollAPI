@@ -10,9 +10,6 @@ import studentscroll.api.shared.StudentLocation;
 public class CreatePostRequest {
 
   @NonNull
-  private final Long posterId;
-
-  @NonNull
   private final String title;
 
   @NonNull

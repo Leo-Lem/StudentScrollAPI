@@ -1,13 +1,14 @@
-package studentscroll.api.students.web.dto;
+package studentscroll.api.profiles.web.dto;
 
 import lombok.*;
+import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Profile;
 
 @Data
 @RequiredArgsConstructor
 public class ProfileResponse {
 
+  private final Long studentId;
   private final String name;
   private final String bio;
   private final String icon;
@@ -16,6 +17,7 @@ public class ProfileResponse {
 
   public ProfileResponse(Profile profile) {
     this(
+        profile.getId(),
         profile.getName(),
         profile.getBio(),
         profile.getIcon(),

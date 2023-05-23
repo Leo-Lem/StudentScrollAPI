@@ -13,5 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   Page<Post> findByTags(String tag, Pageable page);
 
+  Page<Post> findByTitle(String title, Pageable page);
+
   Page<ContentPost> findByContentLike(String pattern, Pageable page);
+
 }

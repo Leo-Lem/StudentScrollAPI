@@ -15,15 +15,15 @@ import org.mockito.MockitoAnnotations;
 
 import lombok.val;
 import studentscroll.api.account.data.Settings;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.account.services.SettingsService;
 import studentscroll.api.utils.TestUtils;
 
 public class SettingsServiceTests {
 
   @Mock
-  private StudentRepository repo;
+  private AccountRepository repo;
 
   @InjectMocks
   private SettingsService service;
@@ -48,7 +48,7 @@ public class SettingsServiceTests {
 
     TestUtils.authenticate(student);
 
-    when(repo.save(any(Student.class)))
+    when(repo.save(any(Account.class)))
         .thenAnswer(i -> i.getArguments()[0]);
 
     Settings newSettings = service.update(

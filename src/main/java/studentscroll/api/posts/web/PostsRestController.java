@@ -18,10 +18,11 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.media.*;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.posts.data.*;
 import studentscroll.api.posts.services.*;
 import studentscroll.api.posts.web.dto.*;
+import studentscroll.api.shared.NotAuthenticatedException;
 
 @Tag(name = "Posts", description = "Everything related to posts.")
 @SecurityRequirement(name = "token")
@@ -40,12 +41,8 @@ public class PostsRestController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public PostResponse create(
-      @RequestBody CreatePostRequest request, HttpServletResponse response) {
-    val principal = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (!request.getPosterId().equals(principal.getId()))
-      throw new IllegalArgumentException("Poster id needs to match currently authenticated student's id.");
-
+      @RequestBody CreatePostRequest request, HttpServletResponse response) throws NotAuthenticatedException {
+    val posterId = getCurrentStudent().getId();
     val type = request.getType();
 
     if (type == null)
@@ -55,7 +52,7 @@ public class PostsRestController {
 
     if (type.equals(EventPost.class))
       postResponse = new PostResponse(service.create(
-          request.getPosterId(),
+          posterId,
           request.getTitle(),
           Set.of(request.getTags()),
           request.getDescription(),
@@ -63,7 +60,7 @@ public class PostsRestController {
           request.getLocation()));
     else
       postResponse = new PostResponse(service.create(
-          request.getPosterId(),
+          posterId,
           request.getTitle(),
           Set.of(request.getTags()),
           request.getContent()));
@@ -91,7 +88,7 @@ public class PostsRestController {
       @RequestParam Optional<Integer> page,
       @RequestParam Optional<Integer> size,
       @RequestParam Optional<List<String>> sort,
-      @RequestParam Optional<Boolean> sortAscending) {
+      @RequestParam Optional<Boolean> sortAscending) throws NotAuthenticatedException {
 
     val pageable = service.createPageable(page, size, sort, sortAscending);
 
@@ -100,7 +97,7 @@ public class PostsRestController {
     if (posterIds.isPresent())
       posts = service.readAllByPosterIds(posterIds.get(), pageable);
     else
-      posts = service.readAll(pageable);
+      posts = service.readAll(getCurrentStudent().getProfile(), pageable);
 
     response.setHeader("X-Total-Count", String.valueOf(posts.getTotalElements()));
 
@@ -147,6 +144,15 @@ public class PostsRestController {
   public void delete(
       @PathVariable Long postId) throws EntityNotFoundException {
     service.delete(postId);
+  }
+
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (student == null)
+      throw new NotAuthenticatedException("You are not logged in.");
+
+    return student;
   }
 
 }

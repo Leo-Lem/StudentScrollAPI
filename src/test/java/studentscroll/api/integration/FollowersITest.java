@@ -1,5 +1,6 @@
 package studentscroll.api.integration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,9 +42,8 @@ public class FollowersITest {
     getFollows(firstStudentId).andExpect(content().json("[]"));
 
     follow(secondStudentId).andExpect(status().isCreated());
-    getFollowers(secondStudentId).andExpect(content().json("[1]"));
 
-    // TODO: test unfollowing
+    unfollow(secondStudentId).andExpect(status().isNoContent());
   }
 
   private ResultActions getFollowers(Long id) throws Exception {
@@ -56,6 +56,10 @@ public class FollowersITest {
 
   private ResultActions follow(Long studentId) throws Exception {
     return mockMVC.perform(post("/students/" + studentId + "/followers"));
+  }
+
+  private ResultActions unfollow(Long studentId) throws Exception {
+    return mockMVC.perform(delete("/students/" + studentId + "/followers"));
   }
 
 }

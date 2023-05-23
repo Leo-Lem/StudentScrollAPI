@@ -3,6 +3,7 @@ package studentscroll.api.utils;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,16 +12,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.val;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.account.data.Settings;
-import studentscroll.api.account.data.Student;
 import studentscroll.api.posts.data.ContentPost;
 import studentscroll.api.posts.data.Post;
+import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.shared.StudentLocation;
-import studentscroll.api.students.data.Profile;
 
 public class TestUtils {
 
-  public static void authenticate(Student student) {
+  public static void authenticate(Account student) {
     val context = mock(SecurityContext.class);
     val authentication = mock(Authentication.class);
 
@@ -37,16 +38,17 @@ public class TestUtils {
     SecurityContextHolder.getContext().setAuthentication(null);
   }
 
-  public static Student getStudent(Long id) {
-    return new Student()
+  public static Account getStudent(Long id) {
+    return new Account()
         .setId(id)
         .setEmail("raoul@duke.legend")
         .setPassword("1234")
-        .setProfile(new Profile("Raoul Duke"));
+        .setProfile(new Profile("Raoul Duke").setId(1L));
   }
 
-  public static Profile getProfile() {
+  public static Profile getProfile(Long id) {
     return new Profile()
+        .setId(id)
         .setName("Cletus Spuckler")
         .setBio("""
             Cletus Delroy Montfort Bigglesworth Spuckler, also known as Cletus the Slack-Jawed Yokel,
@@ -54,7 +56,7 @@ public class TestUtils {
             portrayed wearing a pair of jeans and an undershirt.
             """)
         .setIcon("PIGS")
-        .setInterests(Set.of("farming", "construction", "redneck"))
+        .setInterests(List.of("farming", "construction", "redneck"))
         .setLocation(Optional.of(new StudentLocation("Rural Route 9, Springfield", 44.046111, -123.021944)));
   }
 
@@ -69,7 +71,7 @@ public class TestUtils {
         .setContent("Jimmy's dog is really cute. I would love to pet it again.")
         .setTitle("Jimmy's Dog")
         .setTags(Set.of("JIMMY", "DOG"))
-        .setPoster(new Student().setId(1L))
+        .setPoster(new Account().setId(1L))
         .setId(1L);
   }
 }

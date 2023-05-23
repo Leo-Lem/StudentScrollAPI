@@ -19,8 +19,8 @@ import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.ChatRepository;
 import studentscroll.api.chats.services.ChatService;
@@ -31,7 +31,7 @@ public class ChatServiceTests {
   private ChatRepository repo;
 
   @Mock
-  private StudentRepository studentRepo;
+  private AccountRepository studentRepo;
 
   @InjectMocks
   private ChatService service;
@@ -46,7 +46,7 @@ public class ChatServiceTests {
     val participants = Set.of(2L, 3L);
 
     when(studentRepo.findById(anyLong()))
-        .thenReturn(Optional.of(new Student()));
+        .thenReturn(Optional.of(new Account()));
 
     when(repo.save(any(Chat.class)))
         .thenAnswer((i) -> i.getArgument(0));

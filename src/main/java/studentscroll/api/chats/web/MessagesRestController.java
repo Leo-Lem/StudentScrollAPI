@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.chats.services.MessageService;
 import studentscroll.api.chats.web.dto.MessageResponse;
 import studentscroll.api.shared.ForbiddenException;
@@ -90,8 +90,8 @@ public class MessagesRestController {
     service.delete(messageId);
   }
 
-  private Student getCurrentStudent() throws NotAuthenticatedException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
       throw new NotAuthenticatedException("You are not logged in.");

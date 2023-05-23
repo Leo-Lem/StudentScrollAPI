@@ -1,6 +1,6 @@
-package studentscroll.api.students.web;
+package studentscroll.api.profiles.web;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.profiles.services.FollowersService;
+import studentscroll.api.profiles.web.dto.ProfileResponse;
 import studentscroll.api.shared.NotAuthenticatedException;
-import studentscroll.api.students.services.FollowersService;
 
 @Tag(name = "Followers", description = "Everything related to a student's followers.")
 @RestController
@@ -41,8 +42,8 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @GetMapping("/followers")
   @ResponseStatus(HttpStatus.OK)
-  public Set<Long> readAllFollowers(@PathVariable Long studentId) throws EntityNotFoundException {
-    return service.readFollowers(studentId);
+  public List<ProfileResponse> readAllFollowers(@PathVariable Long studentId) throws EntityNotFoundException {
+    return service.readFollowers(studentId).stream().map(ProfileResponse::new).toList();
   }
 
   @Operation(summary = "Find student's follows.")
@@ -52,8 +53,8 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @GetMapping("/follows")
   @ResponseStatus(HttpStatus.OK)
-  public Set<Long> readAllFollows(@PathVariable Long studentId) throws EntityNotFoundException {
-    return service.readFollows(studentId);
+  public List<ProfileResponse> readAllFollows(@PathVariable Long studentId) throws EntityNotFoundException {
+    return service.readFollows(studentId).stream().map(ProfileResponse::new).toList();
   }
 
   @Operation(summary = "Follow the student.")
@@ -66,9 +67,9 @@ public class FollowersRestController {
   @SecurityRequirement(name = "token")
   @PostMapping("/followers")
   @ResponseStatus(HttpStatus.CREATED)
-  public Long follow(@PathVariable Long studentId)
+  public ProfileResponse follow(@PathVariable Long studentId)
       throws EntityNotFoundException, EntityExistsException, IllegalArgumentException, NotAuthenticatedException {
-    return service.follow(getCurrentStudent(), studentId);
+    return new ProfileResponse(service.follow(getCurrentStudent().getProfile(), studentId));
   }
 
   @Operation(summary = "Unfollow the student.")
@@ -79,11 +80,11 @@ public class FollowersRestController {
   @DeleteMapping("/followers")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void unfollow(@PathVariable Long studentId) throws EntityNotFoundException, NotAuthenticatedException {
-    service.unfollow(getCurrentStudent(), studentId);
+    service.unfollow(getCurrentStudent().getProfile(), studentId);
   }
 
-  private Student getCurrentStudent() throws NotAuthenticatedException {
-    val student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  private Account getCurrentStudent() throws NotAuthenticatedException {
+    val student = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (student == null)
       throw new NotAuthenticatedException("You are not logged in.");

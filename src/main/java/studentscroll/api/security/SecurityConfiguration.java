@@ -72,8 +72,7 @@ public class SecurityConfiguration {
             .requestMatchers(HttpMethod.DELETE, "/account").authenticated()
             .requestMatchers("/account/settings").authenticated())
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers(HttpMethod.GET, "/students", "/students/{studentId}", "/students/{studentId}/**/*")
-            .authenticated()
+            .requestMatchers(HttpMethod.GET, "/students", "/students/{studentId}*/**").authenticated()
             .requestMatchers(HttpMethod.PUT, "/students").authenticated()
             .requestMatchers(HttpMethod.POST, "/students/{studentId}/followers").authenticated()
             .requestMatchers(HttpMethod.DELETE, "/students/{studentId}/followers").authenticated())

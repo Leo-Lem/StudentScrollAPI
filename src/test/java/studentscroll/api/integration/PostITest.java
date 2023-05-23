@@ -77,23 +77,24 @@ public class PostITest {
 
   private ResultActions createContentPost(Long posterId) throws Exception {
     val request = new CreatePostRequest(
-        posterId, "Title", new String[] { "TAG", "ANOTHER_TAG" }, null, null, null,
-        "Some content here");
+        "Title", new String[] { "TAG", "ANOTHER_TAG" }, null, null, null, "Some content here");
 
     return createPost(request);
   }
 
   private ResultActions createEventPost(Long posterId) throws Exception {
     val request = new CreatePostRequest(
-        posterId, "Title", new String[] { "TAG", "ANOTHER_TAG" },
-        "Some description here", LocalDateTime.now(), new StudentLocation(1.0, 1.0), null);
+        "Title",
+        new String[] { "TAG", "ANOTHER_TAG" },
+        "Some description here", LocalDateTime.now(),
+        new StudentLocation(1.0, 1.0),
+        null);
 
     return createPost(request);
   }
 
   private ResultActions createInvalidPost(Long posterId) throws Exception {
-    val request = new CreatePostRequest(posterId, "Some title", new String[] {}, null, null,
-        null, null);
+    val request = new CreatePostRequest("Some title", new String[] {}, null, null, null, null);
 
     return createPost(request);
   }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.val;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.chats.data.ChatRepository;
 import studentscroll.api.chats.data.Message;
 import studentscroll.api.chats.data.MessageRepository;
@@ -20,7 +20,7 @@ public class MessageService {
   private ChatRepository chatRepo;
 
   public Message create(
-      @NonNull Student sender,
+      @NonNull Account sender,
       @NonNull String content,
       @NonNull Long chatId) throws EntityNotFoundException {
     val chat = chatRepo

@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import studentscroll.api.account.data.Student;
+import studentscroll.api.account.data.Account;
 import studentscroll.api.chats.data.Chat;
 import studentscroll.api.chats.data.Message;
 
@@ -18,7 +18,7 @@ public class ChatResponse {
     public ChatResponse(Chat chat) {
         this(
                 chat.getId(),
-                chat.getParticipants().stream().map(Student::getId).toList(),
+                chat.getParticipants().stream().map(Account::getId).toList(),
                 chat.getMessages().stream().map(Message::getId).toList());
     }
 }

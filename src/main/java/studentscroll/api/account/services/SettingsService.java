@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
 import studentscroll.api.account.data.Settings;
-import studentscroll.api.account.data.Student;
-import studentscroll.api.account.data.StudentRepository;
+import studentscroll.api.account.data.Account;
+import studentscroll.api.account.data.AccountRepository;
 
 @Service
 public class SettingsService {
 
   @Autowired
-  private StudentRepository repo;
+  private AccountRepository repo;
 
-  public Settings read(@NonNull Student student) throws IllegalStateException {
+  public Settings read(@NonNull Account student) throws IllegalStateException {
     return student.getSettings();
   }
 
   public Settings update(
-      @NonNull Student student,
+      @NonNull Account student,
       @NonNull Optional<String> newTheme,
       @NonNull Optional<String> newLocale) throws IllegalStateException {
     Settings settings = student.getSettings();

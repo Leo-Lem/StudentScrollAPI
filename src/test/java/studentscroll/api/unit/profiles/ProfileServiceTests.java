@@ -1,4 +1,4 @@
-package studentscroll.api.unit.students;
+package studentscroll.api.unit.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,15 +15,15 @@ import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.account.data.StudentRepository;
-import studentscroll.api.students.data.Profile;
-import studentscroll.api.students.services.ProfileService;
+import studentscroll.api.profiles.data.Profile;
+import studentscroll.api.profiles.data.ProfileRepository;
+import studentscroll.api.profiles.services.ProfileService;
 import studentscroll.api.utils.TestUtils;
 
 public class ProfileServiceTests {
 
   @Mock
-  private StudentRepository repo;
+  private ProfileRepository repo;
 
   @InjectMocks
   private ProfileService service;
@@ -35,12 +35,11 @@ public class ProfileServiceTests {
 
   @Test
   public void givenStudentExists_whenReadingProfile_thenReturnsProfile() {
-    val profile = TestUtils.getProfile();
-    val student = TestUtils.getStudent(1L).setProfile(profile);
+    val profile = TestUtils.getProfile(1L);
 
-    when(repo.findById(any())).thenReturn(Optional.of(student));
+    when(repo.findById(any())).thenReturn(Optional.of(profile));
 
-    Profile result = service.read(student.getId());
+    Profile result = service.read(profile.getId());
 
     assertEquals(profile, result);
   }
@@ -54,15 +53,14 @@ public class ProfileServiceTests {
 
   @Test
   public void givenStudentExists_whenUpdatingProfile_thenUpdatesProfile() {
-    val profile = TestUtils.getProfile();
-    val student = TestUtils.getStudent(1L).setProfile(profile);
+    val profile = TestUtils.getProfile(1L);
 
     val newName = "new name";
 
-    when(repo.save(any())).thenReturn(student);
+    when(repo.save(any())).thenReturn(profile);
 
     Profile result = service.update(
-        student,
+        profile,
         Optional.of(newName),
         Optional.empty(),
         Optional.empty(),
