@@ -8,16 +8,12 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
-import studentscroll.api.account.data.AccountRepository;
 import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.profiles.data.ProfileRepository;
 import studentscroll.api.shared.StudentLocation;
 
 @Service
 public class ProfileService {
-
-  @Autowired
-  private AccountRepository accountRepo;
 
   @Autowired
   private ProfileRepository repo;

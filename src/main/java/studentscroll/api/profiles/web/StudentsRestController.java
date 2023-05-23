@@ -8,13 +8,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -75,14 +75,13 @@ public class StudentsRestController {
   @ApiResponse(responseCode = "200", description = "Updated the profile.")
   @SecurityRequirement(name = "token")
   @PutMapping
-  public ProfileResponse update(
-      @RequestBody UpdateProfileRequest request) throws NotAuthenticatedException {
+  public ProfileResponse updateProfile(@RequestBody UpdateProfileRequest request) throws NotAuthenticatedException {
     return new ProfileResponse(service.update(
         getCurrentStudent().getProfile(),
         Optional.ofNullable(request.getNewName()),
         Optional.ofNullable(request.getNewBio()),
         Optional.ofNullable(request.getNewIcon()),
-        Optional.ofNullable(request.getNewInterests()).map(List::of),
+        Optional.ofNullable(request.getNewInterests()),
         Optional.ofNullable(request.getNewLocation())));
   }
 

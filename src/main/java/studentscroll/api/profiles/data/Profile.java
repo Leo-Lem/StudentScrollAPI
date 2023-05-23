@@ -48,7 +48,7 @@ public class Profile {
   @Column(name = "icon")
   private String icon = "default";
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "interests")
   private List<String> interests = new ArrayList<>();
 

@@ -41,18 +41,17 @@ public class ProfileITest {
   public void test() throws Exception {
     val studentId = utils.createStudent();
     val student = TestUtils.getStudent(studentId);
-    student.getProfile().setInterests(List.of("PIRATE"));
 
     getProfile(studentId).andExpect(status().isOk());
 
     TestUtils.authenticate(student);
     updateProfile().andExpect(status().isOk());
 
-    getProfilesByName("Raoul")
+    getProfilesByName("John")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].studentId").value(studentId));
 
-    getProfilesByInterest("PIRATE")
+    getProfilesByInterests("PIRATE")
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].studentId").value(studentId));
   }
@@ -61,8 +60,8 @@ public class ProfileITest {
     return mockMVC.perform(get("/students?name=" + name));
   }
 
-  private ResultActions getProfilesByInterest(String interest) throws Exception {
-    return mockMVC.perform(get("/students?interests=PIRATE"));
+  private ResultActions getProfilesByInterests(String... interests) throws Exception {
+    return mockMVC.perform(get("/students?interests=" + String.join(",", interests)));
   }
 
   private ResultActions getProfile(Long id) throws Exception {
@@ -71,7 +70,8 @@ public class ProfileITest {
 
   private ResultActions updateProfile() throws Exception {
     val request = new UpdateProfileRequest(
-        "John Silver", "Hello, I'm John.", "PIRATE", null, new StudentLocation(0.0, 0.0));
+        "John Silver", "Hello, I'm John.", "PIRATE", List.of("PIRATE", "SWORD_FIGHTING"),
+        new StudentLocation(0.0, 0.0));
 
     return mockMVC.perform(
         put("/students")
