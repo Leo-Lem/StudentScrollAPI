@@ -1,13 +1,11 @@
 package studentscroll.api.unit.profiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
-import studentscroll.api.profiles.data.Profile;
 import studentscroll.api.profiles.data.ProfileRepository;
 import studentscroll.api.profiles.services.FollowersService;
 import studentscroll.api.utils.TestUtils;
@@ -34,36 +31,6 @@ public class FollowersServiceTests {
   @BeforeEach
   public void setUp() {
     MockitoAnnotations.openMocks(this);
-  }
-
-  @Test
-  public void givenStudentExists_whenReadingAllFollowers_thenReturnsSetOfFollowers() {
-    val followers = List.of(
-        TestUtils.getProfile(2L),
-        TestUtils.getProfile(3L));
-    val profile = TestUtils.getProfile(1L);
-    profile.setFollowers(followers);
-
-    when(repo.findById(1L)).thenReturn(Optional.of(profile));
-
-    List<Profile> result = service.readFollowers(1L);
-
-    assertEquals(followers, result);
-  }
-
-  @Test
-  public void givenStudentExists_whenReadingAllFollows_thenReturnsSetOfFollows() {
-    val follows = List.of(
-        TestUtils.getProfile(2L),
-        TestUtils.getProfile(3L));
-    val profile = TestUtils.getProfile(1L);
-    profile.setFollows(follows);
-
-    when(repo.findById(profile.getId())).thenReturn(Optional.of(profile));
-
-    List<Profile> result = service.readFollows(profile.getId());
-
-    assertEquals(follows, result);
   }
 
   @Test

@@ -1,9 +1,7 @@
 package studentscroll.api.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -30,28 +28,14 @@ public class FollowersITest {
 
   @Test
   public void test() throws Exception {
-    getFollowers(1L).andExpect(status().isNotFound());
-    getFollows(1L).andExpect(status().isNotFound());
-
     Long firstStudentId = utils.createStudent();
     Long secondStudentId = utils.createStudent();
 
     TestUtils.authenticate(TestUtils.getStudent(firstStudentId));
 
-    getFollowers(firstStudentId).andExpect(content().json("[]"));
-    getFollows(firstStudentId).andExpect(content().json("[]"));
-
     follow(secondStudentId).andExpect(status().isCreated());
 
     unfollow(secondStudentId).andExpect(status().isNoContent());
-  }
-
-  private ResultActions getFollowers(Long id) throws Exception {
-    return mockMVC.perform(get("/students/" + id + "/followers"));
-  }
-
-  private ResultActions getFollows(Long id) throws Exception {
-    return mockMVC.perform(get("/students/" + id + "/follows"));
   }
 
   private ResultActions follow(Long studentId) throws Exception {

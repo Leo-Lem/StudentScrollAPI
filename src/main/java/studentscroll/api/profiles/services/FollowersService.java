@@ -1,7 +1,5 @@
 package studentscroll.api.profiles.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +15,6 @@ public class FollowersService {
 
   @Autowired
   private ProfileRepository repo;
-
-  public List<Profile> readFollowers(@NonNull Long studentID) throws EntityNotFoundException {
-    return repo.findById(studentID)
-        .orElseThrow(EntityNotFoundException::new)
-        .getFollowers();
-  }
-
-  public List<Profile> readFollows(@NonNull Long studentID) throws EntityNotFoundException {
-    return repo.findById(studentID)
-        .orElseThrow(EntityNotFoundException::new)
-        .getFollows();
-  }
 
   public Profile follow(
       @NonNull Profile profile,
