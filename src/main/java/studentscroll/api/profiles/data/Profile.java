@@ -85,7 +85,7 @@ public class Profile {
 
   public Profile addFollow(Profile follow) {
     follows.add(follow);
-    follow.followers.add(follow);
+    follow.followers.add(this);
     return this;
   }
 
