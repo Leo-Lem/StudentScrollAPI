@@ -14,6 +14,8 @@ public class ProfileResponse {
   private final String icon;
   private final String[] interests;
   private final StudentLocation location;
+  private final Long[] followers;
+  private final Long[] follows;
 
   public ProfileResponse(Profile profile) {
     this(
@@ -22,7 +24,9 @@ public class ProfileResponse {
         profile.getBio(),
         profile.getIcon(),
         profile.getInterests().toArray(new String[] {}),
-        profile.getLocation().orElse(null));
+        profile.getLocation().orElse(null),
+        profile.getFollowers().stream().map(Profile::getId).toArray(Long[]::new),
+        profile.getFollows().stream().map(Profile::getId).toArray(Long[]::new));
   }
 
 }
