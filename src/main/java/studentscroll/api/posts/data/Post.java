@@ -28,6 +28,7 @@ public class Post {
   @NonNull
   private String title;
 
+  @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "tags")
   @NonNull
   private Set<String> tags;

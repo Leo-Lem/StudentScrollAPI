@@ -1,6 +1,7 @@
 package studentscroll.api.posts.data;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,9 +12,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   Page<Post> findByPosterIdNotIn(List<Long> posterIds, Pageable page);
 
-  Page<Post> findByTags(String tag, Pageable page);
+  Page<Post> findByTagsIn(Set<String> tags, Pageable page);
 
-  Page<Post> findByTitle(String title, Pageable page);
+  Page<Post> findByTitleLike(String title, Pageable page);
 
   Page<ContentPost> findByContentLike(String pattern, Pageable page);
 

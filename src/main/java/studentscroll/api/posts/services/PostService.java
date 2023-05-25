@@ -91,11 +91,11 @@ public class PostService {
   }
 
   public Page<Post> readAllByTitle(@NonNull String title, @NonNull Pageable pageable) {
-    return repo.findByTitle(title, pageable);
+    return repo.findByTitleLike("%" + title + "%", pageable);
   }
 
-  public Page<Post> readAllByTag(@NonNull String tag, @NonNull Pageable pageable) {
-    return repo.findByTags(tag, pageable);
+  public Page<Post> readAllByTags(@NonNull Set<String> tags, @NonNull Pageable pageable) {
+    return repo.findByTagsIn(tags, pageable);
   }
 
   public Page<ContentPost> readByContent(@NonNull String pattern, @NonNull Pageable pageable) {
