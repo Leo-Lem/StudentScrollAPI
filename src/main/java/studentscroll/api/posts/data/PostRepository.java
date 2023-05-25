@@ -12,9 +12,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   Page<Post> findByPosterIdNotIn(List<Long> posterIds, Pageable page);
 
-  Page<Post> findByTagsIn(Set<String> tags, Pageable page);
+  Page<Post> findByTitleLikeIgnoreCase(String title, Pageable page);
 
-  Page<Post> findByTitleLike(String title, Pageable page);
+  Page<Post> findByTagsInIgnoreCase(Set<String> tags, Pageable page);
 
   Page<ContentPost> findByContentLike(String pattern, Pageable page);
 

@@ -10,9 +10,9 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
   List<Profile> findAll();
 
-  List<Profile> findByNameLike(String name);
+  List<Profile> findByNameLikeIgnoreCase(String name);
 
-  List<Profile> findByInterestsIn(List<String> interests);
+  List<Profile> findByInterestsInIgnoreCase(List<String> interests);
 
   @Query("SELECT p FROM profile p WHERE p.location.latitude BETWEEN :minLatitude AND :maxLatitude AND p.location.longitude BETWEEN :minLongitude AND :maxLongitude")
   List<Profile> findNearLocation(

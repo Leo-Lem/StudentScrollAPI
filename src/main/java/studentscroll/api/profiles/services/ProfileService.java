@@ -54,11 +54,11 @@ public class ProfileService {
   }
 
   public List<Profile> readByName(@NonNull String name) {
-    return repo.findByNameLike("%" + name + "%");
+    return repo.findByNameLikeIgnoreCase("%" + name + "%");
   }
 
   public List<Profile> readByInterests(@NonNull List<String> interests) {
-    return repo.findByInterestsIn(interests);
+    return repo.findByInterestsInIgnoreCase(interests);
   }
 
   public List<Profile> readAll() {
