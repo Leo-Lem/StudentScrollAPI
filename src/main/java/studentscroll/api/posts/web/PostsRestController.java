@@ -79,12 +79,14 @@ public class PostsRestController {
     return new PostResponse(service.read(postId));
   }
 
-  @Operation(summary = "Find all matching posts.")
+  @Operation(summary = "Find posts matching query.")
   @ApiResponse(responseCode = "200", description = "Returning posts.")
   @GetMapping
   public List<PostResponse> readAll(
       HttpServletResponse response,
       @RequestParam Optional<List<Long>> posterIds,
+      @RequestParam Optional<String> title,
+      @RequestParam Optional<Set<String>> tags,
       @RequestParam Optional<Integer> page,
       @RequestParam Optional<Integer> size,
       @RequestParam Optional<List<String>> sort,
@@ -96,6 +98,10 @@ public class PostsRestController {
 
     if (posterIds.isPresent())
       posts = service.readAllByPosterIds(posterIds.get(), pageable);
+    else if (title.isPresent())
+      posts = service.readAllByTitle(title.get(), pageable);
+    else if (tags.isPresent())
+      posts = service.readAllByTags(tags.get(), pageable);
     else
       posts = service.readAll(getCurrentStudent().getProfile(), pageable);
 

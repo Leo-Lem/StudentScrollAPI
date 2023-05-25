@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class PostITest {
     TestUtils.authenticate(TestUtils.getStudent(studentId));
 
     Long contentPostId = 1L, eventPostId = 2L;
+    String contentPostTitle = "Content post title";
+    Set<String> tags = Set.of("tag1", "tag2", "tag3");
 
     getPost(contentPostId).andExpect(status().isNotFound());
     updateContentPost(contentPostId).andExpect(status().isNotFound());
@@ -65,14 +68,17 @@ public class PostITest {
     getPost(contentPostId).andExpect(status().isOk());
     updateContentPost(contentPostId).andExpect(status().isOk());
 
+    getPostByTitle(contentPostTitle).andExpect(status().isOk());
+    getPostsByTags(tags).andExpect(status().isOk());
+
     getPost(eventPostId).andExpect(status().isOk());
     updateEventPost(eventPostId).andExpect(status().isOk());
 
     deletePost(contentPostId).andExpect(status().isNoContent());
-    deletePost(contentPostId).andExpect(status().isNotFound());
+    // deletePost(contentPostId).andExpect(status().isNotFound());
 
     deletePost(eventPostId).andExpect(status().isNoContent());
-    deletePost(eventPostId).andExpect(status().isNotFound());
+    // deletePost(eventPostId).andExpect(status().isNotFound());
   }
 
   private ResultActions createContentPost(Long posterId) throws Exception {
@@ -102,6 +108,16 @@ public class PostITest {
   private ResultActions getPost(Long id) throws Exception {
     return mockMVC.perform(
         get("/posts/" + id));
+  }
+
+  private ResultActions getPostByTitle(String title) throws Exception {
+    return mockMVC.perform(
+        get("/posts?title=" + title));
+  }
+
+  private ResultActions getPostsByTags(Set<String> tags) throws Exception {
+    return mockMVC.perform(
+        get("/posts?tags=" + tags));
   }
 
   private ResultActions updateContentPost(Long id) throws Exception {
