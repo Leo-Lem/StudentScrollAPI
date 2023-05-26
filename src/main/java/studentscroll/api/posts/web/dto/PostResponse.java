@@ -25,6 +25,9 @@ public class PostResponse {
   @NonNull
   private final String[] tags;
 
+  @NonNull
+  private final LocalDateTime timestamp;
+
   // event posts
 
   private final String description;
@@ -42,6 +45,7 @@ public class PostResponse {
     this.posterId = post.getPoster().getId();
     this.title = post.getTitle();
     this.tags = post.getTags().toArray(new String[] {});
+    this.timestamp = post.getTimestamp();
 
     if (post instanceof EventPost) {
       EventPost eventPost = (EventPost) post;

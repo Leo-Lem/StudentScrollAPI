@@ -14,3 +14,5 @@ spring:
 springdoc:
   api-docs.path: /docs
   swagger-ui.path: /docs/swagger
+
+googlemaps.apikey: <google-maps-api-key>

@@ -85,6 +85,7 @@ public class SecurityConfiguration {
             .requestMatchers("/chats/{chatId}", "/chats/{chatId}/messages").access(isParticipantAuthz)
             .requestMatchers(HttpMethod.GET, "/chats/{chatId}/messages/{messageId}").access(isParticipantAuthz)
             .requestMatchers("/chats/{chatId}/messages/{messageId}").access(isSenderAuthz))
+        .authorizeHttpRequests(authz -> authz.requestMatchers(HttpMethod.GET, "/maps").authenticated())
         .authorizeHttpRequests(authz -> authz.anyRequest().denyAll())
         .authenticationProvider(authenticationProvider())
         .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
