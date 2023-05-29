@@ -70,4 +70,18 @@ public class FollowersServiceTests {
     assertThrows(EntityNotFoundException.class, () -> service.follow(profile, 2L));
   }
 
+  @Test
+  public void givenIsFollowing_whenUnfollowingTwice_thenSecondTimeThrowsEntityNotFoundException() {
+    val student = TestUtils.getProfile(1L);
+    val follow = TestUtils.getProfile(2L);
+
+    student.addFollow(follow);
+
+    when(repo.findById(follow.getId())).thenReturn(Optional.of(follow));
+
+    service.unfollow(student, 2L);
+
+    assertThrows(EntityNotFoundException.class, () -> service.unfollow(student, 2L));
+  }
+
 }

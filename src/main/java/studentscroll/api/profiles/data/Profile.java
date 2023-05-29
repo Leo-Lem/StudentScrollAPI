@@ -3,8 +3,10 @@ package studentscroll.api.profiles.data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
@@ -61,12 +63,12 @@ public class Profile {
   @ToString.Exclude
   private Account account;
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
   @JoinTable(name = "profile_follows", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "follow_id"))
   @ToString.Exclude
   private List<Profile> followers = new ArrayList<>();
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
   @JoinTable(name = "profile_follows", joinColumns = @JoinColumn(name = "follow_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
   @ToString.Exclude
   private List<Profile> follows = new ArrayList<>();
@@ -85,14 +87,27 @@ public class Profile {
 
   public Profile addFollow(Profile follow) {
     follows.add(follow);
-    follow.followers.add(this);
     return this;
   }
 
   public Profile removeFollow(Profile follow) {
     follows.remove(follow);
-    follow.followers.remove(this);
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Profile profile = (Profile) o;
+    return Objects.equals(id, profile.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 
 }

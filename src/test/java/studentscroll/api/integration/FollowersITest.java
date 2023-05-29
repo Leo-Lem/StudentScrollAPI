@@ -34,8 +34,10 @@ public class FollowersITest {
     TestUtils.authenticate(TestUtils.getStudent(firstStudentId));
 
     follow(secondStudentId).andExpect(status().isCreated());
+    follow(secondStudentId).andExpect(status().isConflict());
 
     unfollow(secondStudentId).andExpect(status().isNoContent());
+    unfollow(secondStudentId).andExpect(status().isNotFound());
   }
 
   private ResultActions follow(Long studentId) throws Exception {

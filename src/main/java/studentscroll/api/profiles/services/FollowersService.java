@@ -37,7 +37,7 @@ public class FollowersService {
       @NonNull Long followId) throws EntityNotFoundException {
     val follow = repo.findById(followId).orElseThrow(EntityNotFoundException::new);
 
-    if (!profile.getFollows().stream().anyMatch(f -> f.getId().equals(followId)))
+    if (!profile.getFollows().contains(follow))
       throw new EntityNotFoundException();
 
     repo.save(profile.removeFollow(follow));
